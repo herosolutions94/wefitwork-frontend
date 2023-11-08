@@ -10,8 +10,24 @@ import BuyerTabs from "../components/buyerTabs";
 import Testimonials from "../components/testimonials";
 import ExploreFrom from "../components/exploreForm";
 import Popup from "../components/popup";
+import Text from "../components/text";
+import MetaGenerator from "../components/meta-generator";
+import Image from "next/image";
+import http from "../helpers/http";
+import { cmsFileUrl } from "../helpers/helpers";
 
-export default function Home() {
+export const getServerSideProps = async () => {
+  const result = await http
+    .get("home")
+    .then((response) => response.data)
+    .catch((error) => error.response.data.message);
+
+  return { props: { result } };
+};
+
+export default function Home({result}) {
+  console.log(result);
+  let { page_title, meta_desc, content, banner_pics, profession_categories, testimonials, featured_profession_categories } = result;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
@@ -67,141 +83,64 @@ export default function Home() {
       }
     }
   };
-  const cats = [
-    {
-      id:1,
-      image:"/images/icon1.svg",
-      title:"Plumber"
-    },
-    {
-      id:2,
-      image:"/images/icon2.svg",
-      title:"Electrician"
-    },
-    {
-      id:3,
-      image:"/images/icon3.svg",
-      title:"Painter"
-    },
-    {
-      id:4,
-      image:"/images/icon4.svg",
-      title:"Locksmith"
-    },
-    {
-      id:5,
-      image:"/images/icon5.svg",
-      title:"Tiler"
-    },
-    {
-      id:6,
-      image:"/images/icon6.svg",
-      title:"Carpenter"
-    },
-    {
-      id:7,
-      image:"/images/icon7.png",
-      title:"Builder"
-    },
-    {
-      id:8,
-      image:"/images/icon1.svg",
-      title:"Plumber"
-    },
-    {
-      id:9,
-      image:"/images/icon2.svg",
-      title:"Electrician"
-    },
-    {
-      id:10,
-      image:"/images/icon3.svg",
-      title:"Painter"
-    },
-  ]
-  const testi = [
-    {
-      id:"testi1",
-      image:"/images/testi7.png",
-      name:"Mickie",
-      designation:"L Hotel",
-      comment: "It was a pleasure to partner with the team at company name. The candidates they have provided me with are without question professional, experienced, reliable and I have been extremely happy with each candidate we hired through them."
-    },
-    {
-      id:"testi2",
-      image:"/images/testi9.png",
-      name:"Ali Gilbert",
-      designation:"House Wife",
-      comment: "It was a pleasure to partner with the team at company name. The candidates they have provided me with are without question professional, experienced, reliable and I have been extremely happy with each candidate we hired through them."
-    },
-    {
-      id:"testi3",
-      image:"/images/testi8.webp",
-      name:"John Desoza",
-      designation:"CEO-Marketing Agnecy",
-      comment: "It was a pleasure to partner with the team at company name. The candidates they have provided me with are without question professional, experienced, reliable and I have been extremely happy with each candidate we hired through them."
-    },
-  ]
+ 
   return (
     <>
+    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="banner_main">
           <div className="contain">
             <div className="flex">
               <div className="colL">
-                <h1>Your final destination for finding high quality and reliable professionals and artisans</h1>
-                <p>Unlock a World of High Skills and Reliability With Wefitwork. We are your  Trusted Partner for Top-Quality Professionals and Artisans!</p>
+                <h1><Text string={content?.banner_heading_1} /></h1>
+                <Text string={content?.banner_detail} />
                 <form>
                   <input type="text" className="input" name="" placeholder={"Professional  (eg, Electrician)"} onClick={handleOpenPopup}/>
                   <button type="button" onClick={handleOpenPopup}><img src="/images/search.svg" alt=""/></button>
                 </form>
                 <div className="most_searched_cat">
-                  <p><strong>Most searched categories</strong></p>
+                  <p><strong><Text string={content?.banner_tagline} /></strong></p>
                   <div className="flex_cat">
-                    <div className="col">
+                  {featured_profession_categories?.map((feat_cat, i) => {
+                    return(
+                      <div className="col" key={i}>
                       <div className="inner">
                         <div className="img_icon">
-                          <img src="/images/banner_icon1.svg" alt="" />
+                          <Image 
+                            src={cmsFileUrl(feat_cat?.icon, 'categories')}
+                            width={40}
+                            height={40}
+                            alt={feat_cat?.title}
+                          />
+                          
                         </div>
-                        <h5>Plumber</h5>
+                        <h5><Text string={feat_cat?.title} /></h5>
                       </div>
                     </div>
-                    <div className="col">
-                      <div className="inner">
-                        <div className="img_icon">
-                          <img src="/images/banner_icon2.svg" alt="" />
-                        </div>
-                        <h5>Electrician</h5>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="inner">
-                        <div className="img_icon">
-                          <img src="/images/banner_icon3.svg" alt="" />
-                        </div>
-                        <h5>Painter</h5>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="inner">
-                        <div className="img_icon">
-                          <img src="/images/banner_icon4.svg" alt="" />
-                        </div>
-                        <h5>Locksmith</h5>
-                      </div>
-                    </div>
+                    )
+                  })}
+                   
                   </div>
                 </div>
               </div>
               <div className="colR">
                   <OwlCarousel className="owl-carousel owl-theme"
                             {...option}>
-                      <div className="image">
-                        <img src="/images/banner1.png" alt="" />
+                      {banner_pics?.map((val, i) => {
+                        return(
+                          <div className="image" key={i}>
+                          <Image 
+                            src={cmsFileUrl(val?.image)}
+                            width={507}
+                            height={507}
+                            alt="banner-pic"
+                          />
+                        
                       </div>
-                      <div className="image">
-                        <img src="/images/banner2.png" alt="" />
-                      </div>
+                        )
+                      })}
+                      
+                      
                   </OwlCarousel>
                 
               </div>
@@ -211,17 +150,23 @@ export default function Home() {
         <section className="categories_sec">
           <div className="contain">
             <div className="sec_heading">
-              <h2>Browse our most popular categories</h2>
+              <h2><Text string={content?.sec2_heading} /></h2>
             </div>
             <OwlCarousel className="owl-carousel owl-theme" {...categories}>
-              {cats.map((val)=>{
+              {profession_categories?.map((val)=>{
                 return(
                   <div className="item" key={val.id}>
                     <div className="inner">
                       <div className="icon_img">
-                        <img src={val.image} alt={val.title}/>
+                      <Image 
+                          src={cmsFileUrl(val?.icon, 'categories')}
+                          width={60}
+                          height={60}
+                          alt={val?.title}
+                        />
+                       
                       </div>
-                      <h5>{val.title}</h5>
+                      <h5><Text string={val.title} /></h5>
                     </div>
                   </div>
                 );
@@ -236,28 +181,29 @@ export default function Home() {
               <div className="col">
                 <div className="inner">
                   <div className="img_icon">
-                    <img src="/images/selected.svg" alt=""/>
+                    
+                    <img src={cmsFileUrl(content?.image1)} alt=""/>
                   </div>
-                  <h4>Selected</h4>
-                  <p>Every WEFITWORK tradesperson has passed up to 12 rigorous checks</p>
+                  <h4><Text string={content?.sec2_img_card_heading1} /></h4>
+                  <p><Text string={content?.sec2_img_card_tagline1} /></p>
                 </div>
               </div>
               <div className="col">
                 <div className="inner">
                   <div className="img_icon">
-                    <img src="/images/tested.svg" alt=""/>
+                    <img src={cmsFileUrl(content?.image2)} alt=""/>
                   </div>
-                  <h4>Tested</h4>
-                  <p>Over 6.2 million reviews have been published on WEFITWORK</p>
+                  <h4><Text string={content?.sec2_img_card_heading2} /></h4>
+                  <p><Text string={content?.sec2_img_card_tagline2} /></p>
                 </div>
               </div>
               <div className="col">
                 <div className="inner">
                   <div className="img_icon">
-                    <img src="/images/confirmed.svg" alt=""/>
+                    <img src={cmsFileUrl(content?.image3)} alt=""/>
                   </div>
-                  <h4>Confirmed</h4>
-                  <p>We guarantee WEFITWORK tradespeople's work, claim up to £1000 - <Link href="">T&Cs apply</Link></p>
+                  <h4><Text string={content?.sec2_img_card_heading3} /></h4>
+                  <p><Text string={content?.sec2_img_card_tagline3} /></p>
                 </div>
               </div>
             </div>
@@ -266,21 +212,28 @@ export default function Home() {
         <section className="how_it_works">
           <div className="contain">
               <div className="sec_heading text-center">
-                <h2>How it works</h2>
-                <p>If you’d rather not tackle even minor fixes, call a professional for quality plumbing services</p>
+                <h2><Text string={content?.sec3_heading} /></h2>
+                <Text string={content?.sec3_detail} />
               </div>
               {/* <Tabs tabs={tabs} defaultTab={0} /> */}
               <div className="flex_how_work_cstm">
                 <div className="col">
                   <div className="inner">
                     <div className="image_new">
-                      <img src="/images/corporate-woman-looking-phone.jpg" alt=""/>
+
+                      <Image
+                        src={cmsFileUrl(content?.image4)}
+                        width={377}
+                        height={264}
+                        alt={content?.sec3_card_heading4}
+                      />
+
                     </div>
                     <div className="cntnt">
-                      <h4>Search</h4>
-                      <p>If you’d rather not tackle even minor fixes, call a professional for quality plumbing services</p>
+                      <h4><Text string={content?.sec3_card_heading4} /></h4>
+                      <p><Text string={content?.sec3_card_tagline4} /></p>
                       <div className="btn_blk">
-                        <Link href="" className="site_btn">Get Started</Link>
+                        <Link href={content?.sec3_card_btn_link4} className="site_btn">{content?.sec3_card_btn_text4}</Link>
                       </div>
                     </div>
                   </div>
@@ -288,13 +241,18 @@ export default function Home() {
                 <div className="col">
                   <div className="inner">
                     <div className="image_new">
-                      <img src="/images/989.png" alt=""/>
+                    <Image
+                        src={cmsFileUrl(content?.image5)}
+                        width={377}
+                        height={264}
+                        alt={content?.sec3_card_heading5}
+                      />
                     </div>
                     <div className="cntnt">
-                      <h4>Book</h4>
-                      <p>If you’d rather not tackle even minor fixes, call a professional for quality plumbing services</p>
+                    <h4><Text string={content?.sec3_card_heading5} /></h4>
+                      <p><Text string={content?.sec3_card_tagline5} /></p>
                       <div className="btn_blk">
-                        <Link href="" className="site_btn">Join Today</Link>
+                        <Link href={content?.sec3_card_btn_link5} className="site_btn">{content?.sec3_card_btn_text5}</Link>
                       </div>
                     </div>
                   </div>
@@ -302,13 +260,18 @@ export default function Home() {
                 <div className="col">
                   <div className="inner">
                     <div className="image_new">
-                      <img src="/images/new1.jpg" alt=""/>
+                    <Image
+                        src={cmsFileUrl(content?.image6)}
+                        width={377}
+                        height={264}
+                        alt={content?.sec3_card_heading6}
+                      />
                     </div>
                     <div className="cntnt">
-                      <h4>Review</h4>
-                      <p>If you’d rather not tackle even minor fixes, call a professional for quality plumbing services</p>
+                    <h4><Text string={content?.sec3_card_heading6} /></h4>
+                      <p><Text string={content?.sec3_card_tagline6} /></p>
                       <div className="btn_blk">
-                        <Link href="" className="site_btn">Leave Review</Link>
+                        <Link href={content?.sec3_card_btn_link6} className="site_btn">{content?.sec3_card_btn_text6}</Link>
                       </div>
                     </div>
                   </div>
@@ -334,9 +297,9 @@ export default function Home() {
         <section className="testimonial_sec">
           <div className="contain">
               <div className="sec_heading text-center">
-                <h2>What Our Clients Say</h2>
+                <h2><Text string={content?.sec4_heading} /></h2>
               </div>
-              <Testimonials data={testi}/>
+              <Testimonials data={testimonials}/>
           </div>
         </section>
       </main>

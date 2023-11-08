@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const webpack = require("webpack");
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: process.env.PROTOCOL,
+        hostname: process.env.HOSTNAME,
+        pathname: process.env.IMAGE_REMOTE_PATTERNS_PATHANME
+      }
+    ]
+  },
   reactStrictMode: true,
   webpack: (config, {
     buildId,
@@ -21,3 +30,4 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+

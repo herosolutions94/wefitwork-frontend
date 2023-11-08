@@ -3,6 +3,7 @@ import Link from "next/link";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import dynamic from "next/dynamic";
+import { cmsFileUrl } from "../helpers/helpers";
 const OwlCarousel = dynamic(import("react-owl-carousel"), {ssr: false});
 
 export default function Testimonials({data}) {
@@ -41,9 +42,9 @@ export default function Testimonials({data}) {
                 <div className="item" key={val.id}>
                     <div className="inner">
                         <div className="testi_icon">
-                            <img src={val.image} alt={val.name}/>
+                            <img src={cmsFileUrl(val.image, 'testimonials')} alt={val.name}/>
                         </div>
-                        <p>{val.comment}</p>
+                        <p>{val.detail}</p>
                         <div className="testi_footer">
                             <h5>{val.name}</h5>
                             <h6>{val.designation}</h6>
