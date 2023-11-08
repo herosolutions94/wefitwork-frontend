@@ -5,53 +5,53 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 import dynamic from "next/dynamic";
 const OwlCarousel = dynamic(import("react-owl-carousel"), {ssr: false});
 import Testimonials from "../components/testimonials";
+import http from "../helpers/http";
+import Text from "../components/text";
+import MetaGenerator from "../components/meta-generator";
+import Image from "next/image";
+import { cmsFileUrl } from "../helpers/helpers";
 
-export default function About() {
-  const testi = [
-    {
-      id:"testi1",
-      image:"/images/testi7.png",
-      name:"Mickie",
-      designation:"L Hotel",
-      comment: "It was a pleasure to partner with the team at company name. The candidates they have provided me with are without question professional, experienced, reliable and I have been extremely happy with each candidate we hired through them."
-    },
-    {
-      id:"testi2",
-      image:"/images/testi9.png",
-      name:"Ali Gilbert",
-      designation:"House Wife",
-      comment: "It was a pleasure to partner with the team at company name. The candidates they have provided me with are without question professional, experienced, reliable and I have been extremely happy with each candidate we hired through them."
-    },
-    {
-      id:"testi3",
-      image:"/images/testi8.webp",
-      name:"John Desoza",
-      designation:"CEO-Marketing Agnecy",
-      comment: "It was a pleasure to partner with the team at company name. The candidates they have provided me with are without question professional, experienced, reliable and I have been extremely happy with each candidate we hired through them."
-    },
-  ]
+export const getServerSideProps = async () => {
+  const result = await http
+    .get("about")
+    .then((response) => response.data)
+    .catch((error) => error.response.data.message);
+
+  return { props: { result } };
+};
+
+export default function About({result}) {
+
+  let { page_title, meta_desc, content, testimonials} = result;
+
   return (
     <>
+    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
+
       <main>
         <section className="grid_first">
           <div className="contain">
              <div className="flex">
                 <div className="colL">
                     <div className="sec_heading">
-                        <h1>About us</h1>
+                        <h1><Text string={content?.sec1_heading} /></h1>
                     </div>
-                    <p>At WEFITWORK, we started with a simple idea: to create a user-friendly platform that makes it effortless for homeowners to find and book service providers.</p>
-                    <p>It all began when John doe encountered the challenges of finding reliable professionals for their own home projects.</p>
-                    <p>This inspired us to create a solution that bridges the gap between homeowners and service experts.</p>
+                    <Text string={content?.sec1_detail} />
                     <div className="mini_br"></div>
                     <div className="btn_blk">
-                        <Link href="" className="site_btn color min_wid">Explore Service Providers</Link>
-                        <Link href="" className="site_btn min_wid">Become a Professional</Link>
+                        <Link href={content?.sec1_button1_link} className="site_btn color min_wid">{content?.sec1_button1_text}</Link>
+                        <Link href={content?.sec1_button2_link} className="site_btn min_wid">{content?.sec1_button2_text}</Link>
                     </div>
                 </div>
                 <div className="colR">
                     <div className="image">
-                        <img src="/images/about.png" alt="about" />
+                    <Image 
+                      src={cmsFileUrl(content?.image1)}
+                      width={555}
+                      height={444}
+                      alt={'about-pic'}
+                    />
+                        
                     </div>
                 </div>
              </div>
@@ -60,40 +60,58 @@ export default function About() {
         <section className="values_sec">
             <div className="contain">
                 <div className="sec_heading text-center">
-                    <h2>Our values</h2>
-                    <p>We believe in transparency, and we're committed to providing you with a platform you can trust. Your convenience and peace of mind are our top priorities.</p>
+                    <h2><Text string={content?.sec2_heading} /></h2>
+                    <Text string={content?.sec2_detail} />
                 </div>
                 <div className="flex">
                     <div className="col">
                         <div className="inner">
                             <div className="img_icon">
-                                <img src="/images/value1.svg" alt=""/>
+                              <Image 
+                                src={cmsFileUrl(content?.image2)}
+                                width={50}
+                                height={50}
+                                alt={'icon'}
+                              />
+                                
                             </div>
                             <div className="cntnt">
-                                <h5>INTEGRITY</h5>
-                                <p>Your convenience and peace of mind are our top priorities.</p>
+                                <h5><Text string={content?.sec2_img_card_heading2} /></h5>
+                                <p><Text string={content?.sec2_img_card_tagline2} /></p>
                             </div>
                         </div>
                     </div>
                     <div className="col">
                         <div className="inner">
-                            <div className="img_icon">
-                                <img src="/images/value2.svg" alt=""/>
+                        <div className="img_icon">
+                              <Image 
+                                src={cmsFileUrl(content?.image3)}
+                                width={50}
+                                height={50}
+                                alt={'icon'}
+                              />
+                                
                             </div>
                             <div className="cntnt">
-                                <h5>RELIABILITY</h5>
-                                <p>Your convenience and peace of mind are our top priorities.</p>
+                                <h5><Text string={content?.sec2_img_card_heading3} /></h5>
+                                <p><Text string={content?.sec2_img_card_tagline3} /></p>
                             </div>
                         </div>
                     </div>
                     <div className="col">
                         <div className="inner">
-                            <div className="img_icon">
-                                <img src="/images/value3.svg" alt=""/>
+                        <div className="img_icon">
+                              <Image 
+                                src={cmsFileUrl(content?.image4)}
+                                width={50}
+                                height={50}
+                                alt={'icon'}
+                              />
+                                
                             </div>
                             <div className="cntnt">
-                                <h5>CUSTOMER SATISFACTION</h5>
-                                <p>Your convenience and peace of mind are our top priorities.</p>
+                                <h5><Text string={content?.sec2_img_card_heading4} /></h5>
+                                <p><Text string={content?.sec2_img_card_tagline4} /></p>
                             </div>
                         </div>
                     </div>
@@ -105,23 +123,22 @@ export default function About() {
              <div className="flex">
                 <div className="colL">
                     <div className="image">
-                        <img src="/images/choose.png" alt="Why choose us" />
+                        <Image 
+                          src={cmsFileUrl(content?.image5)}
+                          width={555}
+                          height={444}
+                          alt="Why choose us"
+                        />
                     </div>
                 </div>
                 <div className="colR">
                     <div className="sec_heading">
-                        <h2>Why choose us</h2>
+                        <h2><Text string={content?.sec3_heading} /></h2>
                     </div>
-                    <p>We believe in transparency, and we're committed to providing you with a platform you can trust. Your convenience and peace of mind are our top priorities.</p>
-                    <ul>
-                        <li>WEFITWORK is designed with your needs in mind, offering a user-friendly experience.</li>
-                        <li>Our extensive network of professionals ensures you find the right expert for your project.</li>
-                        <li>We offer real-time communication, enabling you to chat with professionals and book them with ease.</li>
-                        <li>Enjoy the convenience of finding, booking, and communicating with service providers in one place.</li>
-                    </ul>
+                    <Text string={content?.sec3_detail} />
                     <div className="mini_br"></div>
                     <div className="btn_blk">
-                        <Link href="" className="site_btn min_wid">Explore Service Providers</Link>
+                        <Link href={content?.sec3_button1_link} className="site_btn min_wid">{content?.sec3_button1_text}</Link>
                     </div>
                 </div>
              </div>
@@ -131,13 +148,13 @@ export default function About() {
           <div className="contain">
             <div className="cntnt">
               <div className="sec_heading text-center">
-                <h2>Seamless Interaction and Collaboration</h2>
-                <p>Connect, Collaborate, Conquer, Seamless Interaction</p>
+                <h2><Text string={content?.sec4_heading} /></h2>
+                <Text string={content?.sec4_detail} />
               </div>
               <div className="btn_blk text-center">
-                <Link href="" className="site_btn color min_wid">Become a Professional</Link>
+                <Link href={content?.sec4_button1_link} className="site_btn color min_wid">{content?.sec4_button1_text}</Link>
                 <span>OR</span>
-                <Link href="" className="site_btn white min_wid">Contact Us</Link>
+                <Link href={content?.sec4_button2_link} className="site_btn white min_wid">{content?.sec4_button2_text}</Link>
               </div>
             </div>
           </div>
@@ -145,9 +162,9 @@ export default function About() {
         <section className="testimonial_sec">
           <div className="contain">
               <div className="sec_heading text-center">
-                <h2>What Our Clients Say</h2>
+                <h2><Text string={content?.sec5_heading} /></h2>
               </div>
-              <Testimonials data={testi}/>
+              <Testimonials data={testimonials}/>
           </div>
         </section>
       </main>

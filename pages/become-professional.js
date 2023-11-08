@@ -1,6 +1,24 @@
 import React from "react";
 import Link from "next/link";
-export default function BecomeProfessional() {
+import http from "../helpers/http";
+import Text from "../components/text";
+import MetaGenerator from "../components/meta-generator";
+import { cmsFileUrl } from "../helpers/helpers";
+
+export const getServerSideProps = async () => {
+  const result = await http
+    .get("become-pro")
+    .then((response) => response.data)
+    .catch((error) => error.response.data.message);
+
+  return { props: { result } };
+};
+
+export default function BecomeProfessional({result}) {
+
+  let { page_title, meta_desc, content, how_works} = result;
+
+
   const how_work = [
     {
       id:"step1",
@@ -53,8 +71,10 @@ export default function BecomeProfessional() {
   ]
   return (
     <>
+    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
+
       <main>
-          <section className="become_professional_banner">
+          <section className="become_professional_banner" style={{ background : cmsFileUrl(content?.image2)}}>
             <div className="contain">
                 <div className="flex">
                   <div className="colL">

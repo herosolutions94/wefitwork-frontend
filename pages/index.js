@@ -26,7 +26,7 @@ export const getServerSideProps = async () => {
 };
 
 export default function Home({result}) {
-  console.log(result);
+  // console.log(result);
   let { page_title, meta_desc, content, banner_pics, profession_categories, testimonials, featured_profession_categories } = result;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
