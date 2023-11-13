@@ -1,8 +1,10 @@
 import Link from "next/link"
 import { useRouter} from 'next/router'
 import React,{useState} from 'react'
+import Image from "next/image";
+import { cmsFileUrl } from "../helpers/helpers";
 
-export default function Header() {
+export default function Header({siteSettings}) {
     const[toggle,setToggle] = useState(false);
     const ToggleAction = () =>{
       setToggle(!toggle);
@@ -16,7 +18,8 @@ export default function Header() {
         <div className="contain">
           <div className="logo">
               <Link href="/">
-                  <img src="/images/logo.svg" alt="" />
+              
+                  <img src={cmsFileUrl(siteSettings?.site_logo)} alt={siteSettings?.site_name} />
               </Link>
           </div>
           <div className={toggle ? "toggle active" : "toggle"} onClick={ToggleAction}><span></span></div>

@@ -36,6 +36,10 @@ export default function Contact({ result }) {
     e.preventDefault();
     dispatch(saveContactQuery(data));
     // e.target.reset();
+
+    setTimeout(() => {
+		reset()
+	}, 2000);
   };
 
   return (
