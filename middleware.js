@@ -10,11 +10,9 @@ export default function middleware(request) {
 }
 export const config = {
     matcher: [
-        "/dashboard/:path*",
-        "/payment/:path*",
-
+        "/buyer-dashboard/:path*",
+        "/professional-dashboard/:path*",
         // "/email-verification",
         
-
     ]
 };

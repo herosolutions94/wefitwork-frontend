@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
-
+import NextNProgress from "nextjs-progressbar";
 
 export default function Dashboard() {
   
   return (
     <>
+    <NextNProgress color="#004AAD" />
       <main>
          <section className="dashboard">
             <div className="contain">

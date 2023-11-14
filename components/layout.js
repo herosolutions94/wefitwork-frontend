@@ -6,7 +6,7 @@ export default function Layout({ children , siteSettings}) {
   // console.log(siteSettings);
   const router = useRouter();
   const path = router.pathname;
-  if ((path == "/signup") || (path == "/login") || (path == "/forgot-password") || (path == "/reset-password") || (path == "/trade-person-signup")) {
+  if ((path == "/signup") || (path == "/login") || (path == "/forgot-password") || (path == "/change-password/[token]") || (path == "/trade-person-signup") || (path == "/email-verification")) {
     return (
       <div className="content">
         <SiteMaster />

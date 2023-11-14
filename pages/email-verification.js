@@ -5,12 +5,13 @@ import http from "../helpers/http";
 import MetaGenerator from "../components/meta-generator";
 import Image from "next/image";
 import { cmsFileUrl } from "../helpers/helpers";
+import OTPInput from "react-otp-input";
+import { useForm, Controller } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
 import { parse } from "cookie";
-import { Toaster } from "react-hot-toast";
-import { useForm } from "react-hook-form";
-import { signin } from "../states/actions/signin";
+import { getCookie } from "cookies-next";
+import { verifyEmail } from "../states/actions/signup";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
 
 export const getServerSideProps = async (context) => {
   const { req } = context;
@@ -33,43 +34,61 @@ export const getServerSideProps = async (context) => {
   }
 
   const result = await http
-    .get("login-page")
+    .get("email-verify-page")
     .then((response) => response.data)
     .catch((error) => error.response.data.message);
 
   return { props: { result } };
 };
 
-export default function Login({ result }) {
+export default function EmailVerification({ result }) {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { from } = router.query;
+  const isFormProcessing = useSelector(
+    (state) => state.signup.isFormProcessing
+  );
 
   let { page_title, meta_desc, content, site_settings } = result;
 
-  const isFormProcessing = useSelector(
-    (state) => state.signin.isFormProcessing
-  );
+  const { handleSubmit, control, formState } = useForm();
 
-  let redirect_url = "";
-  if (typeof window !== "undefined") {
-    redirect_url = localStorage.getItem("redirect_url");
-  }
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
-
-  const handleSignin = (data, e) => {
+  const handleVerifyEmail = (data, e) => {
     e.preventDefault();
-    dispatch(signin(data, redirect_url ? redirect_url : from));
+    data = { ...data, email: localStorage.getItem("email") };
+    dispatch(verifyEmail(data));
+  };
+
+  const [emailVerify, setEmailVerify] = useState(false);
+
+  // if (typeof window !== "undefined") {
+  //   // Access localStorage here
+  //   const user_email = localStorage.getItem('email');
+
+  // }
+
+  const resendEmail = async (e) => {
+    setEmailVerify(true);
+    var form_data = new FormData();
+    form_data.append("email", localStorage.getItem("email"));
+    // console.log(form_data);
+    await http.post("auth/resend-email", form_data).then((data) => {
+      // console.log(data);
+      setEmailVerify(false);
+      if (data?.data?.status === 1) {
+        toast.success(data?.data?.msg, { duration: 6000 });
+      } else {
+        if (data?.data?.validationErrors) {
+          toast.error(<Text string={data.validationErrors} parse={true} />, {
+            duration: 6000,
+          });
+        }
+        toast.error(data?.data?.msg, { duration: 6000 });
+      }
+    });
   };
 
   return (
     <>
-      <Toaster position="top-center" />
+        <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
 
       <main className="logon_main">
@@ -111,14 +130,6 @@ export default function Login({ result }) {
                   />
                 </Link>
               </div>
-              <div className="btn_blk">
-                <Link
-                  href={content?.right_top_button_link}
-                  className="site_btn"
-                >
-                  <Text string={content?.right_top_button_text} />
-                </Link>
-              </div>
             </div>
             <div className="right_inner">
               <h2>
@@ -127,61 +138,50 @@ export default function Login({ result }) {
               <p>
                 <Text string={content?.right_sec_tagline} />
               </p>
-              <form method="POST" onSubmit={handleSubmit(handleSignin)}>
+              <form method="POST" onSubmit={handleSubmit(handleVerifyEmail)}>
                 <div className="form_blk">
-                  <input
-                    id="frm-email"
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    placeholder="Enter your email"
-                    className="input"
-                    {...register("email", {
-                      required: "Required",
-                      pattern: {
-                        value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
-                        message: "Email format is not valid!",
-                      },
-                    })}
+                  <Controller
+                    name="code"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Verify Code is required" }}
+                    render={({ field, fieldState }) => (
+                      <OTPInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        numInputs={6}
+                        isInputNum
+                        inputStyle={{ width: "50px" }}
+                        renderSeparator={<span> &nbsp;-&nbsp; </span>}
+                        renderInput={(props) => (
+                          <input {...props} className="input" />
+                        )}
+                      />
+                    )}
                   />
+                </div>
 
-                  <div className="validation-error" style={{ color: "red" }}>
-                    {errors.email?.message}
-                  </div>
-                </div>
-                <div className="form_blk">
-                  <input
-                    id="frm-password"
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    className="input"
-                    {...register("password", {
-                      required: "Required",
-                    })}
-                  />
-                  <div className="validation-error" style={{ color: "red" }}>
-                    {errors.password?.message}
-                  </div>
-                </div>
-                <div className="have_check">
-                  <div className="lbl_btn">
-                    <input type="checkbox" name="remember" id="remember" />
-                    <label htmlFor="remember">
-                      <Text string={content?.check_box_text} />
-                    </label>
-                  </div>
-                  <Link href="/forgot-password">
-                    <Text string={content?.forgot_pswd_text} />
-                  </Link>
-                </div>
                 <div className="btn_blk">
                   <button
-                    className="site_btn block"
+                    className="site_btn"
+                    type="button"
+                    onClick={resendEmail}
+                    disabled={emailVerify}
+                  >
+                    <Text string={content?.left_tagline_link_text} />{" "}
+                    {emailVerify && (
+                      <i
+                        className={emailVerify ? "spinner" : "spinnerHidden"}
+                      ></i>
+                    )}
+                  </button>
+
+                  <button
+                    className="site_btn"
                     type="submit"
                     disabled={isFormProcessing}
                   >
-                    <Text string={content?.button_text} />
+                    <Text string={content?.submit_text} />{" "}
                     {isFormProcessing && (
                       <i
                         className={
@@ -190,14 +190,6 @@ export default function Login({ result }) {
                       ></i>
                     )}
                   </button>
-                </div>
-                <div className="question">
-                  <p>
-                    <Text string={content?.l_link_tagline} />
-                    <Link href={content?.register_link}>
-                      <Text string={content?.register_link_text} />
-                    </Link>
-                  </p>
                 </div>
               </form>
             </div>
