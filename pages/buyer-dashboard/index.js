@@ -2,8 +2,19 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
 import NextNProgress from "nextjs-progressbar";
+import { fetchDashboardData } from "@/components/states/actions/buyer/account";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 export default function Dashboard() {
+  // const router = useRouter();
+  // const dispatch = useDispatch();
+  // const data = useSelector((state) => state.account.content);
+  // const mem = useSelector((state) => state.account.mem);
+  // const isLoading = useSelector((state) => state.account.isLoading);
+
+  // console.log("dashboard",data)
+  
   
   return (
     <>

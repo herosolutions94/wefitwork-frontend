@@ -5,6 +5,7 @@ import newsletter from "./newsletter";
 import signup from "./signup";
 import signin from "./signin";
 import forgetPassword from "./forgetPassword";
+import account from "./buyer/account";
 
 
 export default combineReducers({
@@ -14,6 +15,7 @@ export default combineReducers({
  signup,
  signin,
  forgetPassword,
+ account,
  
  
  
