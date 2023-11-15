@@ -3,8 +3,11 @@ import { useRouter} from 'next/router'
 import React,{useState} from 'react'
 import Image from "next/image";
 import { cmsFileUrl } from "../helpers/helpers";
+import { authToken } from "../helpers/authToken";
 
 export default function Header({siteSettings}) {
+  const token = authToken();
+  // console.log(siteSettings);
     const[toggle,setToggle] = useState(false);
     const ToggleAction = () =>{
       setToggle(!toggle);
@@ -33,8 +36,17 @@ export default function Header({siteSettings}) {
           {/* =========user no login====== */}
           <div className="login_btns">
             <ul>
-              <li><Link href="/login">Login</Link></li>
+              {token ? (
+              <li className="btn_blk"><Link href="/buyer-dashboard" className="site_btn">Dashboard</Link></li>
+
+              ) : (
+                <>
+                <li><Link href="/login">Login</Link></li>
               <li className="btn_blk"><Link href="/signup" className="site_btn">Register</Link></li>
+                </>
+                
+              )}
+              
             </ul>
           </div>
           {/* =============logged user====== */}

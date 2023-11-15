@@ -1,14 +1,19 @@
 import SiteMaster from "./sitemaster";
 import { useRouter } from "next/router";
 import LoggedBuyerHeader from "./logged-buyer-header";
-export default function LayoutBuyerDashboard({children}) {
-    const router = useRouter();
-    const path = router.pathname;
-    return (
+import { Provider } from "react-redux";
+import store from "../states/store";
+
+export default function LayoutBuyerDashboard({ children }) {
+  const router = useRouter();
+  const path = router.pathname;
+  return (
+    <Provider store={store}>
       <div className="content">
         <SiteMaster />
         <LoggedBuyerHeader />
-            {children}
+        {children}
       </div>
-    );
-  }
+    </Provider>
+  );
+}

@@ -2,14 +2,53 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
 import BuyerSidebar from "@/components/components/buyerSidebar";
-
+import Head from "next/head";
+import NextNProgress from "nextjs-progressbar";
+import {
+  fetchBuyerAccountSettings,
+  changeBuyerPassword,
+} from "@/components/states/actions/buyer/account";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Toaster } from "react-hot-toast";
 
 export default function MyAccount() {
-    
+    const dispatch = useDispatch();
+  const data = useSelector((state) => state.account.content);
+  const member = useSelector((state) => state.account.mem);
+  const isLoading = useSelector((state) => state.account.isLoading);
+  const isPassChangeProcessing = useSelector(
+    (state) => state.account.isPassChangeProcessing
+  );
+
+  const { page_title } = data;
+
+  useEffect(() => {
+    dispatch(fetchBuyerAccountSettings());
+  }, []);
+
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    watch
+  } = useForm();
+
+  const handleSavePassword = (data, e) =>{
+    e.preventDefault();
+    dispatch(changeBuyerPassword(data));
+  }
     
   return (
     <>
+    <NextNProgress color="#004AAD" />
       <main>
+      <Toaster position="top-center" />
+        <Head>
+          <title>{page_title ? page_title : "fetching..."}</title>
+        </Head>
          <section className="dashboard">
             <div className="contain">
                 <div className="layout_sidebar flex">
@@ -21,7 +60,8 @@ export default function MyAccount() {
                             <h2>My Account</h2>
                         </div>
                         <div className="profile_blk custom_blk">
-                            <form>
+                        {!isLoading && (
+                            <form method="POST" onSubmit={handleSubmit(handleSavePassword)}>
                                 <div className="from_row row">
                                     <div className="col-sm-12">
                                         <div className="blk_form">
@@ -30,8 +70,9 @@ export default function MyAccount() {
                                                 <input
                                                 type="text"
                                                 name="email"
-                                                defaultValue="francis@gmail.com"
+                                                defaultValue={member?.mem_email}
                                                 className="input"
+                                                readOnly
                                                 />
                                                 <button type="button" className="verfiy_btn">Verfiy</button>
                                             </div>
@@ -48,11 +89,22 @@ export default function MyAccount() {
                                             <h6>Current Password</h6>
                                             <div className="form_blk">
                                                 <input
-                                                type="text"
-                                                name="current_password"
-                                                defaultValue="*****"
+                                                type="password"
+                                                name="pass"
+                                                placeholder="Entre Current Password"
                                                 className="input"
+                                                {...register("pass", {
+                              required: "Current password is required.",
+                              pattern: {
+                                value:
+                                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[A-Za-z0-9\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\>\=\?\@\[\]\{\}\\\\\^\_\`\~]{8,}$/,
+                                message:
+                                  "The password should contain at least 8 characters, that contain at least one lowercase letter, one uppercase letter and one numeric digit.",
+                              }
+                            })}
                                                 />
+
+<div className="validation-error" style={{ color: "red" }}>{errors.pass?.message} </div>
                                             </div>
                                         </div>
                                     </div>
@@ -61,11 +113,16 @@ export default function MyAccount() {
                                             <h6>New Password</h6>
                                             <div className="form_blk">
                                                 <input
-                                                type="text"
-                                                name="new_password"
-                                                defaultValue="*****"
+                                                type="password"
+                                                name="new_pass"
+                                                placeholder="Entre New Password"
                                                 className="input"
+                                                {...register("new_pass", {
+                              required: "New password is required.",
+                            })}
                                                 />
+<div className="validation-error" style={{ color: "red" }}>{errors.new_pass?.message} </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -74,11 +131,21 @@ export default function MyAccount() {
                                             <h6>Repeat Password</h6>
                                             <div className="form_blk">
                                                 <input
-                                                type="text"
-                                                name="repeat_password"
-                                                defaultValue="*****"
+                                                type="password"
+                                                name="confirm_pass"
+                                                placeholder="Repeat New Password"
                                                 className="input"
+                                                {...register("confirm_pass", {
+                              required: "Confirm Password is required.",
+                              validate: (val) => {
+                                if (watch("new_pass") != val) {
+                                  return "Your passwords do no match.";
+                                }
+                              },
+                            })}
                                                 />
+<div className="validation-error" style={{ color: "red" }}>{errors.confirm_pass?.message} </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -95,10 +162,11 @@ export default function MyAccount() {
                                 </div>
                                 <div className="br"></div>
                                 <div className="btn_blk text-right cell_wide_full">
-                                    <button type="submit" className="site_btn">Save changes</button>
+                                    <button type="submit" className="site_btn" disabled={isPassChangeProcessing} >Save changes {isPassChangeProcessing && <i className={isPassChangeProcessing ? "spinner" : "spinnerHidden"}></i>}</button>
                                 </div>
                                 
                             </form>
+                            )}
                         </div>
                     </div>
                 </div>

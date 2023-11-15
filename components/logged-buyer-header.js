@@ -1,9 +1,26 @@
 import Link from "next/link"
 import { useRouter} from 'next/router'
-import React,{useState, useEffect} from 'react';
-
+import React,{useState, useEffect, useRef} from 'react';
+import { fetchBuyerDashboardData } from "../states/actions/buyer/account";
+import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import { cmsFileUrl } from "../helpers/helpers";
+import { deleteCookie } from "cookies-next";
+import { SIGNIN_PAGE} from "../constants/link";
 
 export default function LoggedBuyerHeader() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.account.content);
+  const member = useSelector((state) => state.account.mem);
+  const isLoading = useSelector((state) => state.account.isLoading);
+
+  const { site_settings, page_title } = data;
+
+  useEffect(() => {
+    dispatch(fetchBuyerDashboardData());
+  }, []);
+
     const[userDrop,setUserDrop] = useState(false);
     const[envelopeDrop,setEnvelopeDrop] = useState(false);
     const[notifyDrop,setNotifyDrop] = useState(false);
@@ -16,6 +33,27 @@ export default function LoggedBuyerHeader() {
     const ToggleNotifyDrop = () => {
       setNotifyDrop(!notifyDrop);
     }
+
+
+    const dropOneRef = useRef();
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      if (dropOneRef.current && !dropOneRef.current.contains(e.target)) {
+        setUserDrop(false);
+      }
+    };
+    document.addEventListener("mousedown", checkIfClickedOutside);
+    return () => {
+      document.removeEventListener("mousedown", checkIfClickedOutside);
+    };
+  }, []);
+
+
+    const logout = (e) => {
+      e.preventDefault();
+      deleteCookie("authToken");
+      router.push(SIGNIN_PAGE);
+    };
     
     return (
       <>
@@ -23,7 +61,12 @@ export default function LoggedBuyerHeader() {
         <div className="contain">
           <div className="logo">
               <Link href="/">
-                  <img src="/images/logo.svg" alt="" />
+                  <Image 
+                    src={cmsFileUrl(site_settings?.site_logo)}
+                    width={220}
+                    height={80}
+                    alt={site_settings?.site_name}
+                  />
               </Link>
           </div>
           
@@ -128,25 +171,38 @@ export default function LoggedBuyerHeader() {
                   </ul>
                 </div>
               </li>
+              {isLoading ? <div className="text-center">
+                  <div className="spinner-border text-success" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+                :
               <li className="logged_drop">
                 <button className="logged_drop_btn" onClick={ToggleUserDrop}>
                   <div className="user_img">
-                  <img src="/images/avtar.svg" alt="" />
+                    <Image 
+                      width={40}
+                      height={40}
+                      src={cmsFileUrl(member?.mem_image, "members")}
+                      alt={member?.mem_fname}
+                    />
+                  
                   </div>
                   <div className="cntnt">
-                    <h6>Arlie Anderson</h6>
-                    <p>arlie@breitenberg.com</p>
+                    <h6>{member?.mem_fname}</h6>
+                    <p>{member?.mem_email}</p>
                   </div>
                 </button>
-                <ul className={userDrop ? "sub active" : "sub"}>
+                <ul className={userDrop ? "sub active" : "sub"} ref={dropOneRef}>
                   <li><Link href="/buyer-dashboard" onClick={ToggleUserDrop}><img src="/images/dashboard.svg" alt="" /> <span>Dashboard</span></Link></li>
                   <li><Link href="/buyer-dashboard/profile-settings" onClick={ToggleUserDrop}><img src="/images/setting.svg" alt="" /> <span>Profile Settings</span></Link></li>
                   <li className="drop_hide_dsk"><Link href="/buyer-dashboard/my-account" onClick={ToggleUserDrop}><img src="/images/account.svg" alt="" /> <span>My Account</span></Link></li>
                   <li><Link href="/buyer-dashboard/wishlist" onClick={ToggleUserDrop}><img src="/images/wishlist.svg" alt="" /> <span>Wishlist</span></Link></li>
                   <li><Link href="/buyer-dashboard/bookings" onClick={ToggleUserDrop}><img src="/images/booking.svg" alt="" /> <span>Bookings</span></Link></li>
-                  <li><Link href="/login" onClick={ToggleUserDrop}><img src="/images/logout.svg" alt="" /> <span>Logout</span></Link></li>
+                  <li><Link href="#" onClick={logout}><img src="/images/logout.svg" alt="" /> <span>Logout</span></Link></li>
                 </ul>
               </li>
+              }
             </ul>
           </div>
           <div className="clearfix"></div>

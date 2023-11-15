@@ -2,28 +2,41 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
 import NextNProgress from "nextjs-progressbar";
-import { fetchDashboardData } from "@/components/states/actions/buyer/account";
+import { fetchBuyerDashboardData } from "@/components/states/actions/buyer/account";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import Head from "next/head";
+import Text from "@/components/components/text";
+import { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
-  // const router = useRouter();
-  // const dispatch = useDispatch();
-  // const data = useSelector((state) => state.account.content);
-  // const mem = useSelector((state) => state.account.mem);
-  // const isLoading = useSelector((state) => state.account.isLoading);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.account.content);
+  const member = useSelector((state) => state.account.mem);
+  const isLoading = useSelector((state) => state.account.isLoading);
 
-  // console.log("dashboard",data)
+  // console.log("dashboard",data);
+  const { site_settings, page_title } = data;
+
+  useEffect(() => {
+    dispatch(fetchBuyerDashboardData());
+  }, []);
   
   
   return (
     <>
     <NextNProgress color="#004AAD" />
       <main>
+      <Toaster position="top-center" />
+      <Head>
+          <title>{page_title ? page_title : "fetching..."}</title>
+        </Head>
          <section className="dashboard">
             <div className="contain">
               <div className="sec_heading">
-                <h3>Welcome Back <span className="color">Arlie Anderson.</span></h3>
+                <h3>Welcome Back <span className="color"><Text string={member?.mem_fname} /></span></h3>
               </div>
               <div className="dash_tile_main custom_blk">
                 <div className="col">
