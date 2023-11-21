@@ -18,14 +18,26 @@ export const signin = (formData, redirectTo) => (dispatch) => {
     .post("auth/signin", doObjToFormData(formData))
     .then(({ data }) => {
       if (data.status) {
+        
         toast.success(SUCCESSFUL_SIGNIN_MESSAGE, { duration: 6000 });
         dispatch({
           type: SIGN_IN_MESSAGE_SUCCESS,
           payload: data,
         });
         setTimeout(() => {
-          if (redirectTo) window.location.replace(redirectTo);
-          else window.location.replace(`/buyer-dashboard`);
+          if(!data.memVerified || data.memVerified == false || data.memVerified == 'false'){
+            window.location.replace(`/email-verification`);
+            localStorage.setItem("email" , data.email);
+          }else{
+            if(data.mem_type == 'member'){
+              if (redirectTo) window.location.replace(redirectTo);
+              else window.location.replace(`/buyer-dashboard`);
+            }else if(data.mem_type == 'professional'){
+              if (redirectTo) window.location.replace(redirectTo);
+              else window.location.replace(`/professional-dashboard`);
+            }
+            
+          }
           localStorage.removeItem("redirect_url");
         }, 2000);
       } else {

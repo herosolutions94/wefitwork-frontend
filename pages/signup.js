@@ -11,6 +11,7 @@ import { createAccount } from "../states/actions/signup";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { parse } from "cookie";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async (context) => {
 
@@ -42,12 +43,16 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function Signup({ result }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
     (state) => state.signup.isFormProcessing
   );
 
   let { page_title, meta_desc, content, site_settings } = result;
+
+  const {from} = router.query;
+  // console.log('from', from);
 
   const {
     register,
@@ -57,6 +62,11 @@ export default function Signup({ result }) {
 
   const handleCreateAccount = (data, e) => {
     e.preventDefault();
+    if(from == 'become-professional'){
+      data = {...data, mem_type : 'professional'}
+    }else{
+      data = {...data, mem_type : 'member'}
+    }
     dispatch(createAccount(data));
   };
 

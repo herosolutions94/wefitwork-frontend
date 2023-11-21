@@ -5,6 +5,7 @@ import Text from "../components/text";
 import MetaGenerator from "../components/meta-generator";
 import { cmsFileUrl } from "../helpers/helpers";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async () => {
   const result = await http
@@ -16,8 +17,14 @@ export const getServerSideProps = async () => {
 };
 
 export default function BecomeProfessional({result}) {
-
+  const router = useRouter();
   let { page_title, meta_desc, content, how_works, site_settings} = result;
+
+  const handleRedirectProfession = (e) => {
+    e.preventDefault();
+    localStorage.setItem('mem_type', 'professional');
+    router.push(`/signup?from=become-professional`);
+  }
 
   return (
     <>
@@ -34,7 +41,7 @@ export default function BecomeProfessional({result}) {
                     <Text string={content?.sec1_detail} />
                     <div className="mini_br"></div>
                     <div className="btn_blk">
-                      <Link href={content?.sec1_button1_link} className="site_btn color min_wid"><Text string={content?.sec1_button1_text} /></Link>
+                      <Link href={'#'} onClick={handleRedirectProfession} className="site_btn color min_wid"><Text string={content?.sec1_button1_text} /></Link>
                     </div>
                   </div>
                   <div className="colR">
@@ -123,7 +130,7 @@ export default function BecomeProfessional({result}) {
                     
                     <div className="mini_br"></div>
                     <div className="btn_blk">
-                      <Link href={content?.sec4_button1_link} className="site_btn color min_wid"><Text string={content?.sec4_button1_text} /></Link>
+                      <Link href={'#'} onClick={handleRedirectProfession} className="site_btn color min_wid"><Text string={content?.sec4_button1_text} /></Link>
                     </div>
                   </div>
                 </div>
@@ -138,7 +145,7 @@ export default function BecomeProfessional({result}) {
                 </div>
                 <Text string={content?.sec5_detail} />
                 <div className="btn_blk text-center">
-                  <Link href={content?.sec5_button1_link} className="site_btn min_wid"><Text string={content?.sec5_button1_text} /></Link>
+                  <Link href={'#'} onClick={handleRedirectProfession} className="site_btn min_wid"><Text string={content?.sec5_button1_text} /></Link>
                 </div>
                 <h6><Text string={content?.sec5_tagline} /></h6>
                 <Link href={`tel:${site_settings?.site_phone}`} className="call_btn">Call:  {site_settings?.site_phone}</Link>

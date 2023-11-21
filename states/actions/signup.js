@@ -83,7 +83,12 @@ export const verifyEmail = (formData) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
-          window.location.replace(`/buyer-dashboard`);
+          if(data.mem_type == 'member'){
+            window.location.replace(`/buyer-dashboard`);
+
+          }else{
+            window.location.replace('/professional-dashboard');
+          }
         }, 2000);
       } else {
         if (data.validationErrors) {

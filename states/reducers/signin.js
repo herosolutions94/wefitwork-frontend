@@ -12,6 +12,7 @@ import {
       typeof window !== "undefined"
         ? window.localStorage.getItem("authToken")
         : "",
+    mem : {},    
   };
   
   export default function (state = initialState, { type, payload }) {
@@ -28,6 +29,7 @@ import {
         return {
           ...state,
           isFormProcessing: true,
+          mem : payload.memData,
         };
       case SIGN_IN_MESSAGE_FAILED:
         return {
