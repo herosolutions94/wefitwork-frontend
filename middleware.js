@@ -14,7 +14,7 @@ export const config = {
     matcher: [
         "/buyer-dashboard/:path*",
         "/professional-dashboard/:path*",
-        // "/email-verification",
+        "/trade-person-signup",
         
     ]
 };

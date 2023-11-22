@@ -114,12 +114,12 @@ export default function Signup({ result }) {
                 </Link>
               </div>
               <div className="btn_blk">
-                <Link
+                {!from && <Link
                   href={content?.right_top_button_link}
                   className="site_btn"
                 >
                   <Text string={content?.right_top_button_text} />
-                </Link>
+                </Link>}
               </div>
             </div>
             <div className="right_inner">

@@ -25,19 +25,16 @@ export const signin = (formData, redirectTo) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
-          if(!data.memVerified || data.memVerified == false || data.memVerified == 'false'){
-            window.location.replace(`/email-verification`);
-            localStorage.setItem("email" , data.email);
-          }else{
             if(data.mem_type == 'member'){
               if (redirectTo) window.location.replace(redirectTo);
               else window.location.replace(`/buyer-dashboard`);
-            }else if(data.mem_type == 'professional'){
+            }else if(data.mem_type == 'professional' && (data.profession_profile == '1' || data.profession_profile || data.profession_profile == true || data.profession_profile == 'true')){
               if (redirectTo) window.location.replace(redirectTo);
               else window.location.replace(`/professional-dashboard`);
+            }else if(data.mem_type == 'professional' && (data.profession_profile !== '1' || !data.profession_profile || data.profession_profile !== true || data.profession_profile !== 'true')){
+              if (redirectTo) window.location.replace(redirectTo);
+              else window.location.replace(`/trade-person-signup`);
             }
-            
-          }
           localStorage.removeItem("redirect_url");
         }, 2000);
       } else {

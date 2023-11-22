@@ -1,6 +1,23 @@
 import React, { useState} from "react";
 import Link from 'next/link';
-export default function TradePersonSignup() {
+import Text from "../components/text";
+import http from "../helpers/http";
+import MetaGenerator from "../components/meta-generator";
+
+
+export const getServerSideProps = async () => {
+
+  const result = await http
+    .get("professional-signup-page'")
+    .then((response) => response.data)
+    .catch((error) => error.response.data.message);
+
+  return { props: { result } };
+};
+
+export default function TradePersonSignup({result}) {
+    let { page_title, meta_desc, content, site_settings, services } = result;
+
     const [payment, setPayment] = useState("credit_card");
     const [step, setStep] = useState(1);
     const handleNext = () => {

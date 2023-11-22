@@ -33,7 +33,13 @@ export const createAccount = (formData) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
-          window.location.replace("/email-verification");
+          if(data.mem_type == 'member'){
+            window.location.replace("/email-verification");
+
+          }else{
+            
+            window.location.replace("/trade-person-signup");
+          }
         }, 2000);
       } else {
         if (data.validationErrors) {

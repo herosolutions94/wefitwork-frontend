@@ -14,24 +14,24 @@ import { verifyEmail } from "../states/actions/signup";
 import { useDispatch, useSelector } from "react-redux";
 
 export const getServerSideProps = async (context) => {
-  const { req } = context;
-  const cookieHeader = req.headers.cookie || "";
-  // Parse the cookie header to extract the specific cookie value
-  const cookieValue = parse(cookieHeader);
-  const authToken =
-    cookieValue["authToken"] !== undefined &&
-    cookieValue["authToken"] !== null &&
-    cookieValue["authToken"] !== ""
-      ? cookieValue["authToken"]
-      : null;
-  if (authToken !== null) {
-    return {
-      redirect: {
-        destination: "/buyer-dashboard", // Replace '/dashboard' with the appropriate URL
-        permanent: false,
-      },
-    };
-  }
+  // const { req } = context;
+  // const cookieHeader = req.headers.cookie || "";
+  // // Parse the cookie header to extract the specific cookie value
+  // const cookieValue = parse(cookieHeader);
+  // const authToken =
+  //   cookieValue["authToken"] !== undefined &&
+  //   cookieValue["authToken"] !== null &&
+  //   cookieValue["authToken"] !== ""
+  //     ? cookieValue["authToken"]
+  //     : null;
+  // if (authToken !== null) {
+  //   return {
+  //     redirect: {
+  //       destination: "/buyer-dashboard", // Replace '/dashboard' with the appropriate URL
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   const result = await http
     .get("email-verify-page")
