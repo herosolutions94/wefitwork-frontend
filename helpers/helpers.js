@@ -110,105 +110,11 @@ export function nowPlus6Days() {
   return days;
 }
 
-export function jobProgressColor(value) {
-  switch (value) {
-    case "application_in_progress":
-    case "online_test_completed":
-    case "first_interview_completed":
-    case "second_interview_completed":
-    case "assessment_day_completed":
-      return variables._green_drop;
-    case "offer_received":
-      return variables._lightgreen_drop;
-    case "online_test_failed":
-    case "first_interview_failed":
-    case "second_interview_failed":
-    case "assessment_day_failed":
-      return variables._red_drop;
-    default:
-      return "";
-  }
-}
-
-export function getActiveClassname(value) {
-  switch (value) {
-    case 0:
-      return "first_active";
-    case 1:
-      return "second_active";
-    case 2:
-      return "third_active";
-    case 3:
-      return "four_active";
-    case 4:
-      return "five_active";
-    default:
-      return "";
-  }
-}
-
-export function makeSalaryString(min, max, interval, currency) {
-  min = Number(min);
-  max = Number(max);
-  if (min === 0 && max === 0) return "Competitive";
-  else if (min > 0 && max === 0) return `${currency} ${min} / ${interval}`;
-  else if (min > 0 && max > 0)
-    return `${currency} ${min} - ${max} / ${interval}`;
-  else return "Not Specified";
-}
-
-export function priceFormat(num) {
-  if (num === null || num === "") return 0;
-
-  const dec = num.split(".")[1];
-  const len = dec && dec.length > 2 ? dec.length : 2;
-  return Number(num).toFixed(len);
-}
-
-export function checkReferralLink(ref) {
-  if (
-    ref === undefined ||
-    ref === "" ||
-    ref === null ||
-    ref == null ||
-    ref === "null" ||
-    ref === "null" ||
-    ref === "undefined" ||
-    ref === false
-  ) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-export function ambassadorRef() {
-  return getCookie("ambassadorRef") ?? "";
-}
-
-export function websiteLink(link) {
-  const referralLink =
-    typeof window !== "undefined" ? window.localStorage.getItem("ref") : "";
-  const compaign_name =
-    typeof window !== "undefined"
-      ? window.localStorage.getItem("compaign_name")
-      : "";
-
-  if (checkReferralLink(referralLink))
-    return `${link}?ref=${referralLink}&compaign_name=${compaign_name}`;
-  else return link;
-}
 
 export function cmsFileUrl(src, folder = "images") {
   return `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}uploads/${folder}/${src}`;
 }
 
-export function appendSIfPlural(value, string) {
-  if (value > 1) {
-    return string + "s";
-  }
-  return string;
-}
 
 export function timeAgo(date) {
   const momentDate = moment(date);
@@ -241,7 +147,7 @@ export function timeAgo(date) {
 }
 
 export function format_amount(amount = parseFloat(0.00)) {
-  return "£ " + amount
+  return "₦ " + amount
 }
 export function generateRandomNumber() {
   return Math.floor(100000 + Math.random() * 900000);

@@ -3,12 +3,13 @@ import Link from 'next/link';
 import Text from "../components/text";
 import http from "../helpers/http";
 import MetaGenerator from "../components/meta-generator";
-
+import { cmsFileUrl, format_amount } from "../helpers/helpers";
+import Image from "next/image";
+import { Toaster } from "react-hot-toast";
 
 export const getServerSideProps = async () => {
-
   const result = await http
-    .get("professional-signup-page'")
+    .get("professional-signup-page")
     .then((response) => response.data)
     .catch((error) => error.response.data.message);
 
@@ -16,8 +17,10 @@ export const getServerSideProps = async () => {
 };
 
 export default function TradePersonSignup({result}) {
-    let { page_title, meta_desc, content, site_settings, services } = result;
 
+    let { page_title, meta_desc, content, site_settings,services } = result;
+
+    console.log(result);
     const [payment, setPayment] = useState("credit_card");
     const [step, setStep] = useState(1);
     const handleNext = () => {
@@ -95,45 +98,59 @@ export default function TradePersonSignup({result}) {
       ]
   return (
     <>
+    <Toaster position="top-center" />
+      <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main className="logon_main">
         <section className="logon_sec">
             <div className="logon_left">
                 <div className="inner">
                     <div className={step === 4 ? 'hide_text' : ''}>
                         <div className="inner_text">
-                            <h1>Hello Friend</h1>
-                            <p>Unlock New Opportunities Connect, Showcase, and Grow Your Services in One Place.</p>
+                            <h1><Text string={content?.sec1_heading} /></h1>
+                           <Text string={content?.sec1_detail} />
                         </div>
                         <div className="membership_card">
                             <div className="inner_membership">
                                 <div className="mini_pro">
                                     <img src="/images/pro_membership.svg" alt="" />
-                                    <span>PRO</span>
+                                    <span><Text string={content?.pkg_short_heading} /></span>
                                 </div>
                                 <div className="price_head">
-                                    <h2>₦1000 <span>per Month</span></h2>
+                                    <h2>{format_amount(content?.pkg_price)} <span>{content?.pkg_duration}</span></h2>
                                 </div>
-                                <ul>
-                                    <li>Unlimited Access</li>
-                                    <li>Exclusive Features</li>
-                                    <li>Enhanced Support</li>
-                                    <li>Easy Billing</li>
-                                </ul>
+                                <Text string={content?.pkg_detail} />
                             </div>
                         </div>
                     </div>
                 </div>
                 <ul>
-                    <li><Link href="/contact">Contact  Us</Link></li>
-                    <li><Link href="/contact">Terms of use</Link></li>
-                    <li><Link href="/contact">Privacy Policy</Link></li>
-                </ul>
+              <li>
+                <Link href={content?.sec1_button1_link}>
+                  <Text string={content?.sec1_button1_text} />
+                </Link>
+              </li>
+              <li>
+                <Link href={content?.sec1_button2_link}>
+                  <Text string={content?.sec1_button2_text} />
+                </Link>
+              </li>
+              <li>
+                <Link href={content?.sec1_button3_link}>
+                  <Text string={content?.sec1_button3_text} />
+                </Link>
+              </li>
+            </ul>
             </div>
             <div className="logon_right">
                 <div className="login_header trade_person_header">
                     <div className="logon_logo">
                         <Link href="/">
-                            <img src="images/logo_log.svg" alt="" />
+                        <Image
+                    src={cmsFileUrl(site_settings?.site_logo)}
+                    width={220}
+                    height={40}
+                    alt={site_settings?.site_name}
+                  />
                         </Link>
                     </div>
                 </div>
@@ -143,11 +160,13 @@ export default function TradePersonSignup({result}) {
                             <div className={`step ${step === 1 ? 'field_set active' : 'field_set'}`}>
                                 <h6>What Service You Offered</h6>
                                 <div className="form_blk">
-                                    <select name="" className="input">
+                                    <select name="service_id" className="input">
                                         <option>Choose offered service</option>
-                                        <option value="electrician">Electrician</option>
-                                        <option value="Plumber">Plumber</option>
-                                        <option value="Handyman">Handyman</option>
+                                        {services?.map((ser, i) => {
+                                            return <option value={ser?.id} key={i}>{ser?.title}</option>
+
+                                        })}
+                                        
                                     </select>
                                 </div>
                             </div>
