@@ -15,6 +15,8 @@ export const RESET_PASSWORD_LINK_EXPIRED_MESSAGE =
   "Profile settings saved successfully.";
 export const SUCCESSFUL_PASSWORD_CHANGED = "Password changed successfully.";
 
+export const PROFESSIONAL_PROFILE_CREATED_MESSAGE = "Professional Profile created please visit your dashboard.";
+
 // Payment
 export const SUCCESSFUL_PAYMENT_MESSAGE =
   "You have sccessfully made pyment.";

@@ -27,6 +27,7 @@ import {
       case CREATE_ACCOUNT_MESSAGE_SUCCESS:
         localStorage.setItem("isFirstStepCompleted", true);
         localStorage.setItem("email", payload.email);
+        setCookie("authToken", payload.authToken);
         return {
           ...state,
           isFormProcessing: false,
