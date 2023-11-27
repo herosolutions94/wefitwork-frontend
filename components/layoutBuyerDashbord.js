@@ -8,6 +8,8 @@ import http from "../helpers/http";
 import { authToken } from "../helpers/authToken";
 import { doObjToFormData } from "../helpers/helpers";
 import toast from "react-hot-toast";
+import NextNProgress from "nextjs-progressbar";
+
 
 export default function LayoutBuyerDashboard({ children }) {
   const router = useRouter();
@@ -39,19 +41,21 @@ export default function LayoutBuyerDashboard({ children }) {
   }, []);
   // console.log(memberRow)
   useEffect(() => {
-    if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && lastSegment !== 'email-verification') {
+    if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && memberRow?.mem_verified !== "1" && lastSegment !== 'email-verification') {
         localStorage.setItem('email', memberRow?.mem_email);
         router.push('/email-verification');
     }
     // console.log('hi');
     
-  }, []);
+  }, [memberRow]);
 
 
   return (
     <Provider store={store}>
       <div className="content">
         <SiteMaster />
+    <NextNProgress color="#004AAD" />
+
         <LoggedBuyerHeader />
         {children}
       </div>

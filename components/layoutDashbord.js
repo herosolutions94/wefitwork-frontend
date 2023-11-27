@@ -5,7 +5,9 @@ import http from "../helpers/http";
 import { authToken } from "../helpers/authToken";
 import { useEffect, useState } from "react";
 import { doObjToFormData } from "../helpers/helpers";
-
+import NextNProgress from "nextjs-progressbar";
+import { Provider } from "react-redux";
+import store from "../states/store";
 
 export default function LayoutDashboard({children}) {
     const router = useRouter();
@@ -37,7 +39,7 @@ export default function LayoutDashboard({children}) {
   }, []);
   console.log('sad',memberRow)
   useEffect(() => {
-    if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && lastSegment !== 'email-verification') {
+    if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && memberRow?.mem_verified !== "1" && lastSegment !== 'email-verification') {
         localStorage.setItem('email', memberRow?.mem_email);
         router.push('/email-verification');
     }
@@ -50,12 +52,16 @@ export default function LayoutDashboard({children}) {
     }
     // console.log('hi');
     
-  }, []);
+  }, [memberRow]);
     return (
+      <Provider store={store}>
       <div className="content">
         <SiteMaster />
+    <NextNProgress color="#004AAD" />
+
         <LoggedHeader />
             {children}
       </div>
+      </Provider>
     );
   }

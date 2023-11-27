@@ -1,9 +1,26 @@
 import Link from "next/link"
 import { useRouter} from 'next/router'
-import React,{useState} from 'react';
-
+import React,{useState, useEffect} from 'react';
+import Text from "./text";
+import { fetchProfessioanlDashboardData } from "../states/actions/professional/proProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { cmsFileUrl } from "../helpers/helpers";
+import Image from "next/image";
+import { deleteCookie } from "cookies-next";
 
 export default function LoggedHeader() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.proProfile.content);
+  const member = useSelector((state) => state.proProfile.mem);
+  const isLoading = useSelector((state) => state.proProfile.isLoading);
+
+  const { site_settings, page_title } = data;
+
+  useEffect(() => {
+    dispatch(fetchProfessioanlDashboardData());
+  }, []);
+
     const[userDrop,setUserDrop] = useState(false);
     const[envelopeDrop,setEnvelopeDrop] = useState(false);
     const[notifyDrop,setNotifyDrop] = useState(false);
@@ -16,13 +33,25 @@ export default function LoggedHeader() {
     const ToggleNotifyDrop = () => {
       setNotifyDrop(!notifyDrop);
     }
+
+    const logout = (e) => {
+      e.preventDefault();
+      deleteCookie("authToken");
+      router.push(SIGNIN_PAGE);
+    };
+
     return (
       <>
       <header className="logged_header">
         <div className="contain">
           <div className="logo">
               <Link href="/">
-                  <img src="/images/logo.svg" alt="" />
+              <Image 
+                    src={cmsFileUrl(site_settings?.site_logo)}
+                    width={220}
+                    height={80}
+                    alt={site_settings?.site_name}
+                  />
               </Link>
           </div>
           
@@ -130,11 +159,27 @@ export default function LoggedHeader() {
               <li className="logged_drop">
                 <button className="logged_drop_btn" onClick={ToggleUserDrop}>
                   <div className="user_img">
-                  <img src="/images/avtar.svg" alt="" />
+                  {member?.mem_image ? 
+                    (<Image 
+                      width={40}
+                      height={40}
+                      src={cmsFileUrl(member?.mem_image, "members")}
+                      alt={member?.mem_fname}
+                    />) 
+                    : 
+                    (
+                      <Image 
+                      width={40}
+                      height={40}
+                      src="/images/no-user.svg"
+                      alt={"user-dp"}
+                    />
+                    )
+                  }
                   </div>
                   <div className="cntnt">
-                    <h6>Arlie Anderson</h6>
-                    <p>arlie@breitenberg.com</p>
+                    <h6><Text string={member?.mem_fname} /></h6>
+                    <p><Text string={member?.mem_email} /></p>
                   </div>
                 </button>
                 <ul className={userDrop ? "sub active" : "sub"}>
@@ -143,7 +188,10 @@ export default function LoggedHeader() {
                   <li className="drop_hide_dsk"><Link href="/professional-dashboard/my-account" onClick={ToggleUserDrop}><img src="/images/account.svg" alt="" /> <span>My Account</span></Link></li>
                   <li className="drop_hide_dsk"><Link href="/professional-dashboard/subscription" onClick={ToggleUserDrop}><img src="/images/subscription.svg" alt="" /> <span>Subscription</span></Link></li>
                   <li><Link href="/professional-dashboard/services" onClick={ToggleUserDrop}><img src="/images/service.svg" alt="" /> <span>Services</span></Link></li>
-                  <li><Link href="/login" onClick={ToggleUserDrop}><img src="/images/logout.svg" alt="" /> <span>Logout</span></Link></li>
+                  <li><Link href="#" onClick={logout}><img src="/images/logout.svg" alt="" /> <span>Logout</span></Link></li>
+                  <li><Link href="/buyer-dashboard" onClick={ToggleUserDrop} className="site_btn"><img src="/images/logout.svg" alt="" /> <span>Go to Buyer Dashboard</span></Link></li>
+
+
                 </ul>
               </li>
             </ul>

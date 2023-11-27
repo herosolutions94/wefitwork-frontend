@@ -3,7 +3,7 @@ import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
 import BuyerSidebar from "@/components/components/buyerSidebar";
 import Head from "next/head";
-import NextNProgress from "nextjs-progressbar";
+
 import {
   fetchBuyerAccountSettings,
   saveBuyerAccountSettings,
@@ -60,7 +60,7 @@ export default function ProfileSettings() {
 
   return (
     <>
-      <NextNProgress color="#004AAD" />
+      {/* <NextNProgress color="#004AAD" /> */}
       <main>
         <Toaster position="top-center" />
         <Head>

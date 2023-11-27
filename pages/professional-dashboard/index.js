@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import LayoutDashboard from '@/components/components/layoutDashbord';
+import Text from "@/components/components/text";
+import { fetchProfessioanlDashboardData } from "@/components/states/actions/professional/proProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { Toaster } from "react-hot-toast";
+import Head from "next/head";
 
 
 export default function Dashboard() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.proProfile.content);
+  const member = useSelector((state) => state.proProfile.mem);
+  const isLoading = useSelector((state) => state.proProfile.isLoading);
+
+  // console.log("dashboard",data);
+  const { site_settings, page_title } = data;
+
+  useEffect(() => {
+    dispatch(fetchProfessioanlDashboardData());
+  }, []);
   
   return (
     <>
       <main>
+      <Toaster position="top-center" />
+      <Head>
+          <title>{page_title ? page_title : "fetching..."}</title>
+        </Head>
          <section className="dashboard">
             <div className="contain">
               <div className="sec_heading">
-                <h3>Welcome Back <span className="color">Arlie Anderson.</span></h3>
+                <h3>Welcome Back <span className="color">{member?.mem_fname}</span></h3>
               </div>
               <div className="dash_tile_main custom_blk">
                 <div className="col">

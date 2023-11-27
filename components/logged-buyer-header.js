@@ -180,12 +180,23 @@ export default function LoggedBuyerHeader() {
               <li className="logged_drop">
                 <button className="logged_drop_btn" onClick={ToggleUserDrop}>
                   <div className="user_img">
-                    <Image 
+                  {member?.mem_image ? 
+                    (<Image 
                       width={40}
                       height={40}
                       src={cmsFileUrl(member?.mem_image, "members")}
                       alt={member?.mem_fname}
+                    />) 
+                    : 
+                    (
+                      <Image 
+                      width={40}
+                      height={40}
+                      src="/images/no-user.svg"
+                      alt={"user-dp"}
                     />
+                    )
+                  }
                   
                   </div>
                   <div className="cntnt">
@@ -200,6 +211,8 @@ export default function LoggedBuyerHeader() {
                   <li><Link href="/buyer-dashboard/wishlist" onClick={ToggleUserDrop}><img src="/images/wishlist.svg" alt="" /> <span>Wishlist</span></Link></li>
                   <li><Link href="/buyer-dashboard/bookings" onClick={ToggleUserDrop}><img src="/images/booking.svg" alt="" /> <span>Bookings</span></Link></li>
                   <li><Link href="#" onClick={logout}><img src="/images/logout.svg" alt="" /> <span>Logout</span></Link></li>
+                  <li><Link href="/professional-dashboard" onClick={ToggleUserDrop} className="site_btn"><img src="/images/logout.svg" alt="" /> <span>Go to Professional Dashboard</span></Link></li>
+
                 </ul>
               </li>
               }

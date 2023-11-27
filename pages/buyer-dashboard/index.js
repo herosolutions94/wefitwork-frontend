@@ -27,7 +27,7 @@ export default function Dashboard() {
   
   return (
     <>
-    <NextNProgress color="#004AAD" />
+    {/* <NextNProgress color="#004AAD" /> */}
       <main>
       <Toaster position="top-center" />
       <Head>
