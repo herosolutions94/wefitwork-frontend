@@ -25,6 +25,8 @@ export const signin = (formData, redirectTo) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
+          setCookie('mem_type', data.mem_type);
+
             if(data.mem_type == 'member'){
               if (redirectTo) window.location.replace(redirectTo);
               else window.location.replace(`/buyer-dashboard`);

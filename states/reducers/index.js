@@ -7,6 +7,7 @@ import signin from "./signin";
 import forgetPassword from "./forgetPassword";
 import account from "./buyer/account";
 import proProfile from "./professional/proProfile";
+import services from "./professional/services";
 
 
 export default combineReducers({
@@ -18,6 +19,7 @@ export default combineReducers({
  forgetPassword,
  account,
  proProfile,
+ services,
  
  
  

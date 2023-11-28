@@ -16,6 +16,7 @@ import {
   VERIFY_EMAIL_FAILED,
   BACK_TO_SIGNUP,
 } from "./actionTypes";
+import { setCookie } from "cookies-next";
 
 export const createAccount = (formData) => (dispatch) => {
   formData = doObjToFormData(formData);
@@ -33,6 +34,8 @@ export const createAccount = (formData) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
+          setCookie('mem_type', data.mem_type);
+
           if(data.mem_type == 'member'){
             window.location.replace("/email-verification");
 
@@ -89,6 +92,8 @@ export const verifyEmail = (formData) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
+          setCookie('mem_type', data.mem_type);
+
           if(data.mem_type == 'member'){
             window.location.replace(`/buyer-dashboard`);
 

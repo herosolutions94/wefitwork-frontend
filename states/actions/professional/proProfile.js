@@ -6,7 +6,8 @@ import Text from "@/components/components/text";
 
 import {
     PROFESSIONAL_PROFILE_CREATED_MESSAGE,
-    SUCCESSFUL_ACCOUNT_SETTINGS_CHANGED
+    SUCCESSFUL_ACCOUNT_SETTINGS_CHANGED,
+    SUCCESSFUL_PASSWORD_CHANGED,
 } from "@/components/constants/messages";
 
 import { CREATE_PROFESSIONAL_PROFILE,
@@ -28,6 +29,7 @@ import { CREATE_PROFESSIONAL_PROFILE,
 
 
 import { authToken } from "@/components/helpers/authToken";
+import { setCookie } from "cookies-next";
 
 export const createProfessionalProfile = (formData) => (dispatch) => {
     formData = {...formData, token: authToken()}
@@ -45,6 +47,8 @@ export const createProfessionalProfile = (formData) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
+          setCookie('mem_type', data.mem_type);
+
             window.location.replace("/professional-dashboard");
         }, 2000);
       } else {
@@ -195,6 +199,9 @@ export const changeProfessionalPassword = (formData) => (dispatch) => {
           type: CHANGE_PROFESSIONAL_PASSWORD_SUCCESS,
           payload: data,
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         if (data.validationErrors) {
           toast.error(<Text string={data.validationErrors} parse={true} />, {

@@ -95,12 +95,7 @@ export default function MyAccount() {
                                                 className="input"
                                                 {...register("pass", {
                               required: "Current password is required.",
-                              pattern: {
-                                value:
-                                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[A-Za-z0-9\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\>\=\?\@\[\]\{\}\\\\\^\_\`\~]{8,}$/,
-                                message:
-                                  "The password should contain at least 8 characters, that contain at least one lowercase letter, one uppercase letter and one numeric digit.",
-                              }
+                              
                             })}
                                                 />
 

@@ -37,7 +37,7 @@ export default function LayoutDashboard({children}) {
 
     fetchData();
   }, []);
-  console.log('sad',memberRow)
+  // console.log('sad',memberRow)
   useEffect(() => {
     if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && memberRow?.mem_verified !== "1" && lastSegment !== 'email-verification') {
         localStorage.setItem('email', memberRow?.mem_email);

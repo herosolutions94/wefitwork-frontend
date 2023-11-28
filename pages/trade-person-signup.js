@@ -3,7 +3,7 @@ import Link from "next/link";
 import Text from "../components/text";
 import http from "../helpers/http";
 import MetaGenerator from "../components/meta-generator";
-import { cmsFileUrl, format_amount } from "../helpers/helpers";
+import { cmsFileUrl, format_amount, doObjToFormData } from "../helpers/helpers";
 import Image from "next/image";
 import { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -20,48 +20,50 @@ export const getServerSideProps = async () => {
 };
 
 export default function TradePersonSignup({ result }) {
-    const dispatch = useDispatch();
-    const isFormProcessing = useSelector(
-        (state) => state.proProfile.isFormProcessing
-      );
+  const dispatch = useDispatch();
+  const isFormProcessing = useSelector(
+    (state) => state.proProfile.isFormProcessing
+  );
   let { page_title, meta_desc, content, site_settings, services } = result;
-  
 
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
-
   const handleNext = async () => {
-let fieldsToValidate;
-  // Determine which fields to validate based on the current step
-  switch (step) {
-    case 1:
-      fieldsToValidate = ["service_id"];
-      break;
-    case 2:
-      fieldsToValidate = ["business_name", "business_address", "business_type", "no_of_employes"];
-      break;
-    case 3:
-      fieldsToValidate = ["looking_for"];
-      break;
-    case 4:
-      fieldsToValidate = ["card_holder_name"];
-      break;
-    default:
-      // Handle other steps if needed
-      fieldsToValidate = [];
-  }
+    let fieldsToValidate;
+    // Determine which fields to validate based on the current step
+    switch (step) {
+      case 1:
+        fieldsToValidate = ["service_id"];
+        break;
+      case 2:
+        fieldsToValidate = [
+          "business_name",
+          "business_address",
+          "business_type",
+          "no_of_employes",
+        ];
+        break;
+      case 3:
+        fieldsToValidate = ["looking_for"];
+        break;
+      case 4:
+        fieldsToValidate = ["card_holder_name"];
+        break;
+      default:
+        // Handle other steps if needed
+        fieldsToValidate = [];
+    }
 
-  const isValid = await trigger(fieldsToValidate);
-  
+    const isValid = await trigger(fieldsToValidate);
+
     if (!isValid) {
-        console.log("Validation Errors:", errors);
-      }
+      console.log("Validation Errors:", errors);
+    }
 
-    if(isValid){
-        // setStep(step + 1);
-        setStep((prevStep) => prevStep + 1);
-
+    if (isValid) {
+      // setStep(step + 1);
+      setStep((prevStep) => prevStep + 1);
     }
   };
 
@@ -75,7 +77,6 @@ let fieldsToValidate;
   const [selectedValue, setSelectedValue] = useState(null);
   const [employeValue, setEmployeValue] = useState(null);
   const [lookingForValue, setLookingForValue] = useState(null);
-
 
   const handleLabelClick = (event, id) => {
     setSelectedValue(id);
@@ -147,15 +148,53 @@ let fieldsToValidate;
     formState: { errors },
     handleSubmit,
     watch,
-    trigger
+    trigger,
+    setValue,
   } = useForm();
 
-  const handleCreateProfile = (data, e) =>{
+  const [selectedSubServices, setSelectedSubServices] = useState([]);
+  const handleSubServiceChange = (subServiceId) => {
+    setSelectedSubServices((prevSelectedSubServices) => {
+       const isSubServiceSelected = prevSelectedSubServices.includes(subServiceId);
+        const updatedSelectedSubServices = isSubServiceSelected
+        ? prevSelectedSubServices.filter((id) => id !== subServiceId)
+        : [...prevSelectedSubServices, subServiceId];
+
+      const selectedSubServiceIdsAsIntegers = updatedSelectedSubServices.map((id) => parseInt(id, 10));
+        setValue('sub_services', selectedSubServiceIdsAsIntegers);
+  
+      return updatedSelectedSubServices;
+    });
+  };
+
+  const handleCreateProfile = (data, e) => {
     // alert('hi');
     e.preventDefault();
-    console.log(data);
+    // console.log(data);
     dispatch(createProfessionalProfile(data));
-  }
+  };
+
+  const [subServices, setSubServices] = useState(false);
+  const [getingSubServices, setGetingSubServices] = useState(false);
+
+  const handleGetSubService = (service_id, e) => {
+    // e.preventDefault();
+    setGetingSubServices(true);
+    try {
+      http
+        .post("get-sub-services", doObjToFormData({ service_id: service_id }))
+        .then((data) => {
+          if (data?.data?.status == true) {
+            setSubServices(data?.data?.sub_services);
+          } else {
+            setSubServices(false);
+          }
+        });
+      setGetingSubServices(false);
+    } catch (errors) {
+      console.log("Errors", errors);
+    }
+  };
 
   return (
     <>
@@ -238,6 +277,7 @@ let fieldsToValidate;
                         {...register("service_id", {
                           required: "Required",
                         })}
+                        onChange={(e) => handleGetSubService(e.target.value)}
                       >
                         <option value="">Choose offered service</option>
                         {services?.map((ser, i) => {
@@ -249,8 +289,50 @@ let fieldsToValidate;
                         })}
                       </select>
 
-                      <div className="validation-error" style={{ color: "red" }}>{errors.service_id?.message}</div>
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.service_id?.message}
+                      </div>
+                      <div className="br"></div>
 
+                      {getingSubServices && (
+                        <div class="text-center">
+                          <div
+                            class="spinner-border text-primary"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {subServices && (
+                        <>
+                          <h6>Select Sub Services</h6>
+                          <div>
+                            {subServices?.map((val) => {
+                              return (
+                                <div className="lbl_btn" key={val.id}>
+                                  <input
+                                    type="checkbox"
+                                    name="sub_service"
+                                    value={val?.id}
+                                    id={`sub_ser${val.id}`}
+                                    checked={selectedSubServices.includes(val.id)}
+                                    onChange={() => handleSubServiceChange(val.id)}
+                                   
+                                  />
+                                  <label htmlFor={`sub_ser${val.id}`}>
+                                    {val?.title}
+                                  </label>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div
@@ -266,11 +348,15 @@ let fieldsToValidate;
                         className="input"
                         placeholder="Enter your business name"
                         {...register("business_name", {
-                            required: "Required",
+                          required: "Required",
                         })}
-                      
                       />
-<div className="validation-error" style={{ color: "red" }}>{errors.business_name?.message}</div>
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.business_name?.message}
+                      </div>
                     </div>
                     <div className="form_blk">
                       <h6>Address of your business</h6>
@@ -280,13 +366,16 @@ let fieldsToValidate;
                         className="input"
                         placeholder="Enter address of your business"
                         {...register("business_address", {
-                            required: "Required",
+                          required: "Required",
                         })}
                       />
 
-<div className="validation-error" style={{ color: "red" }}>{errors.business_address?.message}</div>
-
-
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.business_address?.message}
+                      </div>
                     </div>
                     <div className="form_blk">
                       <h6>Business type</h6>
@@ -307,8 +396,8 @@ let fieldsToValidate;
                                   checked={selectedValue === val.id}
                                   onChange={() => setSelectedValue(val.id)}
                                   {...register("business_type", {
-                            required: "Required",
-                        })}
+                                    required: "Required",
+                                  })}
                                 />
 
                                 <label
@@ -318,15 +407,16 @@ let fieldsToValidate;
                                   {val.title}
                                 </label>
                               </div>
-                              
                             </li>
-                            
                           );
                         })}
-
                       </ul>
-<div className="validation-error" style={{ color: "red" }}>{errors.business_type?.message}</div>
-
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.business_type?.message}
+                      </div>
                     </div>
                     <div className="form_blk">
                       <h6>How many employes do you have?</h6>
@@ -336,7 +426,7 @@ let fieldsToValidate;
                             <li key={val.id}>
                               <div
                                 className={`lbl_btn ${
-                                    employeValue === val.id ? "active" : ""
+                                  employeValue === val.id ? "active" : ""
                                 }`}
                               >
                                 <input
@@ -347,8 +437,8 @@ let fieldsToValidate;
                                   checked={employeValue === val.id}
                                   onChange={() => setEmployeValue(val.id)}
                                   {...register("no_of_employes", {
-                            required: "Required",
-                        })}
+                                    required: "Required",
+                                  })}
                                 />
                                 <label
                                   htmlFor={`emp-${val.id}`}
@@ -363,8 +453,12 @@ let fieldsToValidate;
                           );
                         })}
                       </ul>
-<div className="validation-error" style={{ color: "red" }}>{errors.no_of_employes?.message}</div>
-
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.no_of_employes?.message}
+                      </div>
                     </div>
                   </div>
                   <div
@@ -390,15 +484,15 @@ let fieldsToValidate;
                                   id={`for-${val.id}`}
                                   checked={lookingForValue === val.id}
                                   onChange={() => setLookingForValue(val.id)}
-
                                   {...register("looking_for", {
-                            required: "Required",
-                        })}
-
+                                    required: "Required",
+                                  })}
                                 />
                                 <label
                                   htmlFor={`for-${val.id}`}
-                                  onClick={(e) => handleLookingForLabelClick(e, val.id)}
+                                  onClick={(e) =>
+                                    handleLookingForLabelClick(e, val.id)
+                                  }
                                 >
                                   {val.title}
                                 </label>
@@ -407,8 +501,12 @@ let fieldsToValidate;
                           );
                         })}
                       </ul>
-<div className="validation-error" style={{ color: "red" }}>{errors.looking_for?.message}</div>
-
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.looking_for?.message}
+                      </div>
                     </div>
                   </div>
                   <div
@@ -464,13 +562,16 @@ let fieldsToValidate;
                             placeholder="Card holder name"
                             className="input"
                             {...register("card_holder_name", {
-                            required: "Required",
-                        })}
-
+                              required: "Required",
+                            })}
                           />
 
-<div className="validation-error" style={{ color: "red" }}>{errors.card_holder_name?.message}</div>
-
+                          <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.card_holder_name?.message}
+                          </div>
                         </div>
                         {/* <div className="flex flex_blk">
                           <input
@@ -523,7 +624,14 @@ let fieldsToValidate;
                         type="submit"
                         disabled={isFormProcessing}
                       >
-                        Submit {isFormProcessing && ( <i className={isFormProcessing ? "spinner" : "spinnerHidden"}></i>)} 
+                        Submit{" "}
+                        {isFormProcessing && (
+                          <i
+                            className={
+                              isFormProcessing ? "spinner" : "spinnerHidden"
+                            }
+                          ></i>
+                        )}
                       </button>
                     )}
                   </div>

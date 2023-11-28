@@ -25,7 +25,7 @@ export default function ProfileSettings() {
   const isFormProcessing = useSelector(
     (state) => state.proProfile.isFormProcessing
   );
-  let portfolioImages = data?.portfolioImages ? data?.portfolioImages : '';
+  const portfolioImages = data?.portfolioImages ? data?.portfolioImages : '';
 
   const { page_title } = data;
 
@@ -84,26 +84,6 @@ export default function ProfileSettings() {
     const updatedPreviews = [...previewUploadedImages];
     updatedPreviews.splice(index, 1);
     setPreviewUploadedImages(updatedPreviews);
-  };
-
-  const handleRemoveImage = (image_id, e) => {
-    // e.preventDefault();
-    try {
-      http.post("user/delete-portfolio-image", doObjToFormData({image_id: image_id, token: authToken()})).then((data) => {
-        console.log(data);
-        if (data?.data?.status == true) {
-            const updatedDBPreviews = [...portfolioImages];
-            updatedDBPreviews.splice(image_id, 1);
-            
-            portfolioImages = updatedDBPreviews;
-
-        } else {
-        
-        }
-      });
-    } catch (errors) {
-      console.log("Errors", errors);
-    }
   };
 
   //API CAll
@@ -337,7 +317,7 @@ export default function ProfileSettings() {
                                   </div>
                               
                             ) : (<>
-                                {portfolioImages.map((img, i) => {
+                                {portfolioImages && portfolioImages?.map((img, i) => {
                                 return (
                                   <div className="img_col" key={i}>
                                     <div className="inner_img">
@@ -348,7 +328,7 @@ export default function ProfileSettings() {
                                       <button
                                         className="x_btn"
                                         type="button"
-                                        onClick={() => handleRemoveImage(img?.id)}
+                                        
                                       ></button>
                                     </div>
                                   </div>
