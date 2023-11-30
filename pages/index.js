@@ -27,7 +27,7 @@ export const getServerSideProps = async () => {
 
 export default function Home({result}) {
   // console.log(result);
-  let { page_title, meta_desc, content, banner_pics, profession_categories, testimonials, featured_profession_categories } = result;
+  let { page_title, meta_desc, content, banner_pics, profession_categories, testimonials, featured_profession_categories, services } = result;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
@@ -303,8 +303,8 @@ export default function Home({result}) {
           </div>
         </section>
       </main>
-      <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-        <ExploreFrom onClose={handleClosePopup} />
+      <Popup isOpen={isPopupOpen} onClose={handleClosePopup} >
+        <ExploreFrom onClose={handleClosePopup} services={services} />
       </Popup>
     </>
   );

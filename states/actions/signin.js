@@ -8,6 +8,7 @@ import {
   SIGN_IN_MESSAGE_SUCCESS,
   SIGN_IN_MESSAGE_FAILED,
 } from "./actionTypes";
+import { setCookie } from "cookies-next";
 
 export const signin = (formData, redirectTo) => (dispatch) => {
   dispatch({

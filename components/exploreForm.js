@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import FileInputButton from './fileInputButton';
-const ExploreFrom = ({ onClose }) => {
+import { useForm } from 'react-hook-form';
+
+
+const ExploreFrom = ({ onClose, services }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
 
@@ -22,80 +25,6 @@ const ExploreFrom = ({ onClose }) => {
     setSelectedValue(id);
   };
 
-  const services = [
-    {
-      id:"Plumber",
-      title:"Plumber",
-    },
-    {
-      id:"Electrician",
-      title:"Electrician",
-    },
-    {
-      id:"Roofer",
-      title:"Roofer",
-    },
-    {
-      id:"Builder",
-      title:"Builder",
-    },
-    {
-      id:"Gardener",
-      title:"Gardener",
-    },
-    {
-      id:"Painter",
-      title:"Painter",
-    },
-    {
-      id:"Landscaper",
-      title:"Landscaper",
-    },
-    {
-      id:"Carpenter",
-      title:"Carpenter",
-    },
-    {
-      id:"Plasterer",
-      title:"Plasterer",
-    },
-    {
-      id:"Driveways",
-      title:"Driveways / Patios",
-    },
-    {
-      id:"Fencing",
-      title:"Fencing",
-    },
-    {
-      id:"Tree_Surgeon",
-      title:"Tree Surgeon",
-    },
-    {
-      id:"Handyman",
-      title:"Handyman",
-    },
-    {
-      id:"Locksmith",
-      title:"Locksmith",
-    },
-    {
-      id:"Bathrooms",
-      title:"Bathrooms",
-    },
-    {
-      id:"Tiler",
-      title:"Tiler",
-    },
-    {
-      id:"Central_Heating",
-      title:"Central Heating",
-    },
-    {
-      id:"Boiler_Repair",
-      title:"Boiler Repair",
-    },
-  ]
   const sub_services = [
     {
       id:"Windows_doors",
@@ -144,18 +73,19 @@ const ExploreFrom = ({ onClose }) => {
       title:"Im budgeting",
     }
   ]
+  
 
   return (
     <div className="multi-step-form">
       <div className={`step ${step === 1 ? 'field_set active' : 'field_set'}`}>
         <h3>Choose Service</h3>
         <ul className='l_flex'>
-          {services.map((val)=>{
+          {services?.map((val)=>{
             return(
               <li key={val.id}>
-                <div className={`lbl_btn ${selectedValue === val.id ? 'active' : ''}`}>
-                  <input type='radio' name='service_choose' value={val.title} id={val.id} checked={selectedValue === val.id} onChange={() => setSelectedValue(val.id)}/>
-                  <label htmlFor={val.id} onClick={(e) => handleLabelClick(e, val.id)}>{val.title}</label>
+                <div className={`lbl_btn ${selectedValue === val?.id ? 'active' : ''}`}>
+                  <input type='radio' name='service_choose' value={val?.id} id={val?.id} checked={selectedValue === val?.id} onChange={() => setSelectedValue(val.id)}/>
+                  <label htmlFor={val?.id} onClick={(e) => handleLabelClick(e, val?.id)}>{val?.title}</label>
                 </div>
               </li>
             );

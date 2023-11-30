@@ -2,6 +2,7 @@ import React, { useState,useRef } from "react";
 import Link from 'next/link'
 import { gsap } from "gsap";
 export default function ServicesFaq({data}) {
+  // console.log("service_data", mem_Services);
     const [openAccordion, setOpenAccordion] = useState(null);
     const accordionRefs = useRef([]);
     const handleAccordionClick = (index) => {
@@ -47,18 +48,31 @@ export default function ServicesFaq({data}) {
     return (
       <>
         <div className="faq_blk">
-            {data.faq_list?.map((val, i) => {
+            {data?.map((val, i) => {
                 return(
                     <div className={`outer_faq  ${openAccordion === i ? "open" : ""}`} key={i} ref={(el) => (accordionRefs.current[i] = el)} >
                         <div className="accordion__header" onClick={() => handleAccordionClick(i)}>
-                            <h4>{val.title}</h4>
+                            <h4>{val.service_title}</h4>
                             <div className="action_btns">
                                 <button type="button"><img src="/images/edit.svg" alt="edit"/></button>
                                 <button type="button"><img src="/images/trash.svg" alt="edit"/></button>
                             </div>
                         </div>
                         <div className="accordion__details">
-                            <div dangerouslySetInnerHTML={{__html: val.content}} />
+                            {/* <div dangerouslySetInnerHTML={{__html: val.content}} /> */}
+                            <div>
+                              <ul>
+                              {val?.sub_services?.map((sub_ser, i) => {
+                                return(
+                                 
+                                  <li>{sub_ser?.title}</li>
+
+                                 
+                                )
+                              })}
+                                
+                              </ul>
+                            </div>
                         </div>
                     </div>
                 )

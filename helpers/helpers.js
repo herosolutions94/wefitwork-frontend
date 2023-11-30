@@ -187,3 +187,7 @@ export function checkForEmptyValues(data) {
   }
   return false; // Return null if no empty/null values are found
 }
+
+export function isArrayEmpty(arr) {
+  return arr.length === 0;
+}

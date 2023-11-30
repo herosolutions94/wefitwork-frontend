@@ -1,29 +1,33 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import LayoutDashboard from '@/components/components/layoutDashbord';
 import ProfessionalSidebar from "@/components/components/professionalSidebar";
 import ServicesFaq from "@/components/components/serviceFaq";
-
-
+import { fetchServicesData } from "@/components/states/actions/professional/services";
+import { useDispatch, useSelector } from "react-redux";
+import Head from "next/head";
+import { isArrayEmpty, isEmpty } from "@/components/helpers/helpers";
 
 export default function Services() {
-    const data = {
-        faq_list : [
-            {
-                id: "1",
-                title: "Plumber",
-                content: "<ul><li>Pipe Installation and Repair</li><li>Sump Pump Installation and Repair</li><li>Emergency Plumbing Services</li><li>Remodeling and Renovation</li><li>Water Filtration and Treatment</li><li>Fixing Low Water Pressure</li><li>Gas Line Services</li><li>Fixture Upgrades</li></ul>",
-            },
-            {
-                id: "2",
-                title: "Electrician",
-                content: "<ul><li>Pipe Installation and Repair</li><li>Sump Pump Installation and Repair</li><li>Emergency Plumbing Services</li><li>Remodeling and Renovation</li><li>Water Filtration and Treatment</li><li>Fixing Low Water Pressure</li><li>Gas Line Services</li><li>Fixture Upgrades</li></ul>",
-            }
-        ]
-    }
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.services.content);
+    const member = useSelector((state) => state.services.mem);
+    const isLoading = useSelector((state) => state.services.isLoading);
+    console.log(data);
+
+    const { page_title, mem_Services } = data;
+
+    
+
+    useEffect(() => {
+        dispatch(fetchServicesData());
+    }, []);
     
   return (
     <>
+    <Head>
+          <title>{page_title ? page_title : "fetching..."}</title>
+        </Head>
       <main>
          <section className="dashboard">
             <div className="contain">
@@ -34,12 +38,18 @@ export default function Services() {
                     <div className="colR">
                         <div className="sec_heading service_sec_heading">
                             <h2>Services Offered</h2>
+                            {(member?.mem_professionl_profile !== "1" || member?.mem_professionl_profile !== 1) && isEmpty(Object(mem_Services)) && 
                             <div className="btn_blk">
                                 <Link href="add-service" className="site_btn color">Add More</Link>
                             </div>
+                            }
                         </div>
                         <div className="profile_blk custom_blk">
-                            <ServicesFaq data={data}/>
+                        {!isEmpty(Object(mem_Services)) ? 
+                            <ServicesFaq data={mem_Services}/>
+                          : 
+                          <div className="alert alert-danger">You havn't added any service</div>  
+                        }
                         </div>
                     </div>
                 </div>
