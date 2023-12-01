@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Text from "../components/text";
 import http from "../helpers/http";
 import MetaGenerator from "../components/meta-generator";
 import { cmsFileUrl, format_amount, doObjToFormData } from "../helpers/helpers";
 import Image from "next/image";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { createProfessionalProfile } from "../states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,6 +42,8 @@ export default function TradePersonSignup({ result }) {
           "business_address",
           "business_type",
           "no_of_employes",
+          "latitude",
+          "longitude",
         ];
         break;
       case 3:
@@ -155,14 +157,17 @@ export default function TradePersonSignup({ result }) {
   const [selectedSubServices, setSelectedSubServices] = useState([]);
   const handleSubServiceChange = (subServiceId) => {
     setSelectedSubServices((prevSelectedSubServices) => {
-       const isSubServiceSelected = prevSelectedSubServices.includes(subServiceId);
-        const updatedSelectedSubServices = isSubServiceSelected
+      const isSubServiceSelected =
+        prevSelectedSubServices.includes(subServiceId);
+      const updatedSelectedSubServices = isSubServiceSelected
         ? prevSelectedSubServices.filter((id) => id !== subServiceId)
         : [...prevSelectedSubServices, subServiceId];
 
-      const selectedSubServiceIdsAsIntegers = updatedSelectedSubServices.map((id) => parseInt(id, 10));
-        setValue('sub_services', selectedSubServiceIdsAsIntegers);
-  
+      const selectedSubServiceIdsAsIntegers = updatedSelectedSubServices.map(
+        (id) => parseInt(id, 10)
+      );
+      setValue("sub_services", selectedSubServiceIdsAsIntegers);
+
       return updatedSelectedSubServices;
     });
   };
@@ -196,9 +201,44 @@ export default function TradePersonSignup({ result }) {
     }
   };
 
+  const [locationCords, setLocationCords] = useState({lat: null, long:null});
+  const [getingLoction, setGetingLocation] = useState(false);
+  const getCurrentLocation = () => {
+    setGetingLocation(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        setLocationCords({lat : latitude, long: longitude});
+        console.log(locationCords);
+
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
+        if(latitude && longitude){
+          toast.success("Location picked. Continue to next Step");
+        }else{
+          toast.error("Location Not picked");
+        }
+      });
+      
+    } else {
+      toast.error("Geolocation is not supported by this browser.");
+      console.log("Geolocation is not supported by this browser.");
+    }
+    setGetingLocation(false);
+  };
+
+  useEffect(() => {
+    // This will log the updated state whenever locationCords changes
+    setValue("latitude", locationCords.lat);
+    setValue("longitude", locationCords.long);
+  }, [locationCords]);
+
   return (
     <>
       <Toaster position="top-center" />
+
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main className="logon_main">
         <section className="logon_sec">
@@ -320,9 +360,12 @@ export default function TradePersonSignup({ result }) {
                                     name="sub_service"
                                     value={val?.id}
                                     id={`sub_ser${val.id}`}
-                                    checked={selectedSubServices.includes(val.id)}
-                                    onChange={() => handleSubServiceChange(val.id)}
-                                   
+                                    checked={selectedSubServices.includes(
+                                      val.id
+                                    )}
+                                    onChange={() =>
+                                      handleSubServiceChange(val.id)
+                                    }
                                   />
                                   <label htmlFor={`sub_ser${val.id}`}>
                                     {val?.title}
@@ -377,6 +420,7 @@ export default function TradePersonSignup({ result }) {
                         {errors.business_address?.message}
                       </div>
                     </div>
+
                     <div className="form_blk">
                       <h6>Business type</h6>
                       <ul className="l_flex two_flex last_full">
@@ -458,6 +502,53 @@ export default function TradePersonSignup({ result }) {
                         style={{ color: "red" }}
                       >
                         {errors.no_of_employes?.message}
+                      </div>
+                    </div>
+                    <div className="form_blk">
+                      <div className="btn_blk">
+                        <button type="button" onClick={getCurrentLocation} className="site_btn">
+                          Pick My Location <i className={getingLoction ? "spinner" : "spinnerHidden"}></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="form_blk">
+                      <input
+                        type="hidden"
+                        name="latitude"
+                        id="latitude"
+                      
+
+                        {...register("latitude", {
+                          required:
+                            "Longitude Required. Please click on Pick My Location",
+                        })}
+                      />
+
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.latitude?.message}
+                      </div>
+
+                      <input
+                        type="hidden"
+                        name="longitude"
+                        id="longitude"
+                       
+                        
+                        {...register("longitude", {
+                          required:
+                            "Longitude Required. Please click on Pick My Location",
+                        })}
+                      />
+
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.longitude?.message}
                       </div>
                     </div>
                   </div>

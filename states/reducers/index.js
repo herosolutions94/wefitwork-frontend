@@ -8,6 +8,7 @@ import forgetPassword from "./forgetPassword";
 import account from "./buyer/account";
 import proProfile from "./professional/proProfile";
 import services from "./professional/services";
+import saveSearch from "./saveSearch";
 
 
 export default combineReducers({
