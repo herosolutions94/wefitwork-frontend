@@ -6,6 +6,7 @@ import { doObjToFormData } from "../helpers/helpers";
 import toast from "react-hot-toast";
 import { saveSearch } from "../states/actions/saveSearch";
 import { useDispatch, useSelector } from "react-redux";
+import MapComponent from "./map-container";
 
 
 const ExploreFrom = ({ onClose, services }) => {
@@ -117,7 +118,9 @@ const ExploreFrom = ({ onClose, services }) => {
     handleSubmit,
     trigger,
     setValue,
+    watch
   } = useForm();
+  const watchAllFields = watch();
 
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
@@ -162,7 +165,7 @@ const ExploreFrom = ({ onClose, services }) => {
     setValue("longitude", locationCords.long);
   }, [locationCords]);
 
-  const [file, setFile] = useState(null) ;
+  const [file, setFile] = useState(null);
 
   const handleFormSubmit = (data) => {
 
@@ -173,7 +176,7 @@ const ExploreFrom = ({ onClose, services }) => {
     dispatch(saveSearch(data));
 
   }
-  
+
   return (
     <form method="POST" onSubmit={handleSubmit(handleFormSubmit)}>
       <div className="multi-step-form">
@@ -186,9 +189,8 @@ const ExploreFrom = ({ onClose, services }) => {
               return (
                 <li key={val.id}>
                   <div
-                    className={`lbl_btn ${
-                      selectedServiceValue === val?.id ? "active" : ""
-                    }`}
+                    className={`lbl_btn ${selectedServiceValue === val?.id ? "active" : ""
+                      }`}
                   >
                     <input
                       type="radio"
@@ -236,9 +238,8 @@ const ExploreFrom = ({ onClose, services }) => {
                 return (
                   <li key={sub_ser?.id}>
                     <div
-                      className={`lbl_btn ${
-                        selectedSubServiceValue === sub_ser?.id ? "active" : ""
-                      }`}
+                      className={`lbl_btn ${selectedSubServiceValue === sub_ser?.id ? "active" : ""
+                        }`}
                     >
                       <input
                         type="radio"
@@ -388,13 +389,13 @@ const ExploreFrom = ({ onClose, services }) => {
                   onClick={getCurrentLocation}
                   className="site_btn black"
                 >
-                  CHECK ADDRESS AVAILABILITY
+                  Pick my current location
                 </button>
               </div>
             </div>
             <div className="colR">
               <div className="map_sec">
-                <iframe
+                {/* <iframe
                   src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13363.859400788691!2d-117.158019!3d33.136288!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80db8ab3b9f18c1b%3A0x22de000cd55202d6!2s160%20Industrial%20St%20%23200%2C%20San%20Marcos%2C%20CA%2092078!5e0!3m2!1sen!2sus!4v1672885602751!5m2!1sen!2sus"
                   width="100%"
                   height="350"
@@ -402,7 +403,16 @@ const ExploreFrom = ({ onClose, services }) => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
+                ></iframe> */}
+                {
+                  console.log(watchAllFields)
+                }
+                {
+                  watchAllFields?.latitude !== null && watchAllFields?.latitude !== undefined && watchAllFields?.longitude !== null && watchAllFields?.longitude !== undefined ?
+                    <MapComponent latitude={watchAllFields?.latitude} longitude={watchAllFields?.longitude} />
+                    :
+                    ""
+                }
               </div>
             </div>
           </div>
@@ -426,7 +436,7 @@ const ExploreFrom = ({ onClose, services }) => {
           </div>
           <div className="form_blk">
             <FileInputButton setFile={setFile} />
-           
+
           </div>
 
           <div className="br"></div>
@@ -457,9 +467,8 @@ const ExploreFrom = ({ onClose, services }) => {
                 return (
                   <li key={val.id}>
                     <div
-                      className={`lbl_btn ${
-                        selectedValue === val.id ? "active" : ""
-                      }`}
+                      className={`lbl_btn ${selectedValue === val.id ? "active" : ""
+                        }`}
                     >
                       <input
                         type="radio"
@@ -469,8 +478,8 @@ const ExploreFrom = ({ onClose, services }) => {
                         checked={selectedValue === val.id}
                         onChange={() => setSelectedValue(val.id)}
                         {...register("job_start", {
-                required: "Required.",
-              })}
+                          required: "Required.",
+                        })}
                       />
                       <label
                         htmlFor={val.id}

@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { createProfessionalProfile } from "../states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
+import MapComponent from "../components/map-container";
 
 export const getServerSideProps = async () => {
   const result = await http
@@ -20,6 +21,7 @@ export const getServerSideProps = async () => {
 };
 
 export default function TradePersonSignup({ result }) {
+  
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
     (state) => state.proProfile.isFormProcessing
@@ -34,6 +36,7 @@ export default function TradePersonSignup({ result }) {
     // Determine which fields to validate based on the current step
     switch (step) {
       case 1:
+
         fieldsToValidate = ["service_id"];
         break;
       case 2:
@@ -65,7 +68,24 @@ export default function TradePersonSignup({ result }) {
 
     if (isValid) {
       // setStep(step + 1);
-      setStep((prevStep) => prevStep + 1);
+      if (step === 1) {
+        if (subServices && subServices.length > 0) {
+          if (selectedSubServices?.length > 0) {
+            setStep((prevStep) => prevStep + 1);
+          }
+          else {
+            toast.error("Sub Services are required!"); return;
+          }
+
+        }
+        else {
+          toast.error("Sub Services are required!"); return;
+        }
+      }
+      else {
+        setStep((prevStep) => prevStep + 1);
+      }
+
     }
   };
 
@@ -153,7 +173,7 @@ export default function TradePersonSignup({ result }) {
     trigger,
     setValue,
   } = useForm();
-
+const watchAllFields=watch();
   const [selectedSubServices, setSelectedSubServices] = useState([]);
   const handleSubServiceChange = (subServiceId) => {
     setSelectedSubServices((prevSelectedSubServices) => {
@@ -189,39 +209,41 @@ export default function TradePersonSignup({ result }) {
       http
         .post("get-sub-services", doObjToFormData({ service_id: service_id }))
         .then((data) => {
+          setGetingSubServices(false);
           if (data?.data?.status == true) {
             setSubServices(data?.data?.sub_services);
           } else {
             setSubServices(false);
           }
         });
-      setGetingSubServices(false);
+
     } catch (errors) {
+      setGetingSubServices(false);
       console.log("Errors", errors);
     }
   };
 
-  const [locationCords, setLocationCords] = useState({lat: null, long:null});
+  const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
   const getCurrentLocation = () => {
     setGetingLocation(true);
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
+      navigator.geolocation.getCurrentPosition(function (position) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        setLocationCords({lat : latitude, long: longitude});
+        setLocationCords({ lat: latitude, long: longitude });
         console.log(locationCords);
 
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-        if(latitude && longitude){
+        if (latitude && longitude) {
           toast.success("Location picked. Continue to next Step");
-        }else{
+        } else {
           toast.error("Location Not picked");
         }
       });
-      
+
     } else {
       toast.error("Geolocation is not supported by this browser.");
       console.log("Geolocation is not supported by this browser.");
@@ -305,9 +327,8 @@ export default function TradePersonSignup({ result }) {
               <form method="POST" onSubmit={handleSubmit(handleCreateProfile)}>
                 <div className="multi-step-form trade_register_form">
                   <div
-                    className={`step ${
-                      step === 1 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step ${step === 1 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <h6>What Service You Offered</h6>
                     <div className="form_blk">
@@ -336,8 +357,7 @@ export default function TradePersonSignup({ result }) {
                         {errors.service_id?.message}
                       </div>
                       <div className="br"></div>
-
-                      {getingSubServices && (
+                      {getingSubServices === true ? (
                         <div class="text-center">
                           <div
                             class="spinner-border text-primary"
@@ -346,42 +366,39 @@ export default function TradePersonSignup({ result }) {
                             <span class="visually-hidden">Loading...</span>
                           </div>
                         </div>
-                      )}
+                      ) : ""}
 
-                      {subServices && (
+                      {subServices && subServices.length > 0  ? (
                         <>
                           <h6>Select Sub Services</h6>
                           <div>
-                            {subServices?.map((val) => {
-                              return (
-                                <div className="lbl_btn" key={val.id}>
-                                  <input
-                                    type="checkbox"
-                                    name="sub_service"
-                                    value={val?.id}
-                                    id={`sub_ser${val.id}`}
-                                    checked={selectedSubServices.includes(
-                                      val.id
-                                    )}
-                                    onChange={() =>
-                                      handleSubServiceChange(val.id)
-                                    }
-                                  />
-                                  <label htmlFor={`sub_ser${val.id}`}>
-                                    {val?.title}
-                                  </label>
-                                </div>
-                              );
-                            })}
+                            {subServices.map((val) => (
+                              <div className="lbl_btn" key={val.id}>
+                                <input
+                                  type="checkbox"
+                                  name="sub_service"
+                                  value={val?.id}
+                                  id={`sub_ser${val.id}`}
+                                  checked={selectedSubServices.includes(val.id)}
+                                  onChange={() => handleSubServiceChange(val.id)}
+                                />
+                                <label htmlFor={`sub_ser${val.id}`}>{val?.title}</label>
+                              </div>
+                            ))}
                           </div>
                         </>
+                      ) : (
+                        watchAllFields?.service_id ? 
+                        <div className="alert alert-danger">Error: No sub-services available.</div>
+                        :
+                        ""
                       )}
+
                     </div>
                   </div>
                   <div
-                    className={`step ${
-                      step === 2 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step ${step === 2 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <div className="form_blk">
                       <h6>What is your business called?</h6>
@@ -428,9 +445,8 @@ export default function TradePersonSignup({ result }) {
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${
-                                  selectedValue === val.id ? "active" : ""
-                                }`}
+                                className={`lbl_btn ${selectedValue === val.id ? "active" : ""
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -469,9 +485,8 @@ export default function TradePersonSignup({ result }) {
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${
-                                  employeValue === val.id ? "active" : ""
-                                }`}
+                                className={`lbl_btn ${employeValue === val.id ? "active" : ""
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -510,6 +525,12 @@ export default function TradePersonSignup({ result }) {
                           Pick My Location <i className={getingLoction ? "spinner" : "spinnerHidden"}></i>
                         </button>
                       </div>
+                      {
+                        locationCords?.lat !== null && locationCords?.lat !== undefined && locationCords?.long !== null && locationCords?.long !== undefined ?
+                          <MapComponent latitude={locationCords?.lat} longitude={locationCords?.long} />
+                          :
+                          ""
+                      }
                     </div>
 
                     <div className="form_blk">
@@ -517,7 +538,7 @@ export default function TradePersonSignup({ result }) {
                         type="hidden"
                         name="latitude"
                         id="latitude"
-                      
+
 
                         {...register("latitude", {
                           required:
@@ -536,8 +557,8 @@ export default function TradePersonSignup({ result }) {
                         type="hidden"
                         name="longitude"
                         id="longitude"
-                       
-                        
+
+
                         {...register("longitude", {
                           required:
                             "Longitude Required. Please click on Pick My Location",
@@ -553,9 +574,8 @@ export default function TradePersonSignup({ result }) {
                     </div>
                   </div>
                   <div
-                    className={`step ${
-                      step === 3 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step ${step === 3 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <div className="form_blk">
                       <h6>What are you looking for?</h6>
@@ -564,9 +584,8 @@ export default function TradePersonSignup({ result }) {
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${
-                                  lookingForValue === val.id ? "active" : ""
-                                }`}
+                                className={`lbl_btn ${lookingForValue === val.id ? "active" : ""
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -601,18 +620,16 @@ export default function TradePersonSignup({ result }) {
                     </div>
                   </div>
                   <div
-                    className={`step checkout_step ${
-                      step === 4 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step checkout_step ${step === 4 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <div className="form_blk">
                       <h6>Checkout</h6>
                       <div className="btn_blk payment_btn">
                         <button
                           type="button"
-                          className={`site_btn blank credit ${
-                            payment === "credit_card" ? "active" : ""
-                          }`}
+                          className={`site_btn blank credit ${payment === "credit_card" ? "active" : ""
+                            }`}
                           onClick={() => setPayment("credit_card")}
                         >
                           <img src="/images/creditcard.svg" alt="credit card" />
@@ -620,9 +637,8 @@ export default function TradePersonSignup({ result }) {
                         </button>
                         <button
                           type="button"
-                          className={`site_btn blank paypal ${
-                            payment === "pay_pal" ? "active" : ""
-                          }`}
+                          className={`site_btn blank paypal ${payment === "pay_pal" ? "active" : ""
+                            }`}
                           onClick={() => setPayment("pay_pal")}
                         >
                           <img
@@ -633,9 +649,8 @@ export default function TradePersonSignup({ result }) {
                         </button>
                       </div>
                       <div
-                        className={`credit_fields ${
-                          payment === "credit_card" ? "" : "hide"
-                        }`}
+                        className={`credit_fields ${payment === "credit_card" ? "" : "hide"
+                          }`}
                       >
                         {/* <div className="form_blk relative_field">
                           <input
@@ -680,9 +695,8 @@ export default function TradePersonSignup({ result }) {
                         </div> */}
                       </div>
                       <div
-                        className={`credit_fields ${
-                          payment === "pay_pal" ? "" : "hide"
-                        }`}
+                        className={`credit_fields ${payment === "pay_pal" ? "" : "hide"
+                          }`}
                       >
                         <p>
                           After clicking "Submit", you will be redirected to
@@ -706,8 +720,9 @@ export default function TradePersonSignup({ result }) {
                         onClick={handleNext}
                         className="site_btn"
                         type="button"
+                        disabled={getingSubServices}
                       >
-                        Next
+                        Next {getingSubServices ? <i className="spinner"></i> : ""}
                       </button>
                     ) : (
                       <button
