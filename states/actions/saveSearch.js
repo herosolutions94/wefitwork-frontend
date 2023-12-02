@@ -33,9 +33,9 @@ export const saveSearch = (formData) => (dispatch) => {
         });
       } else {
         if(data.status){
-          // console.log(data);
+          console.log(data);
           toast.success("Successfully.", { duration: 6000 });
-          
+          window.location.replace(`/search-result?service_id=${data?.search_data?.service_id}&latitude=${data?.search_data?.latitude}&longitude=${data?.search_data?.longitude}`)
         }
         
       }

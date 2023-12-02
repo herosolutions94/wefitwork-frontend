@@ -2,7 +2,27 @@ import React, { useState} from "react";
 import Link from 'next/link';
 import Pagination from "../../components/pagination";
 import DistanceSlider from "@/components/components/DistanceSlider";
-export default function SearchResult() {
+import { cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
+import http from "@/components/helpers/http";
+
+export const getServerSideProps = async (context) => {
+
+    const {service_id, latitude, longitude} = context.query;
+
+    const result = await http
+      .post("search-profession", doObjToFormData({service_id: service_id, latitude: latitude, longitude: longitude}))
+      .then((response) => response.data)
+      .catch((error) => error.response.data.message);
+  
+    return { props: { result, service_id, latitude, longitude } };
+  };
+
+export default function SearchResult({result, service_id, longitude, latitude}) {
+
+    console.log(result)
+
+    let {professions} =result;
+
     const [viewMode, setViewMode] = useState('grid');
     const[openCat,setOpenCat] = useState(false);
     const ToggleCat = () =>{
@@ -11,62 +31,7 @@ export default function SearchResult() {
     const toggleView = (mode) => {
         setViewMode(mode);
       };
-      const result = [
-        {
-            id:"1",
-            image:"/images/pro1.png",
-            name:"John Gilbert",
-            services:"Carpentry Repairs, Framing..",
-            rating:"5.0",
-            reviews:"10",
-            complete_work:"30"
-        },
-        {
-            id:"2",
-            image:"/images/pro2.png",
-            name:"Thomas Alenjery",
-            services:"Carpentry Repairs, Framing..",
-            rating:"5.0",
-            reviews:"12",
-            complete_work:"16"
-        },
-        {
-            id:"3",
-            image:"/images/pro3.png",
-            name:"John Gilbert",
-            services:"Carpentry Repairs, Framing..",
-            rating:"5.0",
-            reviews:"16",
-            complete_work:"9"
-        },
-        {
-            id:"4",
-            image:"/images/pro4.png",
-            name:"Thomas Alenjery",
-            services:"Carpentry Repairs, Framing..",
-            rating:"5.0",
-            reviews:"12",
-            complete_work:"16"
-        },
-        {
-            id:"5",
-            image:"/images/pro5.png",
-            name:"John Gilbert",
-            services:"Carpentry Repairs, Framing..",
-            rating:"5.0",
-            reviews:"12",
-            complete_work:"16"
-        },
-        {
-            id:"6",
-            image:"/images/pro6.png",
-            name:"John Gilbert",
-            services:"Carpentry Repairs, Framing..",
-            rating:"5.0",
-            reviews:"12",
-            complete_work:"16"
-        },
-      ]
+      
   return (
     <>
       <main>
@@ -184,26 +149,28 @@ export default function SearchResult() {
                             </div>
                         </div>
                         <div className={viewMode === 'grid' ? 'flex flex_view view_grid' : 'flex flex_view'}>
-                            {result.map((val)=>{
+                            {professions.map((val)=>{
                                 return(
-                                <div className="col" key={val.id}>
+                                <div className="col" key={val?.mem_id}>
                                     <div className="inner">
                                         <div className="head_professional">
                                             <div className="image">
-                                                <img src={val.image} alt={val.name}/>
+                                                <img src={cmsFileUrl(val?.mem_image, "members")} alt={val?.mem_fname}/>
                                             </div>
                                             <div className="cntnt">
-                                                <h4><Link href={`/search-result/${val.id}`}>{val.name}</Link></h4>
-                                                <p>{val.services}</p>
-                                                <div className="rating_lbl">
+                                                <h4><Link href={`/search-result/${val?.mem_id}`}>{val?.mem_fname}</Link></h4>
+                                                {/* <p>{val?.services}</p> */}
+                                                <p>{"plumber"}</p>
+
+                                                {/* <div className="rating_lbl">
                                                     <img src="/images/star.svg" alt=""/>
                                                     <span>{val.rating} ({val.reviews} Reviews)</span>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                         <div className="done_work">
                                             <p>Projects Completed</p>
-                                            <h3>{val.complete_work}</h3>
+                                            <h3>{'30'}</h3>
                                         </div>
                                         <div className="btn_blk">
                                             <Link href="" className="site_btn color block">Start Chat</Link>
