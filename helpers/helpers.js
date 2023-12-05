@@ -16,7 +16,10 @@ export function doObjToFormData(obj) {
       if (typeof obj[key] == "object") {
         formData.append(key, JSON.stringify(obj[key]));
       } else {
-        formData.append(key, obj[key]);
+        if(obj[key] !== null && obj[key] !== undefined){
+          formData.append(key, obj[key]);
+
+        }
       }
     }
   }

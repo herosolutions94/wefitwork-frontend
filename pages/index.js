@@ -31,7 +31,7 @@ export const getServerSideProps = async () => {
 
 export default function Home({ result }) {
   // console.log(result);
-  let { page_title, meta_desc, content, banner_pics, profession_categories, testimonials, featured_profession_categories, services } = result;
+  let { page_title, meta_desc, content, banner_pics, testimonials, featured_services, most_searched, services } = result;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
@@ -105,22 +105,29 @@ export default function Home({ result }) {
                 <div className="most_searched_cat">
                   <p><strong><Text string={content?.banner_tagline} /></strong></p>
                   <div className="flex_cat">
-                    {featured_profession_categories?.map((feat_cat, i) => {
+                    {most_searched?.map((searched, i) => {
                       return (
+                        <>
+                        
                         <div className="col" key={i}>
+                        <Link href={`search-result?service_id=${searched?.id}`}>
                           <div className="inner">
                             <div className="img_icon">
                               <Image
-                                src={cmsFileUrl(feat_cat?.icon, 'categories')}
+                                src={cmsFileUrl(searched?.icon, 'services')}
                                 width={40}
                                 height={40}
-                                alt={feat_cat?.title}
+                                alt={searched?.title}
                               />
 
                             </div>
-                            <h5><Text string={feat_cat?.title} /></h5>
+                            <h5><Text string={searched?.title} /></h5>
                           </div>
+                          </Link>
                         </div>
+                     
+                        </>
+                        
                       )
                     })}
 
@@ -157,13 +164,13 @@ export default function Home({ result }) {
               <h2><Text string={content?.sec2_heading} /></h2>
             </div>
             <OwlCarousel className="owl-carousel owl-theme" {...categories}>
-              {profession_categories?.map((val) => {
+              {featured_services?.map((val) => {
                 return (
                   <div className="item" key={val.id}>
                     <div className="inner">
                       <div className="icon_img">
                         <Image
-                          src={cmsFileUrl(val?.icon, 'categories')}
+                          src={cmsFileUrl(val?.icon, 'services')}
                           width={60}
                           height={60}
                           alt={val?.title}

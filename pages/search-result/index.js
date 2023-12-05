@@ -7,17 +7,20 @@ import http from "@/components/helpers/http";
 
 export const getServerSideProps = async (context) => {
 
-    const { service_id, latitude, longitude } = context.query;
+    const query=context?.query;
+    const service_id = query?.service_id;
+    const latitude = query?.latitude;
+    const longitude = query?.longitude;
 
     const result = await http
         .post("search-profession", doObjToFormData({ service_id: service_id, latitude: latitude, longitude: longitude }))
         .then((response) => response.data)
         .catch((error) => error.response.data.message);
 
-    return { props: { result, service_id, latitude, longitude } };
+    return { props: { result } };
 };
 
-export default function SearchResult({ result, service_id, longitude, latitude }) {
+export default function SearchResult({ result }) {
 
     console.log(result)
 
@@ -149,7 +152,7 @@ export default function SearchResult({ result, service_id, longitude, latitude }
                                     </div>
                                 </div>
                                 <div className={viewMode === 'grid' ? 'flex flex_view view_grid' : 'flex flex_view'}>
-                                    {professions?.map((val) => {
+                                    {professions ? professions?.map((val) => {
                                         return (
                                             <div className="col" key={val?.mem_id}>
                                                 <div className="inner">
@@ -160,7 +163,7 @@ export default function SearchResult({ result, service_id, longitude, latitude }
                                                         <div className="cntnt">
                                                             <h4><Link href={`/search-result/${val?.mem_id}`}>{val?.mem_fname}</Link></h4>
                                                             {/* <p>{val?.services}</p> */}
-                                                            <p><strong>{parseInt(val?.distance)+ " miles away"}</strong></p>
+                                                            {val?.distance  && <p><strong>{parseInt(val?.distance)+ " miles away"}</strong></p>}
 
                                                             {/* <div className="rating_lbl">
                                                     <img src="/images/star.svg" alt=""/>
@@ -179,7 +182,12 @@ export default function SearchResult({ result, service_id, longitude, latitude }
                                                 </div>
                                             </div>
                                         );
-                                    })}
+                                    }) : 
+                                    <div className="text-center m-auto ">
+                                    <div className="alert alert-danger">No Record Found</div>
+
+                                    </div>
+                                    }
                                 </div>
                                 {/* <div className="text-center pagination_outer">
                                     <Pagination />
