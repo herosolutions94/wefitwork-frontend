@@ -35,7 +35,7 @@ export const saveSearch = (formData) => (dispatch) => {
         if(data.status){
           console.log(data);
           toast.success("Successfully.", { duration: 6000 });
-          window.location.replace(`/search-result?service_id=${data?.search_data?.service_id}&latitude=${data?.search_data?.latitude}&longitude=${data?.search_data?.longitude}`)
+          window.location.replace(`/search-result?service_id=${data?.search_data?.service_id}&sub_service_id=${data?.search_data?.sub_service_id}&latitude=${data?.search_data?.latitude}&longitude=${data?.search_data?.longitude}`)
         }
         
       }

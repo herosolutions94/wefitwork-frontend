@@ -10,8 +10,23 @@ import { useForm } from "react-hook-form";
 import { createProfessionalProfile } from "../states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
 import MapComponent from "../components/map-container";
+import { parse } from "cookie";
+import { business_type, employes, question_add } from "../constants/formFieldsData";
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
+  const { req } = context;
+  const cookieHeader = req.headers.cookie || "";
+  // Parse the cookie header to extract the specific cookie value
+  const cookieValue = parse(cookieHeader);
+  // const memProfile = cookieValue["mem_type"] == 'professional' && cookieValue["mem_professionl_profile"] !== "0" && cookieValue["mem_professionl_profile"] !== 0 ;
+  if (cookieValue["mem_type"] == 'professional' && cookieValue["mem_professionl_profile"] !== "0" && cookieValue["mem_professionl_profile"]) {
+    return {
+      redirect: {
+        destination: "/professional-dashboard/services", // Replace '/dashboard' with the appropriate URL
+        permanent: false,
+      },
+    };
+  }
   const result = await http
     .get("professional-signup-page")
     .then((response) => response.data)
@@ -110,60 +125,60 @@ export default function TradePersonSignup({ result }) {
   const handleLookingForLabelClick = (event, id) => {
     setLookingForValue(id);
   };
-  const business_type = [
-    {
-      id: "self",
-      title: "Self Employed",
-    },
-    {
-      id: "limited",
-      title: "Limited company",
-    },
-    {
-      id: "start",
-      title: "Looking to start a business",
-    },
-  ];
-  const employes = [
-    {
-      id: "1",
-      title: "1",
-    },
-    {
-      id: "2_5",
-      title: "2-5",
-    },
-    {
-      id: "6_9",
-      title: "6-9",
-    },
-    {
-      id: "10",
-      title: "10+",
-    },
-  ];
-  const question_add = [
-    {
-      id: "fill_gap",
-      title: "I’m looking to fill the gaps in my diary",
-    },
-    {
-      id: "flow_leads",
-      title: "I need a steady flow of leads",
-    },
-    {
-      id: "leads",
-      title: "I need as many leads as possible",
-    },
-    {
-      id: "profile",
-      title: "I just want a Checkatrade profile",
-    },
-    {
-      id: "not_sure",
-      title: "I’m not sure",
-    },
-  ];
+  // const business_type = [
+  //   {
+  //     id: "self",
+  //     title: "Self Employed",
+  //   },
+  //   {
+  //     id: "limited",
+  //     title: "Limited company",
+  //   },
+  //   {
+  //     id: "start",
+  //     title: "Looking to start a business",
+  //   },
+  // ];
+  // const employes = [
+  //   {
+  //     id: "1",
+  //     title: "1",
+  //   },
+  //   {
+  //     id: "2_5",
+  //     title: "2-5",
+  //   },
+  //   {
+  //     id: "6_9",
+  //     title: "6-9",
+  //   },
+  //   {
+  //     id: "10",
+  //     title: "10+",
+  //   },
+  // ];
+  // const question_add = [
+  //   {
+  //     id: "fill_gap",
+  //     title: "I’m looking to fill the gaps in my diary",
+  //   },
+  //   {
+  //     id: "flow_leads",
+  //     title: "I need a steady flow of leads",
+  //   },
+  //   {
+  //     id: "leads",
+  //     title: "I need as many leads as possible",
+  //   },
+  //   {
+  //     id: "profile",
+  //     title: "I just want a Checkatrade profile",
+  //   },
+  //   {
+  //     id: "not_sure",
+  //     title: "I’m not sure",
+  //   },
+  // ];
 
   const {
     register,

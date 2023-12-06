@@ -35,7 +35,7 @@ export default function ProfileSettings() {
 
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const fileInputRef = useRef(null);
+
   const fileDpRef = useRef(null);
 
   //DP Photo
@@ -52,40 +52,6 @@ export default function ProfileSettings() {
     }
   };
 
-  // Images
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [previewUploadedImages, setPreviewUploadedImages] = useState([]);
-
-  const handleButtonClick = (e) => {
-    e.preventDefault();
-    fileInputRef.current.click();
-  };
-
-  const handleFileSelected = (e) => {
-    const selectedFiles = e.target.files;
-
-    if (selectedFiles) {
-      const newUploadedImages = [...uploadedImages, ...selectedFiles];
-      setUploadedImages(newUploadedImages);
-
-      const newPreviewImages = [...previewUploadedImages];
-      for (let i = 0; i < selectedFiles.length; i++) {
-        newPreviewImages.push(URL.createObjectURL(selectedFiles[i]));
-      }
-      setPreviewUploadedImages(newPreviewImages);
-    }
-  };
-
-  const removeImage = (index) => {
-    const updatedImages = [...uploadedImages];
-    updatedImages.splice(index, 1);
-    setUploadedImages(updatedImages);
-
-    const updatedPreviews = [...previewUploadedImages];
-    updatedPreviews.splice(index, 1);
-    setPreviewUploadedImages(updatedPreviews);
-  };
-
   //API CAll
 
   const {
@@ -96,9 +62,6 @@ export default function ProfileSettings() {
 
   const handleSaveProfessionalSettings = (data) => {
     if (image !== null) data.profile = image.target.files;
-    if (uploadedImages !== null ) data.portfolio_images = uploadedImages;
-
-    // console.log(data);
     dispatch(saveProfessionalAccountSettings(data));
   };
 
@@ -157,7 +120,7 @@ export default function ProfileSettings() {
                       </div>
                       <div className="br"></div>
                       <div className="from_row row">
-                        <div className="col-sm-6">
+                        {/* <div className="col-sm-6">
                           <div className="blk_form">
                             <h6>
                               Display Name <span>(Visible to others)</span>
@@ -181,7 +144,7 @@ export default function ProfileSettings() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-sm-6">
                           <div className="blk_form">
                             <h6>
@@ -213,7 +176,7 @@ export default function ProfileSettings() {
                             <div className="form_blk">
                               <InputMask
                                 id="phone"
-                                mask="+9 999-999-9999"
+                                mask="0999 999 9999"
                                 name="phone"
                                 autoComplete="phone"
                                 placeholder="Phone Number"
@@ -232,7 +195,7 @@ export default function ProfileSettings() {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-6">
+                        {/* <div className="col-sm-6">
                           <div className="blk_form">
                             <h6>Specialization</h6>
                             <div className="form_blk">
@@ -254,7 +217,7 @@ export default function ProfileSettings() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-sm-12">
                           <div className="blk_form">
                             <h6>Address</h6>
@@ -302,72 +265,7 @@ export default function ProfileSettings() {
                           </div>
                         </div>
                       </div>
-                      <div className="add_portfolio_blk">
-                        <div className="sec_heading">
-                          <h4>Add Your Portfolio</h4>
-                        </div>
-                        <div className="profile_grid_edit scrollbar">
-                          <div className="flex">
-                            {(previewUploadedImages == "" ||
-                            previewUploadedImages == null) && (portfolioImages == "" || portfolioImages == null)? (
-                                                          
-                                    <div className="alert alert-primary text-center">
-                                Please Select Images
-                                                           
-                                  </div>
-                              
-                            ) : (<>
-                                {portfolioImages && portfolioImages?.map((img, i) => {
-                                return (
-                                  <div className="img_col" key={i}>
-                                    <div className="inner_img">
-                                      <img
-                                        src={cmsFileUrl(img?.image, "members/portfolio")}
-                                        alt={`Uploaded ${img?.id}`}
-                                      />
-                                      <button
-                                        className="x_btn"
-                                        type="button"
-                                        
-                                      ></button>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                                {previewUploadedImages.map((preview, index) => {
-                                return (
-                                  <div className="img_col" key={index}>
-                                    <div className="inner_img">
-                                      <img
-                                        src={preview}
-                                        alt={`Uploaded ${index + 1}`}
-                                      />
-                                      <button
-                                        className="x_btn"
-                                        type="button"
-                                        onClick={() => removeImage(index)}
-                                      ></button>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </>
-                              
-                            )}
-                          </div>
-                        </div>
-                        <div className="br"></div>
-                        <div className="btn_blk">
-                          <button
-                            type="button"
-                            className="site_btn color filter_btn"
-                            onClick={handleButtonClick}
-                          >
-                            <img src="/images/clip.svg" alt="" />
-                            <span>Upload</span>
-                          </button>
-                        </div>
-                      </div>
+                     
                       <div className="br"></div>
                       <div className="btn_blk text-right cell_wide_full">
                         <button
@@ -385,13 +283,7 @@ export default function ProfileSettings() {
                           )}
                         </button>
                       </div>
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        multiple
-                        style={{ display: "none" }}
-                        onChange={handleFileSelected}
-                      />
+                      
                       <input
                         type="file"
                         ref={fileDpRef}

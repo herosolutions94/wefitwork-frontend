@@ -133,17 +133,10 @@ export const saveProfessionalAccountSettings = (formData) => (dispatch) => {
   formData = { ...formData, token: authToken() };
   let file = formData.profile;
   delete formData.profile;
-  let images = formData.portfolio_images;
-  delete formData.portfolio_images;
-
+  
   formData = doObjToFormData(formData);
   if (typeof file != "undefined") formData.append("profile", file[0]);
 
-  if (typeof images != "undefined" && Array.isArray(images)) {
-  images.forEach((file) => {
-    formData.append("portfolioImages[]", file);
-  });
-}
 
   dispatch({
     type: SAVE_PROFESSIONAL_ACCOUNT_SETTINGS,

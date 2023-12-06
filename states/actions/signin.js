@@ -27,6 +27,7 @@ export const signin = (formData, redirectTo) => (dispatch) => {
         });
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
+          setCookie('mem_professionl_profile', data.mem_professionl_profile);
 
             if(data.mem_type == 'member'){
               if (redirectTo) window.location.replace(redirectTo);

@@ -4,7 +4,10 @@ import {
   FETCH_SERVICES_DATA_FAILED,
   UPDATE_SERVICES_DATA,
   UPDATE_SERVICES_DATA_SUCCESS,
-  UPDATE_SERVICES_DATA_FAILED
+  UPDATE_SERVICES_DATA_FAILED,
+  SAVE_BUSINESS_DATA,
+  SAVE_BUSINESS_DATA_SUCCESS,
+  SAVE_BUSINESS_DATA_FAILED,
 } from "../../actions/actionTypes";
 import { setCookie } from "cookies-next";
 
@@ -14,6 +17,7 @@ const initialState = {
   error: false,
   isFormProcessing: false,
   mem: {},
+  pro_profile: {},
 
 };
 
@@ -31,6 +35,7 @@ export default function (state = initialState, { type, payload }) {
         isLoading: false,
         content: payload,
         mem: payload.member,
+        pro_profile: payload.pro_profile
       };
     case FETCH_SERVICES_DATA_FAILED:
       return {
@@ -50,6 +55,23 @@ export default function (state = initialState, { type, payload }) {
         isFormProcessing: false,
       };
     case UPDATE_SERVICES_DATA_FAILED:
+      return {
+        ...state,
+        isFormProcessing: false,
+        error: payload,
+      };
+
+      case SAVE_BUSINESS_DATA:
+      return {
+        ...state,
+        isFormProcessing: true,
+      };
+    case SAVE_BUSINESS_DATA_SUCCESS:
+      return {
+        ...state,
+        isFormProcessing: false,
+      };
+    case SAVE_BUSINESS_DATA_FAILED:
       return {
         ...state,
         isFormProcessing: false,

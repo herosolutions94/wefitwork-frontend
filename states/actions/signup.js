@@ -35,14 +35,7 @@ export const createAccount = (formData) => (dispatch) => {
         });
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
-
-          if(data.mem_type == 'member'){
             window.location.replace("/email-verification");
-
-          }else{
-            
-            window.location.replace("/trade-person-signup");
-          }
         }, 2000);
       } else {
         if (data.validationErrors) {
@@ -93,12 +86,16 @@ export const verifyEmail = (formData) => (dispatch) => {
         });
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
+          setCookie('mem_professionl_profile', data.mem_professionl_profile);
 
           if(data.mem_type == 'member'){
             window.location.replace(`/buyer-dashboard`);
 
-          }else{
+          }else if(data.mem_type == 'professional' && (data.mem_professionl_profile == "0" || data.mem_professionl_profile == 0) ){
+            window.location.replace('/trade-person-signup');
+          }else if(data.mem_type == 'professional' && (data.mem_professionl_profile == "1" || data.mem_professionl_profile == 1)){
             window.location.replace('/professional-dashboard');
+
           }
         }, 2000);
       } else {

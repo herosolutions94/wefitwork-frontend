@@ -4,16 +4,18 @@ import Pagination from "../../components/pagination";
 import DistanceSlider from "@/components/components/DistanceSlider";
 import { cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
 import http from "@/components/helpers/http";
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 
 export const getServerSideProps = async (context) => {
 
     const query=context?.query;
     const service_id = query?.service_id;
+    const sub_service_id = query?.sub_service_id;
     const latitude = query?.latitude;
     const longitude = query?.longitude;
 
     const result = await http
-        .post("search-profession", doObjToFormData({ service_id: service_id, latitude: latitude, longitude: longitude }))
+        .post("search-profession", doObjToFormData({ service_id: service_id, latitude: latitude, longitude: longitude, sub_service_id: sub_service_id }))
         .then((response) => response.data)
         .catch((error) => error.response.data.message);
 
@@ -21,8 +23,6 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function SearchResult({ result }) {
-
-    console.log(result)
 
     let { professions } = result;
 
@@ -161,7 +161,7 @@ export default function SearchResult({ result }) {
                                                             <img src={cmsFileUrl(val?.mem_image, "members")} alt={val?.mem_fname} />
                                                         </div>
                                                         <div className="cntnt">
-                                                            <h4><Link href={`/search-result/${val?.mem_id}`}>{val?.mem_fname}</Link></h4>
+                                                            <h4><Link href={`/search-result/${encrypt_decrypt("encrypt", val?.mem_id)}`}>{val?.mem_fname}</Link></h4>
                                                             {/* <p>{val?.services}</p> */}
                                                             {val?.distance  && <p><strong>{parseInt(val?.distance)+ " miles away"}</strong></p>}
 
