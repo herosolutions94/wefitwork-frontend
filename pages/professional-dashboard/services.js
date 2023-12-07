@@ -10,8 +10,9 @@ import { isArrayEmpty, isEmpty } from "@/components/helpers/helpers";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import { business_type, employes, question_add } from "@/components/constants/formFieldsData";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { cmsFileUrl } from "@/components/helpers/helpers";
+import MapComponent from "@/components/components/map-container";
 
 
 export default function Services() {
@@ -73,6 +74,7 @@ const updateMemberService=(frmData)=>{
     register,
     formState: { errors },
     handleSubmit,
+    setValue
   } = useForm();
 
   const handleSaveBusinessData = (data) => {
@@ -80,6 +82,41 @@ const updateMemberService=(frmData)=>{
     // console.log(data);
     dispatch(saveBusinessData(data));
   };
+
+  const [locationCords, setLocationCords] = useState({ lat: null, long: null });
+  const [getingLoction, setGetingLocation] = useState(false);
+
+  const getCurrentLocation = () => {
+    setGetingLocation(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        setLocationCords({ lat: latitude, long: longitude });
+        console.log(locationCords);
+
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
+        if (latitude && longitude) {
+          toast.success("Location picked. Continue to next Step");
+        } else {
+          toast.error("Location Not picked");
+        }
+      });
+
+    } else {
+      toast.error("Geolocation is not supported by this browser.");
+      console.log("Geolocation is not supported by this browser.");
+    }
+    setGetingLocation(false);
+  };
+
+  useEffect(() => {
+    // This will log the updated state whenever locationCords changes
+    setValue("latitude", locationCords.lat);
+    setValue("longitude", locationCords.long);
+  }, [locationCords]);
 
   return (
     <>
@@ -239,7 +276,7 @@ const updateMemberService=(frmData)=>{
                                   name="business_type"
                                   value={val.title}
                                   id={`typ-${val.id}`}
-                                  checked={pro_profile?.business_type === val.title}
+                                  checked={pro_profile?.business_type == val.title}
                                   {...register("business_type", {
                                     required: "Required",
                                   })}
@@ -322,7 +359,7 @@ const updateMemberService=(frmData)=>{
                         </div> */}
 
 
-                        <div className="col-sm-12">
+                        <div className="col-sm-8">
                           <div className="blk_form">
                             <h6>Business Address</h6>
                             <div className="form_blk">
@@ -345,6 +382,74 @@ const updateMemberService=(frmData)=>{
                             </div>
                           </div>
                         </div>
+
+                        <div className="col-sm-4">
+                          <div className="blk_form">
+                          <h6>Pick Location</h6>
+
+                          <div className="form_blk">
+                      <div className="btn_blk">
+                        <button type="button" onClick={getCurrentLocation} className="site_btn">
+                          Pick My Location <i className={getingLoction ? "spinner" : "spinnerHidden"}></i>
+                        </button>
+                      </div>
+                      
+                    </div>                 
+
+                    <div className="form_blk">
+                      <input
+                        type="hidden"
+                        name="latitude"
+                        id="latitude"
+                        defaultValue={pro_profile?.latitude}
+
+                        {...register("latitude", {
+                          required:
+                            "Longitude Required. Please click on Pick My Location",
+                        })}
+                      />
+
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.latitude?.message}
+                      </div>
+
+                      <input
+                        type="hidden"
+                        name="longitude"
+                        id="longitude"
+                        defaultValue={pro_profile?.longitude}
+
+                        {...register("longitude", {
+                          required:
+                            "Longitude Required. Please click on Pick My Location",
+                        })}
+                      />
+
+                      <div
+                        className="validation-error"
+                        style={{ color: "red" }}
+                      >
+                        {errors.longitude?.message}
+                      </div>
+                    </div>
+
+
+                          </div>
+                        </div>
+                        {locationCords?.lat !== null && locationCords?.lat !== undefined && locationCords?.long !== null && locationCords?.long !== undefined ? 
+                        <div className="col-sm-8">
+                          <div className="blk_form">
+                            <h6>Map</h6>
+                            <div className="form_blk">
+                            <MapComponent latitude={locationCords?.lat} longitude={locationCords?.long} />
+                              
+                            </div>
+                          </div>
+                        </div>
+                        : "" }
                         
                         <div className="col-sm-12">
                           <div className="blk_form">

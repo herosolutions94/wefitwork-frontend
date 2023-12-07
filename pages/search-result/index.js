@@ -5,6 +5,8 @@ import DistanceSlider from "@/components/components/DistanceSlider";
 import { cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
 import http from "@/components/helpers/http";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async (context) => {
 
@@ -23,8 +25,10 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function SearchResult({ result }) {
-
-    let { professions } = result;
+    console.log(result);
+    const router = useRouter();
+    console.log(router.query);
+    let { professions, services, selected_service, selected_sub_service } = result;
 
     const [viewMode, setViewMode] = useState('grid');
     const [openCat, setOpenCat] = useState(false);
@@ -34,6 +38,30 @@ export default function SearchResult({ result }) {
     const toggleView = (mode) => {
         setViewMode(mode);
     };
+
+    const [subServices, setSubServices] = useState(false);
+  const [getingSubServices, setGetingSubServices] = useState(false);
+
+  const handleGetSubService = (service_id, e) => {
+    // e.preventDefault();
+    setGetingSubServices(true);
+    try {
+      http
+        .post("get-sub-services", doObjToFormData({ service_id: service_id }))
+        .then((data) => {
+          setGetingSubServices(false);
+          if (data?.data?.status == true) {
+            setSubServices(data?.data?.sub_services);
+          } else {
+            setSubServices(false);
+          }
+        });
+
+    } catch (errors) {
+      setGetingSubServices(false);
+      console.log("Errors", errors);
+    }
+  };
 
     return (
         <>
@@ -51,19 +79,30 @@ export default function SearchResult({ result }) {
                                 <h5>Search</h5>
                                 <div className="form_blk">
                                     <div className="relative_field">
-                                        <input type="text" className="input" name="" defaultValue={"Carpenter"} />
+                                        <select name="service_id" id="service_id" className="input" onChange={(e) => handleGetSubService(e.target.value)}>
+                                            <option value="">Choose Service</option>
+                                            {services?.map((ser, i) => {
+                                                return (<option value={ser?.id} key={i}  >{ser?.title}</option>)
+                                            })}
+                                        </select>
                                         <button type="button"><img src="/images/PencilSimple.svg" alt="" /></button>
                                     </div>
                                 </div>
                                 <div className="form_blk">
                                     <div className="relative_field">
-                                        <input type="text" className="input" name="" defaultValue={"Flooring & skirting"} />
+                                    <select name="sub_service_id" id="sub_service_id" className="input">
+                                    
+                                            <option value="">Choose Sub Service</option>
+                                            {subServices && subServices?.map((sub, i) => {
+                                                return (<option value={sub?.id} key={i}  >{sub?.title}</option>)
+                                            })}
+                                        </select>
                                         <button type="button"><img src="/images/PencilSimple.svg" alt="" /></button>
                                     </div>
                                 </div>
                                 <div className="form_blk">
                                     <div className="relative_field">
-                                        <input type="text" className="input" name="" defaultValue={"1711 O Street Sanger,CA 93657 Suite 102"} />
+                                        <input type="text" className="input" name="address" defaultValue={"1711 O Street Sanger,CA 93657 Suite 102"} />
                                         <button type="button"><img src="/images/PencilSimple.svg" alt="" /></button>
                                     </div>
                                 </div>
@@ -158,6 +197,17 @@ export default function SearchResult({ result }) {
                                                 <div className="inner">
                                                     <div className="head_professional">
                                                         <div className="image">
+                                                            {val?.mem_image ? 
+                                                                <Image 
+                                                                    src={cmsFileUrl(val?.mem_image, "members")}
+                                                                    width={100}
+                                                                    height={100}
+                                                                    alt={val?.mem_fname}
+                                                                />
+                                                                : 
+                                                            <img src="/images/no-user.svg" alt={val?.mem_fname} />
+
+                                                            }
                                                             <img src={cmsFileUrl(val?.mem_image, "members")} alt={val?.mem_fname} />
                                                         </div>
                                                         <div className="cntnt">
