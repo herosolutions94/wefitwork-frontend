@@ -118,7 +118,7 @@ const ExploreFrom = ({ onClose, services }) => {
     handleSubmit,
     trigger,
     setValue,
-    watch
+    watch,
   } = useForm();
   const watchAllFields = watch();
 
@@ -168,14 +168,38 @@ const ExploreFrom = ({ onClose, services }) => {
   const [file, setFile] = useState(null);
 
   const handleFormSubmit = (data) => {
-
     if (file !== null) data.doc_file = file.target.files;
 
     console.log(data);
 
     dispatch(saveSearch(data));
+  };
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchedServices, setSearchedServices] = useState({res: services, searched:false});
 
-  }
+  const handleSearchService = (e) => {
+    console.log("hi", e.target.value);
+    setIsSearching(true);
+    let search = e.target.value;
+    
+    try {
+      http.post("search-services", doObjToFormData({search: search})).then((data) => {
+        if (data?.data?.status == true) {
+          setSearchedServices({ res: data.data.services, searched: true });
+          setIsSearching(false);
+        } else {
+          setIsSearching(false);
+          setSearchedServices({ res: services, searched: false });
+
+          setTimeout(() => {
+            setSearchedServices({ res: services, searched: false });
+          }, 6000);
+        }
+      });
+    } catch (errors) {
+      console.log("Errors", errors);
+    }
+  };
 
   return (
     <form method="POST" onSubmit={handleSubmit(handleFormSubmit)}>
@@ -183,14 +207,38 @@ const ExploreFrom = ({ onClose, services }) => {
         <div
           className={`step ${step === 1 ? "field_set active" : "field_set"}`}
         >
+          <h6>Search Serrvice</h6>
+          <div className="form_blk">
+            <input
+              type="text"
+              name="search-service"
+              className="input"
+              placeholder={"Search service You are looking for"}
+              onChange={handleSearchService}
+            />
+          </div>
           <h3>Choose Service</h3>
-          <ul className="l_flex">
-            {services?.map((val) => {
+          {isSearching && 
+          <div className="text-center">
+            <div
+              className="spinner-border text-primary"
+              style={{ width: "3rem", height: "3rem" }}
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          }
+
+          {!isSearching && <ul className="l_flex">
+            {searchedServices?.res.length > 0 ?
+              searchedServices?.res?.map((val) => {
               return (
                 <li key={val.id}>
                   <div
-                    className={`lbl_btn ${selectedServiceValue === val?.id ? "active" : ""
-                      }`}
+                    className={`lbl_btn ${
+                      selectedServiceValue === val?.id ? "active" : ""
+                    }`}
                   >
                     <input
                       type="radio"
@@ -214,8 +262,11 @@ const ExploreFrom = ({ onClose, services }) => {
                   </div>
                 </li>
               );
-            })}
-          </ul>
+            }): 
+              <div className="alert alert-danger">No Service Found With this Name</div>
+            }
+          </ul>}
+          
           <br />
           <div className="validation-error" style={{ color: "red" }}>
             {errors.service_id?.message}
@@ -238,8 +289,9 @@ const ExploreFrom = ({ onClose, services }) => {
                 return (
                   <li key={sub_ser?.id}>
                     <div
-                      className={`lbl_btn ${selectedSubServiceValue === sub_ser?.id ? "active" : ""
-                        }`}
+                      className={`lbl_btn ${
+                        selectedSubServiceValue === sub_ser?.id ? "active" : ""
+                      }`}
                     >
                       <input
                         type="radio"
@@ -361,7 +413,8 @@ const ExploreFrom = ({ onClose, services }) => {
                   name="latitude"
                   id="latitude"
                   {...register("latitude", {
-                    required: "Longitude Required. Please click on Pick My Location",
+                    required:
+                      "Latitude Required. Please click on Pick My Location",
                   })}
                 />
 
@@ -374,7 +427,8 @@ const ExploreFrom = ({ onClose, services }) => {
                   name="longitude"
                   id="longitude"
                   {...register("longitude", {
-                    required: "Longitude Required. Please click on Pick My Location",
+                    required:
+                      "Longitude Required. Please click on Pick My Location",
                   })}
                 />
 
@@ -404,15 +458,18 @@ const ExploreFrom = ({ onClose, services }) => {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 ></iframe> */}
-                {
-                  console.log(watchAllFields)
-                }
-                {
-                  watchAllFields?.latitude !== null && watchAllFields?.latitude !== undefined && watchAllFields?.longitude !== null && watchAllFields?.longitude !== undefined ?
-                    <MapComponent latitude={watchAllFields?.latitude} longitude={watchAllFields?.longitude} />
-                    :
-                    ""
-                }
+                {console.log(watchAllFields)}
+                {watchAllFields?.latitude !== null &&
+                watchAllFields?.latitude !== undefined &&
+                watchAllFields?.longitude !== null &&
+                watchAllFields?.longitude !== undefined ? (
+                  <MapComponent
+                    latitude={watchAllFields?.latitude}
+                    longitude={watchAllFields?.longitude}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>
@@ -436,7 +493,6 @@ const ExploreFrom = ({ onClose, services }) => {
           </div>
           <div className="form_blk">
             <FileInputButton setFile={setFile} />
-
           </div>
 
           <div className="br"></div>
@@ -467,8 +523,9 @@ const ExploreFrom = ({ onClose, services }) => {
                 return (
                   <li key={val.id}>
                     <div
-                      className={`lbl_btn ${selectedValue === val.id ? "active" : ""
-                        }`}
+                      className={`lbl_btn ${
+                        selectedValue === val.id ? "active" : ""
+                      }`}
                     >
                       <input
                         type="radio"

@@ -15,6 +15,7 @@ import MetaGenerator from "../components/meta-generator";
 import Image from "next/image";
 import http from "../helpers/http";
 import { cmsFileUrl } from "../helpers/helpers";
+import { useRouter } from "next/router";
 
 
 export const getServerSideProps = async () => {
@@ -30,6 +31,7 @@ export const getServerSideProps = async () => {
 
 
 export default function Home({ result }) {
+  const router = useRouter();
   // console.log(result);
   let { page_title, meta_desc, content, banner_pics, testimonials, featured_services, most_searched, services } = result;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -86,7 +88,12 @@ export default function Home({ result }) {
         items: 8
       }
     }
+    
   };
+
+  const handleServiceClick = (service_id) => {
+    router.push(`search-result?service_id=${service_id}`)
+  }
 
   return (
     <>
@@ -166,7 +173,7 @@ export default function Home({ result }) {
             <OwlCarousel className="owl-carousel owl-theme" {...categories}>
               {featured_services?.map((val) => {
                 return (
-                  <div className="item" key={val.id}>
+                  <div className="item" style={{cursor : "pointer"}} key={val.id} onClick={(e) => handleServiceClick(val?.id)}>
                     <div className="inner">
                       <div className="icon_img">
                         <Image
