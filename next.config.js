@@ -6,7 +6,7 @@ const nextConfig = {
       {
         protocol: process.env.PROTOCOL,
         hostname: process.env.HOSTNAME,
-        pathname: process.env.IMAGE_REMOTE_PATTERNS_PATHANME
+        pathname: process.env.IMAGE_REMOTE_PATTERNS_PATHANME,
       }
     ]
   },

@@ -17,6 +17,8 @@ export const getServerSideProps = async (context) => {
   const sub_service_id = query?.sub_service_id;
   const latitude = query?.latitude;
   const longitude = query?.longitude;
+  const radius = query?.radius;
+
 
   const result = await http
     .post(
@@ -26,6 +28,7 @@ export const getServerSideProps = async (context) => {
         latitude: latitude,
         longitude: longitude,
         sub_service_id: sub_service_id,
+        radius: radius
       })
     )
     .then((response) => response.data)
@@ -103,8 +106,17 @@ export default function SearchResult({ result }) {
 
   const handleSearch = (search_data) => {
     console.log("search_data", search_data);
-    router.replace(`/search-result?service_id=${search_data?.service_id}&sub_service_id=${search_data?.sub_service_id}&latitude=${search_data?.latitude}&longitude=${search_data?.longitude}`)
+    router.replace(`/search-result?service_id=${search_data?.service_id}&sub_service_id=${search_data?.sub_service_id}&latitude=${search_data?.latitude}&longitude=${search_data?.longitude}&radius=${search_data?.radius}`)
   }
+
+  const [radius, setRadius] = useState(10);
+  const handleRadiusCahnge = (newRadius) => {
+    setRadius(newRadius);
+  }
+
+  useEffect(() => {
+    setValue("radius", radius)
+  }, [radius]);
 
   return (
     <>
@@ -208,7 +220,8 @@ export default function SearchResult({ result }) {
                   </div>
                   <div className="mini_br"></div>
                   <h5>Distance</h5>
-                  <DistanceSlider />
+                  <DistanceSlider handleRadiusCahnge={handleRadiusCahnge} />
+                  <input type="hidden" name="radius" value={radius} {...register("radius")}/>
                   <div className="mini_br"></div>
                   <div className="mini_br"></div>
                   <h5>Ratings</h5>

@@ -35,10 +35,16 @@ const updateMemberService=(frmData)=>{
   }, []);
 
   const fileInputRef = useRef(null);
-  const portfolioImages = data?.portfolioImages ? data?.portfolioImages : '';
+  // console.log(data);
+  const portfolioImages = data?.portfolioImages ? data?.portfolioImages : [];
 
   const [uploadedImages, setUploadedImages] = useState([]);
   const [previewUploadedImages, setPreviewUploadedImages] = useState([]);
+
+  useEffect(() => {
+    setPreviewUploadedImages(portfolioImages);
+    setUploadedImages(portfolioImages);
+  }, [portfolioImages]);
 
   const handleButtonClick = (e) => {
     e.preventDefault();
@@ -47,16 +53,21 @@ const updateMemberService=(frmData)=>{
 
   const handleFileSelected = (e) => {
     const selectedFiles = e.target.files;
+      setUploadedImages(portfolioImages);
+      console.log("uploaded", uploadedImages);
 
     if (selectedFiles) {
       const newUploadedImages = [...uploadedImages, ...selectedFiles];
       setUploadedImages(newUploadedImages);
+
+      console.log("new0",  uploadedImages);
 
       const newPreviewImages = [...previewUploadedImages];
       for (let i = 0; i < selectedFiles.length; i++) {
         newPreviewImages.push(URL.createObjectURL(selectedFiles[i]));
       }
       setPreviewUploadedImages(newPreviewImages);
+      console.log(previewUploadedImages);
     }
   };
 
@@ -85,6 +96,10 @@ const updateMemberService=(frmData)=>{
 
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
+
+  useEffect(() => {
+    setLocationCords({lat: pro_profile?.latitude, long: pro_profile?.longitude})
+  },[pro_profile])
 
   const getCurrentLocation = () => {
     setGetingLocation(true);
@@ -230,6 +245,8 @@ const updateMemberService=(frmData)=>{
                                   required: "Business Phone Number is Required",
                                 })}
                               />
+                                  <button type="button" className="verfiy_btn">Verfiy <i class="fa-solid fa-house"></i> </button>
+
                               <div
                                 className="validation-error"
                                 style={{ color: "red" }}
@@ -276,7 +293,7 @@ const updateMemberService=(frmData)=>{
                                   name="business_type"
                                   value={val.title}
                                   id={`typ-${val.id}`}
-                                  checked={pro_profile?.business_type == val.title}
+                                  defaultChecked={pro_profile?.business_type == val.title}
                                   {...register("business_type", {
                                     required: "Required",
                                   })}
@@ -308,9 +325,9 @@ const updateMemberService=(frmData)=>{
                                 <input
                                   type="radio"
                                   name="no_of_employes"
-                                  value={val.title}
+                                  defaultValue={val.title}
                                   id={`emp-${val.id}`}
-                                  checked={pro_profile?.no_of_employes === val.title}
+                                  defaultChecked={pro_profile?.no_of_employes === val.title}
                                   {...register("no_of_employes", {
                                     required: "Required",
                                   })}
@@ -341,7 +358,7 @@ const updateMemberService=(frmData)=>{
                                 <input
                                   type="radio"
                                   name="looking_for"
-                                  value={val.title}
+                                  defaultValue={val.title}
                                   id={`for-${val.id}`}
                                   // checked={lookingForValue === val.id}
                                   // onChange={() => setLookingForValue(val.id)}
@@ -490,13 +507,13 @@ const updateMemberService=(frmData)=>{
                                   </div>
                               
                             ) : (<>
-                                {portfolioImages && portfolioImages?.map((img, i) => {
+                                {/* {portfolioImages && portfolioImages?.map((img, i) => {
                                 return (
                                   <div className="img_col" key={i}>
                                     <div className="inner_img">
                                       <img
-                                        src={cmsFileUrl(img?.image, "members/portfolio")}
-                                        alt={`Uploaded ${img?.id}`}
+                                        src={img}
+                                        alt={`Uploaded ${i}`}
                                       />
                                       <button
                                         className="x_btn"
@@ -506,8 +523,9 @@ const updateMemberService=(frmData)=>{
                                     </div>
                                   </div>
                                 );
-                              })}
-                                {previewUploadedImages.map((preview, index) => {
+                              })} */}
+                              {console.log(previewUploadedImages)}
+                                {previewUploadedImages?.map((preview, index) => {
                                 return (
                                   <div className="img_col" key={index}>
                                     <div className="inner_img">
