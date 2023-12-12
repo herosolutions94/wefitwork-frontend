@@ -3,7 +3,7 @@ import Link from "next/link";
 import LayoutDashboard from '@/components/components/layoutDashbord';
 import ProfessionalSidebar from "@/components/components/professionalSidebar";
 import ServicesFaq from "@/components/components/serviceFaq";
-import { fetchServicesData,updateSubServices, saveBusinessData } from "@/components/states/actions/professional/services";
+import { fetchServicesData,updateSubServices, saveBusinessData, requestPhoneVerify } from "@/components/states/actions/professional/services";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import { isArrayEmpty, isEmpty } from "@/components/helpers/helpers";
@@ -13,7 +13,8 @@ import { business_type, employes, question_add } from "@/components/constants/fo
 import { Toaster, toast } from "react-hot-toast";
 import { cmsFileUrl } from "@/components/helpers/helpers";
 import MapComponent from "@/components/components/map-container";
-
+import PopupSmall from "@/components/components/popupSmall";
+import VerifyPhone from "@/components/components/verifyPhone";
 
 export default function Services() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function Services() {
   const pro_profile = useSelector((state) => state.services.pro_profile);
   const isLoading = useSelector((state) => state.services.isLoading);
   const isFormProcessing = useSelector((state) => state.services.isFormProcessing);
+  const verify_popup = useSelector((state) => state.services.verify_popup);
 
   const { page_title, mem_Services } = data;
   const [editPopup, setEditPopup] = useState({ show: false, item: null });
@@ -85,7 +87,8 @@ const updateMemberService=(frmData)=>{
     register,
     formState: { errors },
     handleSubmit,
-    setValue
+    setValue,
+    watch
   } = useForm();
 
   const handleSaveBusinessData = (data) => {
@@ -132,6 +135,12 @@ const updateMemberService=(frmData)=>{
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
   }, [locationCords]);
+
+  const handleRequestVerify = () => {
+    let watchAllFields = watch();
+    let verifyData = {phone : watchAllFields?.business_phone}
+    dispatch(requestPhoneVerify(verifyData));
+  }
 
   return (
     <>
@@ -235,17 +244,24 @@ const updateMemberService=(frmData)=>{
                             <div className="form_blk">
                               <InputMask
                                 id="phone"
-                                mask="0999 999 9999"
+                                // mask="+234 999 999 9999"
+                                mask="+1 999 9999999"
                                 name="phone"
                                 autoComplete="phone"
                                 placeholder="Phone Number"
-                                value={pro_profile?.business_phone}
+                                defaultValue={pro_profile?.business_phone}
                                 className="input"
                                 {...register("business_phone", {
                                   required: "Business Phone Number is Required",
                                 })}
                               />
-                                  <button type="button" className="verfiy_btn">Verfiy <i class="fa-solid fa-house"></i> </button>
+                              {pro_profile?.phone_verified !== "1" && pro_profile?.phone_verified !== 1 ? (
+                                <button type="button" onClick={handleRequestVerify} className="verfiy_btn" >Verfiy <i class="fa-solid fa-house"></i> </button>
+
+                              ):(
+                                <button type="button" onClick={(e) => toast.success("This phone nnumber is already verified")} className="verfiy_btn" style={{color: "#02932A"}}><b> ✓ </b>Verfied <i class="fa-solid fa-house"></i> </button>
+                              ) 
+                              }
 
                               <div
                                 className="validation-error"
@@ -595,6 +611,10 @@ const updateMemberService=(frmData)=>{
           </div>
         </section>
       </main>
+
+      <PopupSmall isOpen={verify_popup} onClose={(e) => toast.error("e")} >
+        <VerifyPhone />
+      </PopupSmall>
 
     </>
   );

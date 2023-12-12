@@ -10,7 +10,6 @@ import proProfile from "./professional/proProfile";
 import services from "./professional/services";
 import saveSearch from "./saveSearch";
 
-
 export default combineReducers({
  siteSettings,
  contactUs,
@@ -21,6 +20,7 @@ export default combineReducers({
  account,
  proProfile,
  services,
+ saveSearch,
  
  
  
