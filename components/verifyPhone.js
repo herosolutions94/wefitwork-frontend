@@ -57,7 +57,7 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
             <InputMask
               id="phone"
               
-              mask="+1 999 9999999"
+              mask="+234 999 999 9999"
               name="phone"
               defaultValue={phoneNumber}
               className="input"
