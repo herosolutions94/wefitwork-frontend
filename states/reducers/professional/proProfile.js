@@ -23,6 +23,7 @@ import { CREATE_PROFESSIONAL_PROFILE,
     isFormProcessing: false,   
     isPassChangeProcessing: false,
     mem: {},
+    pro_profile: {},
    
   };
   
@@ -58,6 +59,7 @@ import { CREATE_PROFESSIONAL_PROFILE,
           isLoading: false,
           content: payload,
           mem: payload.member,
+          pro_profile: payload.pro_profile
         };
       case FETCH_PROFESSIONAL_DASHBOARD_DATA_FAILED:
         return {
@@ -79,6 +81,7 @@ import { CREATE_PROFESSIONAL_PROFILE,
           isLoading: false,
           content: payload,
           mem: payload.member,
+          pro_profile: payload.pro_profile
         };
       case FETCH_PROFESSIONAL_ACCOUNT_SETTINGS_FAILED:
         return {

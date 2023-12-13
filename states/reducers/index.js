@@ -9,6 +9,7 @@ import account from "./buyer/account";
 import proProfile from "./professional/proProfile";
 import services from "./professional/services";
 import saveSearch from "./saveSearch";
+import phoneVerification from "./professional/phoneVerification";
 
 export default combineReducers({
  siteSettings,
@@ -21,6 +22,7 @@ export default combineReducers({
  proProfile,
  services,
  saveSearch,
+ phoneVerification,
  
  
  

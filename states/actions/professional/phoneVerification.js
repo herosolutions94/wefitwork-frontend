@@ -8,9 +8,13 @@ import {
   REQUEST_VERIFY_PHONE,
   REQUEST_VERIFY_PHONE_SUCCESS,
   REQUEST_VERIFY_PHONE_FAILED,
+
+  VERIFY_PHONE_NUMBER,
+  VERIFY_PHONE_NUMBER_SUCCESS,
+  VERIFY_PHONE_NUMBER_FAILED,
 } from "../actionTypes";
 import { authToken } from "@/components/helpers/authToken";
-import { setCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 
 
 export const requestPhoneVerify = (formData) => (dispatch) => {
@@ -23,16 +27,17 @@ http
   .post("user/request-verify-phone", doObjToFormData(formData))
   .then(({ data }) => {
     if (data.status) {
-      toast.success(PROFESSIONAL_PROFILE_CREATED_MESSAGE, { duration: 6000 });
+      toast.success(data?.msg, { duration: 4000 });
       dispatch({
         type: REQUEST_VERIFY_PHONE_SUCCESS,
         payload: data,
       });
-      setTimeout(() => {
-        setCookie('mem_type', data.mem_type);
-
-          window.location.replace("/professional-dashboard");
-      }, 2000);
+      setCookie("verify_phone", data.phoneNumber);
+      if(data.already_verified){
+        setTimeout(() =>{
+          window.location.reload();
+        }, 2000)
+      }
     } else {
       if (data.validationErrors) {
         toast.error(<Text string={data.validationErrors} parse={true} />, {
@@ -51,8 +56,48 @@ http
       type: REQUEST_VERIFY_PHONE_FAILED,
       payload: error,
     });
-    // setTimeout(() => {
-    //     window.location.replace("/email-verification");
-    //   }, 3000);
+    
+  });
+};
+
+export const VerifyPhoneNumber = (formData) => (dispatch) => {
+  formData = {...formData, token: authToken()}
+dispatch({
+  type: VERIFY_PHONE_NUMBER,
+  payload: null,
+});
+http
+  .post("user/verify-phone", doObjToFormData(formData))
+  .then(({ data }) => {
+    if (data.status) {
+      toast.success(data?.msg, { duration: 4000 });
+      dispatch({
+        type: VERIFY_PHONE_NUMBER_SUCCESS,
+        payload: data,
+      });
+      setTimeout(() => {
+        deleteCookie("verify_phone", data.phone);
+        window.location.reload();
+      }, 2000);
+      
+    } else {
+      if (data.validationErrors) {
+        toast.error(<Text string={data.validationErrors} parse={true} />, {
+          duration: 6000,
+        });
+        dispatch({
+          type: VERIFY_PHONE_NUMBER_FAILED,
+          payload: null,
+        });
+      }
+    }
+  })
+  .catch((error) => {
+    toast.error('Technical Problem Occured Please Try Again or contatct Admin', { duration: 2000 })
+    dispatch({
+      type: VERIFY_PHONE_NUMBER_FAILED,
+      payload: error,
+    });
+    
   });
 };

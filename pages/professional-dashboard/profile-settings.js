@@ -11,11 +11,13 @@ import { cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
 import InputMask from "react-input-mask";
 import Image from "next/image";
 import Text from "@/components/components/text";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import Head from "next/head";
 import { useForm } from "react-hook-form";
 import { authToken } from "@/components/helpers/authToken";
 import http from "@/components/helpers/http";
+import PopupSmall from "@/components/components/popupSmall";
+import VerifyPhone from "@/components/components/verifyPhone";
 
 export default function ProfileSettings() {
   const dispatch = useDispatch();
@@ -64,6 +66,11 @@ export default function ProfileSettings() {
     if (image !== null) data.profile = image.target.files;
     dispatch(saveProfessionalAccountSettings(data));
   };
+
+  const[verifyPopup, setVerifyPopup] = useState(false);
+  const handleVerifyPhonePopup = () => {
+       setVerifyPopup(true)
+  }
 
   return (
     <>
@@ -176,16 +183,22 @@ export default function ProfileSettings() {
                             <div className="form_blk">
                               <InputMask
                                 id="phone"
-                                mask="0999 999 9999"
+                                mask="+234 999 999 9999"
                                 name="phone"
                                 autoComplete="phone"
                                 placeholder="Phone Number"
                                 value={member?.mem_phone}
                                 className="input"
-                                {...register("phone", {
-                                  required: "Phone Number is Required",
-                                })}
+                                readOnly
+                                {...register("phone")}
                               />
+                              {member?.mem_phone_verified !== "1" && member?.mem_phone_verified !== 1 ? (
+                                <button type="button" onClick={handleVerifyPhonePopup} className="verfiy_btn" >Verfiy</button>
+
+                              ):(
+                                <button type="button" onClick={(e) => toast.success("This phone nnumber is already verified")} className="verfiy_btn" style={{color: "#02932A"}}><b> ✓ </b>Verfied <i class="fa-solid fa-house"></i> </button>
+                              ) 
+                              }
                               <div
                                 className="validation-error"
                                 style={{ color: "red" }}
@@ -298,6 +311,10 @@ export default function ProfileSettings() {
           </div>
         </section>
       </main>
+      <PopupSmall isOpen={verifyPopup} onClose={() => {setVerifyPopup(false); window.location.reload()}} >
+      {verifyPopup && <VerifyPhone phoneNumber={member?.mem_phone} phoneType="mem" />}
+        
+      </PopupSmall>
     </>
   );
 }

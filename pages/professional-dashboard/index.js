@@ -15,6 +15,7 @@ export default function Dashboard() {
   const data = useSelector((state) => state.proProfile.content);
   const member = useSelector((state) => state.proProfile.mem);
   const isLoading = useSelector((state) => state.proProfile.isLoading);
+  const pro_profile = useSelector((state) => state.proProfile.pro_profile);
 
   // console.log("dashboard",data);
   const { site_settings, page_title } = data;
@@ -32,6 +33,11 @@ export default function Dashboard() {
         </Head>
          <section className="dashboard">
             <div className="contain">
+            
+            {(pro_profile?.phone_verified == "0" && pro_profile?.phone_verified == 0) && 
+              <div className="alert alert-danger text-center">Your Bussiness Phone is not Verified</div>
+            }
+            
               <div className="sec_heading">
                 <h3>Welcome Back <span className="color">{member?.mem_fname}</span></h3>
               </div>
