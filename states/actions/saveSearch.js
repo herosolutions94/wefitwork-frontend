@@ -11,6 +11,7 @@ import {
     SAVE_SEARCH_DATA_SUCCESS,
     SAVE_SEARCH_DATA_FAILED,
 } from "./actionTypes";
+import { getCookie, setCookie } from "cookies-next";
 
 export const saveSearch = (formData) => (dispatch) => {
   formData = { ...formData, token: authToken() };
@@ -18,7 +19,6 @@ export const saveSearch = (formData) => (dispatch) => {
   delete formData.doc_file;
   formData = doObjToFormData(formData);
   if (typeof file != "undefined") formData.append("doc_file", file[0]);
-  console.log(formData);
 
   dispatch({
     type: SAVE_SEARCH_DATA,
@@ -33,8 +33,10 @@ export const saveSearch = (formData) => (dispatch) => {
         });
       } else {
         if(data.status){
-          console.log(data);
+          console.log("work_scope",data);
           toast.success("Successfully.", { duration: 6000 });
+          setCookie('workscope', data.work_scope)
+
           window.location.replace(`/search-result?service_id=${data?.search_data?.service_id}&sub_service_id=${data?.search_data?.sub_service_id}&latitude=${data?.search_data?.latitude}&longitude=${data?.search_data?.longitude}`)
         }
         

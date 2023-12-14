@@ -10,6 +10,9 @@ import { useRouter } from "next/router";
 import AddressAutocomplete from "@/components/components/map-autocomplete";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import PopupSmall from "@/components/components/popupSmall";
+import SendMessage from "@/components/components/sendMessage";
+import Text from "@/components/components/text";
 
 export const getServerSideProps = async (context) => {
   const query = context?.query;
@@ -117,6 +120,22 @@ export default function SearchResult({ result }) {
   useEffect(() => {
     setValue("radius", radius)
   }, [radius]);
+
+  const [isPopupOpenSend, setIsPopupOpenSend] = useState(false);
+  const [proData, setProData] = useState(false);
+
+    
+    const handleOpenPopupSend = (pro_mem_data) => {
+        setProData(pro_mem_data);
+        setIsPopupOpenSend(true);
+        
+    };
+    const handleClosePopupSend = () => {
+        setProData(false);
+        setIsPopupOpenSend(false);
+    };
+
+    console.log('professions', professions);
 
   return (
     <>
@@ -393,10 +412,7 @@ export default function SearchResult({ result }) {
                                     alt={val?.mem_fname}
                                   />
                                 )}
-                                <img
-                                  src={cmsFileUrl(val?.mem_image, "members")}
-                                  alt={val?.mem_fname}
-                                />
+                                
                               </div>
                               <div className="cntnt">
                                 <h4>
@@ -409,7 +425,7 @@ export default function SearchResult({ result }) {
                                     {val?.mem_fname}
                                   </Link>
                                 </h4>
-                                {/* <p>{val?.services}</p> */}
+                                <p><Text string={`${val?.service_title} (${val?.sub_services?.join(', ')})`} /></p>
                                 {val?.distance && (
                                   <p>
                                     <strong>
@@ -418,10 +434,10 @@ export default function SearchResult({ result }) {
                                   </p>
                                 )}
 
-                                {/* <div className="rating_lbl">
+                                <div className="rating_lbl">
                                                     <img src="/images/star.svg" alt=""/>
-                                                    <span>{val.rating} ({val.reviews} Reviews)</span>
-                                                </div> */}
+                                                    <span>{'5.0'} ({'10'} Reviews)</span>
+                                                </div>
                               </div>
                             </div>
                             <div className="done_work">
@@ -432,9 +448,9 @@ export default function SearchResult({ result }) {
                               <Link href="" className="site_btn color block">
                                 Start Chat
                               </Link>
-                              <Link href="" className="site_btn block">
+                              <button type="button" onClick={() => handleOpenPopupSend(val)} className="site_btn block">
                                 Send SMS
-                              </Link>
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -454,6 +470,11 @@ export default function SearchResult({ result }) {
           </div>
         </section>
       </main>
+
+      <PopupSmall isOpen={isPopupOpenSend} onClose={handleClosePopupSend}>
+      {proData && <SendMessage data={proData} />}
+        
+      </PopupSmall>
     </>
   );
 }

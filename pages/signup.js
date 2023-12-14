@@ -176,7 +176,7 @@ export default function Signup({ result }) {
                 <div className="form_blk">
                   <InputMask
                     id="phone"
-                    mask="0999 999 9999"
+                    mask="+234 999 999 9999"
                     name="phone"
                     autoComplete="phone"
                     placeholder="Phone Number"

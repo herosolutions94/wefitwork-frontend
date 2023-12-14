@@ -169,16 +169,13 @@ const ExploreFrom = ({ onClose, services }) => {
 
   const handleFormSubmit = (data) => {
     if (file !== null) data.doc_file = file.target.files;
-
-    console.log(data);
-
     dispatch(saveSearch(data));
   };
   const [isSearching, setIsSearching] = useState(false);
   const [searchedServices, setSearchedServices] = useState({res: services, searched:false});
 
   const handleSearchService = (e) => {
-    console.log("hi", e.target.value);
+    // console.log("hi", e.target.value);
     setIsSearching(true);
     let search = e.target.value;
     
