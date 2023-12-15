@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import Pagination from "../../components/pagination";
 import DistanceSlider from "@/components/components/DistanceSlider";
-import { cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
+import { isEmpty, cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
 import http from "@/components/helpers/http";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 import Image from "next/image";
@@ -13,6 +13,10 @@ import { useForm } from "react-hook-form";
 import PopupSmall from "@/components/components/popupSmall";
 import SendMessage from "@/components/components/sendMessage";
 import Text from "@/components/components/text";
+import { authToken } from "@/components/helpers/authToken";
+import toast from "react-hot-toast";
+import LoginPopup from "@/components/components/authPopup";
+
 
 export const getServerSideProps = async (context) => {
   const query = context?.query;
@@ -41,17 +45,21 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function SearchResult({ result }) {
-  console.log(result);
+  
   const router = useRouter();
-
   const route_query = router?.query;
   const service_id = route_query?.service_id;
   const sub_service_id = route_query?.sub_service_id;
   const latitude = route_query?.latitude;
   const longitude = route_query?.longitude;
+  const loc_radius = route_query?.radius;
+
 
   let { professions, services, selected_service, selected_sub_service } =
     result;
+
+    const token = authToken();
+
 
   const [viewMode, setViewMode] = useState("grid");
   const [openCat, setOpenCat] = useState(false);
@@ -123,16 +131,26 @@ export default function SearchResult({ result }) {
 
   const [isPopupOpenSend, setIsPopupOpenSend] = useState(false);
   const [proData, setProData] = useState(false);
+  const [authPopup, setAuthPopup] = useState(false);
+
 
     
-    const handleOpenPopupSend = (pro_mem_data) => {
+    const handleOpenPopupSend = (pro_mem_data, mem_token = token) => {
+      if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
         setProData(pro_mem_data);
         setIsPopupOpenSend(true);
+      }else{
+        toast.error("You sre not logedin. Please Login to your account to send SMS");
+        setAuthPopup(true);
+        setProData(pro_mem_data);
+        
+      }
         
     };
     const handleClosePopupSend = () => {
         setProData(false);
-        setIsPopupOpenSend(false);
+        setIsPopupOpenSend(false);   
+        setAuthPopup(false);    
     };
 
     console.log('professions', professions);
@@ -471,9 +489,14 @@ export default function SearchResult({ result }) {
         </section>
       </main>
 
+      {authPopup &&
+        <PopupSmall isOpen={authPopup} onClose={handleClosePopupSend}>
+          <LoginPopup handleOpenPopupSend={handleOpenPopupSend} proData={proData} setAuthPopup={setAuthPopup} />
+        </PopupSmall>
+      }
+
       <PopupSmall isOpen={isPopupOpenSend} onClose={handleClosePopupSend}>
-      {proData && <SendMessage data={proData} />}
-        
+      {proData && <SendMessage data={proData} handleClosePopupSend={handleClosePopupSend} />}
       </PopupSmall>
     </>
   );

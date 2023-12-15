@@ -2,10 +2,49 @@ import React, { useState,useRef } from "react";
 import { cmsFileUrl } from "../helpers/helpers";
 import Image from "next/image";
 import Text from "./text";
+import { useRouter } from "next/router";
+import { getCookie } from "cookies-next";
+import { authToken } from "../helpers/authToken";
+import http from "../helpers/http";
+import { doObjToFormData } from "../helpers/helpers";
+import toast from "react-hot-toast";
 
-export default function SendMessage({data}) {
-    
-    console.log("dataaaa", data);
+export default function SendMessage({data, handleClosePopupSend}) {
+    const router = useRouter();
+    const [isFormProcessing, setIsFormProcessing] = useState(false);
+    const workscope = getCookie("workscope") ? getCookie("workscope") : '';
+
+    const handleSendSMS = () => {
+      setIsFormProcessing(true);
+      let formData = {work_scope: workscope, token: authToken(), pro: data?.mem_id, pro_name: data?.mem_fname, pro_phone: data?.mem_phone, base_path: window.location.origin} 
+      try {
+        http.post("user/send-message", doObjToFormData(formData)).then((data) => {
+          console.log(data);
+          if (data.data.status) {
+          
+            toast.success(data.data.msg);
+            
+            setTimeout(() => {
+              setIsFormProcessing(false);
+              handleClosePopupSend()
+              
+            }, 2000);
+           
+          } else {
+            if (data.data.validationErrors) {
+              toast.error(<Text string={data.validationErrors} parse={true} />, {
+                duration: 6000,
+              });
+            }else{
+              toast.error(data.data.msg);
+            }
+            setIsFormProcessing(false);
+          }
+        });
+      } catch (errors) {
+        console.log("Errors", errors);
+      }
+    }
     
     return (
       <>
@@ -38,7 +77,13 @@ export default function SendMessage({data}) {
                     </div>
                 </div>
                 <div className="btn_blk">
-                    <button type="button" className="site_btn">Send SMS</button>
+                    <button type="button" className="site_btn" disabled={isFormProcessing} onClick={handleSendSMS}>Send SMS{isFormProcessing && (
+                      <i
+                        className={
+                          isFormProcessing ? "spinner" : "spinnerHidden"
+                        }
+                      ></i>
+                    )}</button>
                 </div>
            </div>
         </div>
