@@ -678,7 +678,7 @@ const watchAllFields=watch();
                           />
                           <img src="/images/ri_visa-line.svg" alt="" />
                         </div> */}
-                        {/* <div className="form_blk">
+                        <div className="form_blk">
                           <input
                             type="text"
                             name="card_holder_name"
@@ -695,7 +695,7 @@ const watchAllFields=watch();
                           >
                             {errors.card_holder_name?.message}
                           </div>
-                        </div> */}
+                        </div>
                             <PayStackPayment memData={memData}/>
 
                         {/* <div className="flex flex_blk">
@@ -762,8 +762,6 @@ const watchAllFields=watch();
                   </div>
                 </div>
               </form>
-                            {/* <PayStackPayment memData={memData}/> */}
-
             </div>
           </div>
         </section>
