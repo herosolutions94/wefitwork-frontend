@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import MapComponent from "../components/map-container";
 import { parse } from "cookie";
 import { business_type, employes, question_add } from "../constants/formFieldsData";
+import PayStackPayment from "../components/pay-stack";
+import { authToken } from "../helpers/authToken";
 
 export const getServerSideProps = async (context) => {
   const { req } = context;
@@ -28,7 +30,7 @@ export const getServerSideProps = async (context) => {
     };
   }
   const result = await http
-    .get("professional-signup-page")
+    .post("professional-signup-page", doObjToFormData({ token: cookieValue["authToken"] }))
     .then((response) => response.data)
     .catch((error) => error.response.data.message);
 
@@ -41,8 +43,8 @@ export default function TradePersonSignup({ result }) {
   const isFormProcessing = useSelector(
     (state) => state.proProfile.isFormProcessing
   );
-  let { page_title, meta_desc, content, site_settings, services } = result;
-
+  let { page_title, meta_desc, content, site_settings, services, memData } = result;
+console.log("result", result);
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
@@ -648,9 +650,9 @@ const watchAllFields=watch();
                           onClick={() => setPayment("credit_card")}
                         >
                           <img src="/images/creditcard.svg" alt="credit card" />
-                          <span>Credit Card</span>
+                          <span>Pay with Paystack</span>
                         </button>
-                        <button
+                        {/* <button
                           type="button"
                           className={`site_btn blank paypal ${payment === "pay_pal" ? "active" : ""
                             }`}
@@ -661,7 +663,7 @@ const watchAllFields=watch();
                             alt="credit card"
                           />
                           <span>Pay Pal</span>
-                        </button>
+                        </button> */}
                       </div>
                       <div
                         className={`credit_fields ${payment === "credit_card" ? "" : "hide"
@@ -676,7 +678,7 @@ const watchAllFields=watch();
                           />
                           <img src="/images/ri_visa-line.svg" alt="" />
                         </div> */}
-                        <div className="form_blk">
+                        {/* <div className="form_blk">
                           <input
                             type="text"
                             name="card_holder_name"
@@ -693,7 +695,9 @@ const watchAllFields=watch();
                           >
                             {errors.card_holder_name?.message}
                           </div>
-                        </div>
+                        </div> */}
+                            <PayStackPayment memData={memData}/>
+
                         {/* <div className="flex flex_blk">
                           <input
                             type="text"
@@ -758,6 +762,8 @@ const watchAllFields=watch();
                   </div>
                 </div>
               </form>
+                            {/* <PayStackPayment memData={memData}/> */}
+
             </div>
           </div>
         </section>
