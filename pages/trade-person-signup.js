@@ -11,7 +11,11 @@ import { createProfessionalProfile } from "../states/actions/professional/proPro
 import { useDispatch, useSelector } from "react-redux";
 import MapComponent from "../components/map-container";
 import { parse } from "cookie";
-import { business_type, employes, question_add } from "../constants/formFieldsData";
+import {
+  business_type,
+  employes,
+  question_add,
+} from "../constants/formFieldsData";
 import PayStackPayment from "../components/pay-stack";
 import { authToken } from "../helpers/authToken";
 
@@ -21,7 +25,11 @@ export const getServerSideProps = async (context) => {
   // Parse the cookie header to extract the specific cookie value
   const cookieValue = parse(cookieHeader);
   // const memProfile = cookieValue["mem_type"] == 'professional' && cookieValue["mem_professionl_profile"] !== "0" && cookieValue["mem_professionl_profile"] !== 0 ;
-  if (cookieValue["mem_type"] == 'professional' && cookieValue["mem_professionl_profile"] !== "0" && cookieValue["mem_professionl_profile"]) {
+  if (
+    cookieValue["mem_type"] == "professional" &&
+    cookieValue["mem_professionl_profile"] !== "0" &&
+    cookieValue["mem_professionl_profile"]
+  ) {
     return {
       redirect: {
         destination: "/professional-dashboard/services", // Replace '/dashboard' with the appropriate URL
@@ -30,7 +38,10 @@ export const getServerSideProps = async (context) => {
     };
   }
   const result = await http
-    .post("professional-signup-page", doObjToFormData({ token: cookieValue["authToken"] }))
+    .post(
+      "professional-signup-page",
+      doObjToFormData({ token: cookieValue["authToken"] })
+    )
     .then((response) => response.data)
     .catch((error) => error.response.data.message);
 
@@ -38,13 +49,13 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function TradePersonSignup({ result }) {
-  
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
     (state) => state.proProfile.isFormProcessing
   );
-  let { page_title, meta_desc, content, site_settings, services, memData } = result;
-console.log("result", result);
+  let { page_title, meta_desc, content, site_settings, services, memData } =
+    result;
+  // console.log("result", result);
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
@@ -53,7 +64,6 @@ console.log("result", result);
     // Determine which fields to validate based on the current step
     switch (step) {
       case 1:
-
         fieldsToValidate = ["service_id"];
         break;
       case 2:
@@ -70,7 +80,7 @@ console.log("result", result);
         fieldsToValidate = ["looking_for"];
         break;
       case 4:
-        fieldsToValidate = ["card_holder_name"];
+        fieldsToValidate = ["payment_email"];
         break;
       default:
         // Handle other steps if needed
@@ -89,20 +99,17 @@ console.log("result", result);
         if (subServices && subServices.length > 0) {
           if (selectedSubServices?.length > 0) {
             setStep((prevStep) => prevStep + 1);
+          } else {
+            toast.error("Sub Services are required!");
+            return;
           }
-          else {
-            toast.error("Sub Services are required!"); return;
-          }
-
+        } else {
+          toast.error("Sub Services are required!");
+          return;
         }
-        else {
-          toast.error("Sub Services are required!"); return;
-        }
-      }
-      else {
+      } else {
         setStep((prevStep) => prevStep + 1);
       }
-
     }
   };
 
@@ -127,60 +134,7 @@ console.log("result", result);
   const handleLookingForLabelClick = (event, id) => {
     setLookingForValue(id);
   };
-  // const business_type = [
-  //   {
-  //     id: "self",
-  //     title: "Self Employed",
-  //   },
-  //   {
-  //     id: "limited",
-  //     title: "Limited company",
-  //   },
-  //   {
-  //     id: "start",
-  //     title: "Looking to start a business",
-  //   },
-  // ];
-  // const employes = [
-  //   {
-  //     id: "1",
-  //     title: "1",
-  //   },
-  //   {
-  //     id: "2_5",
-  //     title: "2-5",
-  //   },
-  //   {
-  //     id: "6_9",
-  //     title: "6-9",
-  //   },
-  //   {
-  //     id: "10",
-  //     title: "10+",
-  //   },
-  // ];
-  // const question_add = [
-  //   {
-  //     id: "fill_gap",
-  //     title: "I’m looking to fill the gaps in my diary",
-  //   },
-  //   {
-  //     id: "flow_leads",
-  //     title: "I need a steady flow of leads",
-  //   },
-  //   {
-  //     id: "leads",
-  //     title: "I need as many leads as possible",
-  //   },
-  //   {
-  //     id: "profile",
-  //     title: "I just want a Checkatrade profile",
-  //   },
-  //   {
-  //     id: "not_sure",
-  //     title: "I’m not sure",
-  //   },
-  // ];
+  
 
   const {
     register,
@@ -190,7 +144,7 @@ console.log("result", result);
     trigger,
     setValue,
   } = useForm();
-const watchAllFields=watch();
+  const watchAllFields = watch();
   const [selectedSubServices, setSelectedSubServices] = useState([]);
   const handleSubServiceChange = (subServiceId) => {
     setSelectedSubServices((prevSelectedSubServices) => {
@@ -209,11 +163,12 @@ const watchAllFields=watch();
     });
   };
 
-  const handleCreateProfile = (data, e) => {
-    // alert('hi');
-    e.preventDefault();
-    // console.log(data);
-    dispatch(createProfessionalProfile(data));
+  const handleCreateProfile = (data, saveFormData = false) => {
+
+    if (saveFormData === true) {
+dispatch(createProfessionalProfile(data));
+          
+    }
   };
 
   const [subServices, setSubServices] = useState(false);
@@ -233,7 +188,6 @@ const watchAllFields=watch();
             setSubServices(false);
           }
         });
-
     } catch (errors) {
       setGetingSubServices(false);
       console.log("Errors", errors);
@@ -260,7 +214,6 @@ const watchAllFields=watch();
           toast.error("Location Not picked");
         }
       });
-
     } else {
       toast.error("Geolocation is not supported by this browser.");
       console.log("Geolocation is not supported by this browser.");
@@ -344,8 +297,9 @@ const watchAllFields=watch();
               <form method="POST" onSubmit={handleSubmit(handleCreateProfile)}>
                 <div className="multi-step-form trade_register_form">
                   <div
-                    className={`step ${step === 1 ? "field_set active" : "field_set"
-                      }`}
+                    className={`step ${
+                      step === 1 ? "field_set active" : "field_set"
+                    }`}
                   >
                     <h6>What Service You Offered</h6>
                     <div className="form_blk">
@@ -383,9 +337,11 @@ const watchAllFields=watch();
                             <span class="visually-hidden">Loading...</span>
                           </div>
                         </div>
-                      ) : ""}
+                      ) : (
+                        ""
+                      )}
 
-                      {subServices && subServices.length > 0  ? (
+                      {subServices && subServices.length > 0 ? (
                         <>
                           <h6>Select Sub Services</h6>
                           <div>
@@ -397,25 +353,30 @@ const watchAllFields=watch();
                                   value={val?.id}
                                   id={`sub_ser${val.id}`}
                                   checked={selectedSubServices.includes(val.id)}
-                                  onChange={() => handleSubServiceChange(val.id)}
+                                  onChange={() =>
+                                    handleSubServiceChange(val.id)
+                                  }
                                 />
-                                <label htmlFor={`sub_ser${val.id}`}>{val?.title}</label>
+                                <label htmlFor={`sub_ser${val.id}`}>
+                                  {val?.title}
+                                </label>
                               </div>
                             ))}
                           </div>
                         </>
+                      ) : watchAllFields?.service_id ? (
+                        <div className="alert alert-danger">
+                          Error: No sub-services available.
+                        </div>
                       ) : (
-                        watchAllFields?.service_id ? 
-                        <div className="alert alert-danger">Error: No sub-services available.</div>
-                        :
                         ""
                       )}
-
                     </div>
                   </div>
                   <div
-                    className={`step ${step === 2 ? "field_set active" : "field_set"
-                      }`}
+                    className={`step ${
+                      step === 2 ? "field_set active" : "field_set"
+                    }`}
                   >
                     <div className="form_blk">
                       <h6>What is your business called?</h6>
@@ -462,8 +423,9 @@ const watchAllFields=watch();
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${selectedValue === val.id ? "active" : ""
-                                  }`}
+                                className={`lbl_btn ${
+                                  selectedValue === val.id ? "active" : ""
+                                }`}
                               >
                                 <input
                                   type="radio"
@@ -502,8 +464,9 @@ const watchAllFields=watch();
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${employeValue === val.id ? "active" : ""
-                                  }`}
+                                className={`lbl_btn ${
+                                  employeValue === val.id ? "active" : ""
+                                }`}
                               >
                                 <input
                                   type="radio"
@@ -538,16 +501,30 @@ const watchAllFields=watch();
                     </div>
                     <div className="form_blk">
                       <div className="btn_blk">
-                        <button type="button" onClick={getCurrentLocation} className="site_btn">
-                          Pick My Location <i className={getingLoction ? "spinner" : "spinnerHidden"}></i>
+                        <button
+                          type="button"
+                          onClick={getCurrentLocation}
+                          className="site_btn"
+                        >
+                          Pick My Location{" "}
+                          <i
+                            className={
+                              getingLoction ? "spinner" : "spinnerHidden"
+                            }
+                          ></i>
                         </button>
                       </div>
-                      {
-                        locationCords?.lat !== null && locationCords?.lat !== undefined && locationCords?.long !== null && locationCords?.long !== undefined ?
-                          <MapComponent latitude={locationCords?.lat} longitude={locationCords?.long} />
-                          :
-                          ""
-                      }
+                      {locationCords?.lat !== null &&
+                      locationCords?.lat !== undefined &&
+                      locationCords?.long !== null &&
+                      locationCords?.long !== undefined ? (
+                        <MapComponent
+                          latitude={locationCords?.lat}
+                          longitude={locationCords?.long}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
 
                     <div className="form_blk">
@@ -555,8 +532,6 @@ const watchAllFields=watch();
                         type="hidden"
                         name="latitude"
                         id="latitude"
-
-
                         {...register("latitude", {
                           required:
                             "Longitude Required. Please click on Pick My Location",
@@ -574,8 +549,6 @@ const watchAllFields=watch();
                         type="hidden"
                         name="longitude"
                         id="longitude"
-
-
                         {...register("longitude", {
                           required:
                             "Longitude Required. Please click on Pick My Location",
@@ -591,8 +564,9 @@ const watchAllFields=watch();
                     </div>
                   </div>
                   <div
-                    className={`step ${step === 3 ? "field_set active" : "field_set"
-                      }`}
+                    className={`step ${
+                      step === 3 ? "field_set active" : "field_set"
+                    }`}
                   >
                     <div className="form_blk">
                       <h6>What are you looking for?</h6>
@@ -601,8 +575,9 @@ const watchAllFields=watch();
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${lookingForValue === val.id ? "active" : ""
-                                  }`}
+                                className={`lbl_btn ${
+                                  lookingForValue === val.id ? "active" : ""
+                                }`}
                               >
                                 <input
                                   type="radio"
@@ -637,16 +612,18 @@ const watchAllFields=watch();
                     </div>
                   </div>
                   <div
-                    className={`step checkout_step ${step === 4 ? "field_set active" : "field_set"
-                      }`}
+                    className={`step checkout_step ${
+                      step === 4 ? "field_set active" : "field_set"
+                    }`}
                   >
                     <div className="form_blk">
                       <h6>Checkout</h6>
                       <div className="btn_blk payment_btn">
                         <button
                           type="button"
-                          className={`site_btn blank credit ${payment === "credit_card" ? "active" : ""
-                            }`}
+                          className={`site_btn blank credit ${
+                            payment === "credit_card" ? "active" : ""
+                          }`}
                           onClick={() => setPayment("credit_card")}
                         >
                           <img src="/images/creditcard.svg" alt="credit card" />
@@ -666,8 +643,9 @@ const watchAllFields=watch();
                         </button> */}
                       </div>
                       <div
-                        className={`credit_fields ${payment === "credit_card" ? "" : "hide"
-                          }`}
+                        className={`credit_fields ${
+                          payment === "credit_card" ? "" : "hide"
+                        }`}
                       >
                         {/* <div className="form_blk relative_field">
                           <input
@@ -679,13 +657,20 @@ const watchAllFields=watch();
                           <img src="/images/ri_visa-line.svg" alt="" />
                         </div> */}
                         <div className="form_blk">
+                        <h6>Payment Email</h6>
                           <input
-                            type="text"
-                            name="card_holder_name"
-                            placeholder="Card holder name"
+                            type="email"
+                            name="payment_email"
+                            placeholder="Email"
                             className="input"
-                            {...register("card_holder_name", {
+                            defaultValue={memData?.mem_email}
+                            readOnly
+                            {...register("payment_email", {
                               required: "Required",
+                              pattern: {
+                        value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
+                        message: "Email format is not valid!",
+                      },
                             })}
                           />
 
@@ -693,10 +678,9 @@ const watchAllFields=watch();
                             className="validation-error"
                             style={{ color: "red" }}
                           >
-                            {errors.card_holder_name?.message}
+                            {errors.payment_email?.message}
                           </div>
                         </div>
-                            <PayStackPayment memData={memData}/>
 
                         {/* <div className="flex flex_blk">
                           <input
@@ -714,8 +698,9 @@ const watchAllFields=watch();
                         </div> */}
                       </div>
                       <div
-                        className={`credit_fields ${payment === "pay_pal" ? "" : "hide"
-                          }`}
+                        className={`credit_fields ${
+                          payment === "pay_pal" ? "" : "hide"
+                        }`}
                       >
                         <p>
                           After clicking "Submit", you will be redirected to
@@ -741,23 +726,35 @@ const watchAllFields=watch();
                         type="button"
                         disabled={getingSubServices}
                       >
-                        Next {getingSubServices ? <i className="spinner"></i> : ""}
+                        Next{" "}
+                        {getingSubServices ? <i className="spinner"></i> : ""}
                       </button>
                     ) : (
-                      <button
-                        className="site_btn"
-                        type="submit"
-                        disabled={isFormProcessing}
-                      >
-                        Submit{" "}
-                        {isFormProcessing && (
-                          <i
-                            className={
-                              isFormProcessing ? "spinner" : "spinnerHidden"
-                            }
-                          ></i>
+                      <>
+                        {watch().payment_email ? (
+                          <PayStackPayment
+                            memData={memData}
+                            handleCreateProfile={handleCreateProfile}
+                            watcFields={watch()}
+                          />
+                        ) : (
+                          <button
+                            className="site_btn"
+                            type="submit"
+                            disabled={isFormProcessing}
+                            onClick={() => toast.error("please type valid email address for paymnet")}
+                          >
+                            Pay now
+                            {isFormProcessing && (
+                              <i
+                                className={
+                                  isFormProcessing ? "spinner" : "spinnerHidden"
+                                }
+                              ></i>
+                            )}
+                          </button>
                         )}
-                      </button>
+                      </>
                     )}
                   </div>
                 </div>
