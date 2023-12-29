@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import Pagination from "../../components/pagination";
 import DistanceSlider from "@/components/components/DistanceSlider";
-import { isEmpty, cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
+import { isEmpty, cmsFileUrl, doObjToFormData, getObjKeyCount } from "@/components/helpers/helpers";
 import http from "@/components/helpers/http";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 import Image from "next/image";
@@ -58,8 +58,12 @@ export default function SearchResult({ result }) {
   let { professions, services, selected_service, selected_sub_service } =
     result;
 
+    console.log(result)
+
     const token = authToken();
 
+  const countProfessions = professions ? getObjKeyCount(professions) : 0;
+  const service_tilte = selected_service ? selected_service?.title : '';
 
   const [viewMode, setViewMode] = useState("grid");
   const [openCat, setOpenCat] = useState(false);
@@ -117,7 +121,7 @@ export default function SearchResult({ result }) {
 
   const handleSearch = (search_data) => {
     console.log("search_data", search_data);
-    router.replace(`/search-result?service_id=${search_data?.service_id}&sub_service_id=${search_data?.sub_service_id}&latitude=${search_data?.latitude}&longitude=${search_data?.longitude}&radius=${search_data?.radius}`)
+    router.replace(`/search-result?${search_data?.service_id > 0 ? 'service_id='+search_data?.service_id+'&' : ''}${search_data?.sub_service_id > 0 ? 'sub_service_id='+search_data?.sub_service_id+'&' : ''}${search_data?.latitude !== null ? 'latitude='+search_data?.latitude+'&' : ''}${search_data?.longitude !== null ? 'longitude='+search_data?.longitude+'&' : ''}${search_data?.radius > 0 ? 'radius='+search_data?.radius : ''}`)
   }
 
   const [radius, setRadius] = useState(10);
@@ -153,7 +157,7 @@ export default function SearchResult({ result }) {
         setAuthPopup(false);    
     };
 
-    console.log('professions', professions);
+    
 
   return (
     <>
@@ -387,7 +391,8 @@ export default function SearchResult({ result }) {
               </div>
               <div className="colR">
                 <div className="result_head">
-                  <p>6 carpenters found nearby in your area</p>
+                  <p>{countProfessions} {service_tilte !== '' && service_tilte} {countProfessions === 1 ? 'Professional' : 'Professionals' } found.</p>
+                  
                   <div className="lst_grid">
                     <button
                       onClick={() => toggleView("list")}

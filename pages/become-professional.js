@@ -6,6 +6,10 @@ import MetaGenerator from "../components/meta-generator";
 import { cmsFileUrl } from "../helpers/helpers";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { getCookie, setCookie } from "cookies-next";
+import { authToken } from "../helpers/authToken";
+import toast,{ Toaster } from "react-hot-toast";
+
 
 export const getServerSideProps = async () => {
   const result = await http
@@ -20,14 +24,27 @@ export default function BecomeProfessional({result}) {
   const router = useRouter();
   let { page_title, meta_desc, content, how_works, site_settings} = result;
 
+  const token = authToken() ? authToken() : false;
+
   const handleRedirectProfession = (e) => {
+    const mem_type = getCookie('mem_type');
     e.preventDefault();
-    localStorage.setItem('mem_type', 'professional');
-    router.push(`/signup?from=become-professional`);
+    if(!token){
+      setCookie('mem_type', 'professional');
+      router.push(`/signup?from=become-professional`);
+    } else if(token && mem_type === 'member'){
+      router.push(`/trade-person-signup`);
+    }else if(token && mem_type === 'professional'){
+      router.push(`/professional-dashboard/services`);
+    }else{
+      toast.error('Something Went Wrong');
+    }
+    
   }
 
   return (
     <>
+    <Toaster position="top-center" />
     <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
 
       <main>

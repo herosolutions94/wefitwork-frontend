@@ -4,6 +4,7 @@ import React,{useState} from 'react'
 import Image from "next/image";
 import { cmsFileUrl } from "../helpers/helpers";
 import { authToken } from "../helpers/authToken";
+import { getCookie } from "cookies-next";
 
 export default function Header({siteSettings}) {
   const token = authToken();
@@ -16,6 +17,8 @@ export default function Header({siteSettings}) {
     const ToggleUserDrop = () => {
       setUserDrop(!userDrop);
     }
+
+    const mem_type = getCookie('mem_type');
     return (
       <header>
         <div className="contain">
@@ -36,8 +39,8 @@ export default function Header({siteSettings}) {
           {/* =========user no login====== */}
           <div className="login_btns">
             <ul>
-              {token ? (
-              <li className="btn_blk"><Link href="/buyer-dashboard" className="site_btn">Dashboard</Link></li>
+              {token ? ( 
+              <li className="btn_blk"><Link href={mem_type === 'professional' ? '/professional-dashboard' : '/buyer-dashboard'} className="site_btn">Dashboard</Link></li>
 
               ) : (
                 <>

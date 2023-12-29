@@ -189,7 +189,11 @@ export default function LoggedHeader() {
                   <li className="drop_hide_dsk"><Link href="/professional-dashboard/subscription" onClick={ToggleUserDrop}><img src="/images/subscription.svg" alt="" /> <span>Subscription</span></Link></li>
                   <li><Link href="/professional-dashboard/services" onClick={ToggleUserDrop}><img src="/images/service.svg" alt="" /> <span>Services</span></Link></li>
                   <li><Link href="#" onClick={logout}><img src="/images/logout.svg" alt="" /> <span>Logout</span></Link></li>
-                  <li><Link href="/buyer-dashboard" onClick={ToggleUserDrop} className="site_btn"><img src="/images/logout.svg" alt="" /> <span>Go to Buyer Dashboard</span></Link></li>
+
+                  <div className="btn_blk text-center">
+                  <Link href="/buyer-dashboard" onClick={ToggleUserDrop} className="site_btn color"> <span>My Buyer Dashboard</span></Link>
+                  </div>
+                  
 
 
                 </ul>

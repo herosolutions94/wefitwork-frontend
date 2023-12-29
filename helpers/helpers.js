@@ -194,3 +194,7 @@ export function checkForEmptyValues(data) {
 export function isArrayEmpty(arr) {
   return arr.length === 0;
 }
+
+export function getObjKeyCount(obj){
+  return Object.keys(obj).length;
+};
