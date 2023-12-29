@@ -1,11 +1,15 @@
 import React, { useRef } from 'react';
 import { LoadScript, Autocomplete } from '@react-google-maps/api';
 
-const AddressAutocomplete = ({ onPlaceSelect }) => {
+const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
   const autocompleteRef = useRef(null);
 
   const handlePlaceSelect = () => {
+
+    console.log("ref",autocompleteRef.current.getPlace());
+
     const place = autocompleteRef.current.getPlace();
+    console.log('ad,' , place.formatted_address);
     const { lat, lng } = place.geometry.location;
       const location = {
         latitude: lat(),
@@ -15,6 +19,7 @@ const AddressAutocomplete = ({ onPlaceSelect }) => {
       console.log("loc", location);
     // console.log(place.geometry.location.lat);
     onPlaceSelect(location);
+    setAddress(place.formatted_address)
   };
 
   return (
@@ -29,7 +34,7 @@ const AddressAutocomplete = ({ onPlaceSelect }) => {
         }}
         onPlaceChanged={handlePlaceSelect}
       >
-        <input type="text" placeholder="Enter address" className='input' />
+        <input type="text" placeholder="Enter address" className='input'  />
       </Autocomplete>
     </LoadScript>
   );

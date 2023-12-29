@@ -18,6 +18,8 @@ import {
 } from "../constants/formFieldsData";
 import PayStackPayment from "../components/pay-stack";
 import { authToken } from "../helpers/authToken";
+import AddressAutocomplete from "../components/map-autocomplete";
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 export const getServerSideProps = async (context) => {
   const { req } = context;
@@ -55,7 +57,7 @@ export default function TradePersonSignup({ result }) {
   );
   let { page_title, meta_desc, content, site_settings, services, memData } =
     result;
-  // console.log("result", result);
+  console.log("result", result);
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
@@ -194,14 +196,54 @@ dispatch(createProfessionalProfile(data));
     }
   };
 
+  const [businessAddress, setBusinessAddress] = useState('');
+
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
+
+  const handlePlaceSelect = (place) => {
+    setGetingLocation(true);
+    setLocationCords({lat: place.latitude, long: place.longitude});
+    // Use reverse geocoding to get the address from coordinates
+    setValue('business_address', businessAddress);
+
+    if (place.latitude && place.longitude) {
+      toast.success("Location picked. Continue to next Step");
+    } else {
+      toast.error("Location Not picked");
+    }
+
+    setGetingLocation(false);
+
+
+
+  };
+
   const getCurrentLocation = () => {
     setGetingLocation(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
+
+        // Use reverse geocoding to get the address from coordinates
+      geocodeByAddress(`${latitude}, ${longitude}`)
+      .then(results => {
+        if (results && results.length > 0) {
+          const address = results[0].formatted_address;
+        console.log(address);
+
+          setBusinessAddress(address);
+          // Update the form value using react-hook-form's setValue
+          setValue('business_address', address);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching address:', error);
+      })
+      .finally(() => {
+        setGetingLocation(false);
+      });
 
         setLocationCords({ lat: latitude, long: longitude });
         console.log(locationCords);
@@ -225,7 +267,12 @@ dispatch(createProfessionalProfile(data));
     // This will log the updated state whenever locationCords changes
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
+    setValue("business_address",businessAddress)
+
+    console.log(watch());
   }, [locationCords]);
+
+  
 
   return (
     <>
@@ -398,7 +445,7 @@ dispatch(createProfessionalProfile(data));
                     </div>
                     <div className="form_blk">
                       <h6>Address of your business</h6>
-                      <input
+                      {/* <input
                         type="text"
                         name="business_address"
                         className="input"
@@ -406,7 +453,9 @@ dispatch(createProfessionalProfile(data));
                         {...register("business_address", {
                           required: "Required",
                         })}
-                      />
+                      /> */}
+
+                      <AddressAutocomplete onPlaceSelect={handlePlaceSelect} setAddress={setBusinessAddress}/>
 
                       <div
                         className="validation-error"
@@ -414,6 +463,34 @@ dispatch(createProfessionalProfile(data));
                       >
                         {errors.business_address?.message}
                       </div>
+                    </div>
+                    <div className="form_blk">
+                    <h6>Or Pick My Location</h6>
+                      <div className="btn_blk">
+                        <button
+                          type="button"
+                          onClick={getCurrentLocation}
+                          className="site_btn"
+                        >
+                          Pick My Location{" "}
+                          <i
+                            className={
+                              getingLoction ? "spinner" : "spinnerHidden"
+                            }
+                          ></i>
+                        </button>
+                      </div>
+                      {locationCords?.lat !== null &&
+                      locationCords?.lat !== undefined &&
+                      locationCords?.long !== null &&
+                      locationCords?.long !== undefined ? (
+                        <MapComponent
+                          latitude={locationCords?.lat}
+                          longitude={locationCords?.long}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
 
                     <div className="form_blk">
@@ -499,33 +576,7 @@ dispatch(createProfessionalProfile(data));
                         {errors.no_of_employes?.message}
                       </div>
                     </div>
-                    <div className="form_blk">
-                      <div className="btn_blk">
-                        <button
-                          type="button"
-                          onClick={getCurrentLocation}
-                          className="site_btn"
-                        >
-                          Pick My Location{" "}
-                          <i
-                            className={
-                              getingLoction ? "spinner" : "spinnerHidden"
-                            }
-                          ></i>
-                        </button>
-                      </div>
-                      {locationCords?.lat !== null &&
-                      locationCords?.lat !== undefined &&
-                      locationCords?.long !== null &&
-                      locationCords?.long !== undefined ? (
-                        <MapComponent
-                          latitude={locationCords?.lat}
-                          longitude={locationCords?.long}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </div>
+                    
 
                     <div className="form_blk">
                       <input

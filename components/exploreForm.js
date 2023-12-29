@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { saveSearch } from "../states/actions/saveSearch";
 import { useDispatch, useSelector } from "react-redux";
 import MapComponent from "./map-container";
+import AddressAutocomplete from "./map-autocomplete";
 
 
 const ExploreFrom = ({ onClose, services }) => {
@@ -124,6 +125,27 @@ const ExploreFrom = ({ onClose, services }) => {
 
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
+
+  const [businessAddress, setBusinessAddress] = useState('');
+
+  const handlePlaceSelect = (place) => {
+    setGetingLocation(true);
+    setLocationCords({lat: place.latitude, long: place.longitude});
+    // Use reverse geocoding to get the address from coordinates
+    setValue('business_address', businessAddress);
+
+    if (place.latitude && place.longitude) {
+      toast.success("Location picked. Continue to next Step");
+    } else {
+      toast.error("Location Not picked");
+    }
+
+    setGetingLocation(false);
+
+
+
+  };
+
   const getCurrentLocation = () => {
     setGetingLocation(true);
     if (navigator.geolocation) {
@@ -163,6 +185,7 @@ const ExploreFrom = ({ onClose, services }) => {
 
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
+    setValue("business_address",businessAddress)
   }, [locationCords]);
 
   const [file, setFile] = useState(null);
@@ -385,13 +408,14 @@ const ExploreFrom = ({ onClose, services }) => {
 
               <div className="form_blk">
                 <div className="map_indication">
-                  <input
+                <AddressAutocomplete onPlaceSelect={handlePlaceSelect} setAddress={setBusinessAddress} />
+                                  {/* <input
                     type="text"
                     name="location"
                     className="input"
                     readOnly
                     placeholder={"Please Click on Pick my location"}
-                  />
+                  /> */}
                   <button className="map_marker" type="button">
                     <img src="/images/map_marker.svg" alt="" />
                   </button>
