@@ -16,6 +16,8 @@ import Image from "next/image";
 import http from "../helpers/http";
 import { cmsFileUrl } from "../helpers/helpers";
 import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
+import SubSerForm from "../components/subSerForm";
 
 
 export const getServerSideProps = async () => {
@@ -95,8 +97,29 @@ export default function Home({ result }) {
     router.push(`search-result?service_id=${service_id}`)
   }
 
+  const [isSubPopupOpen, setIsSubPopupOpen] = useState(false);
+  const [serId, setSerId] = useState(false);
+  const [serviceTitle, setServiceTitle] = useState(false);
+  const [getingSubServices, setGetingSubServices] = useState(false);
+
+  const handleOpenSubPopup = (service_id, title) => {
+    setGetingSubServices(true);
+    setSerId(service_id);
+    setServiceTitle(title);
+    setIsSubPopupOpen(true);
+
+  };
+
+  const handleCloseSubPopup = () => {
+    setGetingSubServices(false);
+    setSerId(false);
+    setServiceTitle(false);
+    setIsSubPopupOpen(false);
+  };
+
   return (
     <>
+    <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="banner_main">
@@ -116,10 +139,10 @@ export default function Home({ result }) {
                       return (
                         <>
                         
-                        <div className="col" key={i}>
-                        <Link href={`search-result?service_id=${searched?.id}`}>
-                          <div className="inner">
-                            <div className="img_icon">
+                        <div className="col" key={i} style={{cursor : "pointer"}} onClick={() => handleOpenSubPopup(searched?.id, searched?.title)}>
+                        {/* <Link href={`search-result?service_id=${searched?.id}`}> */}
+                          <div className="inner" >
+                            <div className="img_icon" >
                               <Image
                                 src={cmsFileUrl(searched?.icon, 'services')}
                                 width={40}
@@ -130,7 +153,7 @@ export default function Home({ result }) {
                             </div>
                             <h5><Text string={searched?.title} /></h5>
                           </div>
-                          </Link>
+                          {/* </Link> */}
                         </div>
                      
                         </>
@@ -173,7 +196,7 @@ export default function Home({ result }) {
             <OwlCarousel className="owl-carousel owl-theme" {...categories}>
               {featured_services?.map((val) => {
                 return (
-                  <div className="item" style={{cursor : "pointer"}} key={val.id} onClick={(e) => handleServiceClick(val?.id)}>
+                  <div className="item" style={{cursor : "pointer"}} key={val.id} onClick={() => handleOpenSubPopup(val?.id, val?.title)}>
                     <div className="inner">
                       <div className="icon_img">
                         <Image
@@ -324,6 +347,12 @@ export default function Home({ result }) {
       <Popup isOpen={isPopupOpen} onClose={handleClosePopup} >
         <ExploreFrom onClose={handleClosePopup} services={services} />
       </Popup>
+
+{serId > 0 && <Popup isOpen={isSubPopupOpen} onClose={handleCloseSubPopup} >
+        <SubSerForm onClose={handleCloseSubPopup} service_id={serId} serviceTitle={serviceTitle} getingSubServices={getingSubServices} setGetingSubServices={setGetingSubServices}/>
+      </Popup>}
+      
+
     </>
   );
 }

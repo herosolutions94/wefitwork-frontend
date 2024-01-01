@@ -13,7 +13,7 @@ import AddressAutocomplete from "./map-autocomplete";
 const ExploreFrom = ({ onClose, services }) => {
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
-    (state) => state.contactUs.isFormProcessing
+    (state) => state.saveSearch.isFormProcessing
   );
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
@@ -519,8 +519,16 @@ const ExploreFrom = ({ onClose, services }) => {
           <div className="br"></div>
           <h3>More Information</h3>
           <div className="form_blk w_6">
-            <h6>Estimated Price</h6>
-            <select
+            <h6>Estimated Price / Your Budet</h6>
+            <input
+                        type="text"
+                        name="budget"
+                        className="input"
+                        {...register("budget", {
+                          required: "Required.",
+                        })}
+                      />
+            {/* <select
               className="input"
               name="budget"
               {...register("budget", {
@@ -532,7 +540,7 @@ const ExploreFrom = ({ onClose, services }) => {
               <option value="3k-4k">3k-4k</option>
               <option value="5k-6k">5k-6k</option>
               <option value="7k-8k">7k-8k</option>
-            </select>
+            </select> */}
             <div className="validation-error" style={{ color: "red" }}>
               {errors.budget?.message}
             </div>
@@ -594,6 +602,13 @@ const ExploreFrom = ({ onClose, services }) => {
           ) : (
             <button type="submit" className="site_btn">
               Search
+              {isFormProcessing && 
+                          <i
+                          className={
+                            isFormProcessing ? "spinner" : "spinnerHidden"
+                          }
+                        ></i>
+                    }
             </button>
           )}
         </div>
