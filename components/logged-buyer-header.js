@@ -295,6 +295,8 @@ export default function LoggedBuyerHeader() {
                         <span>Logout</span>
                       </Link>
                     </li>
+                  <div className="br"></div>
+
                     {member?.mem_type === "professional" ? (
                       <div className="btn_blk text-center">
                         <Link

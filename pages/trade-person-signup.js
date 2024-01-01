@@ -34,7 +34,7 @@ export const getServerSideProps = async (context) => {
   ) {
     return {
       redirect: {
-        destination: "/professional-dashboard/services", // Replace '/dashboard' with the appropriate URL
+        destination: "/professional-dashboard", // Replace '/dashboard' with the appropriate URL
         permanent: false,
       },
     };

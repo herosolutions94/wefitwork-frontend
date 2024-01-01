@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import Head from "next/head";
 import Text from "@/components/components/text";
 import { Toaster } from "react-hot-toast";
+import { cmsFileUrl, isEmpty } from "@/components/helpers/helpers";
+import Image from "next/image";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -16,7 +18,7 @@ export default function Dashboard() {
   const data = useSelector((state) => state.account.content);
   const member = useSelector((state) => state.account.mem);
   const isLoading = useSelector((state) => state.account.isLoading);
-
+ const sent_sms = useSelector((state) => state.account.sent_sms);
   // console.log("dashboard",data);
   const { site_settings, page_title } = data;
 
@@ -78,100 +80,55 @@ export default function Dashboard() {
                 <h4>Contracts Converged</h4>
               </div>
               {/* ====start loop====== */}
-              <div className="contract_list custom_blk">
+              {isEmpty(sent_sms) && 
+                <div className="alert alert-danger text-center">You haven't sent any request </div>
+              }
+              {!isEmpty(sent_sms) && 
+                sent_sms?.map((sms, i) => {
+                  return (
+                    <div className="contract_list custom_blk" key={i}>
                   <div className="col">
                     <div className="user_info">
                       <div className="dp_icon">
-                        <img src="/images/testi6.png" alt=""/>
+                      <Image 
+                      src={cmsFileUrl(sms?.to_mem_dp, "members")}
+                      width={60}
+                      height={60}
+                      alt={"dp"}
+                       />
                       </div>
                       <div className="cntnt">
-                        <h5>Aleena Gilbert</h5>
+                        <h5><Text string={sms?.to_mem_name} /></h5>
                       </div>
                     </div>
                   </div>
                   <div className="col">
                     <div className="inner">
                       <p><small>Date</small></p>
-                      <p><strong>Feb 26,2023</strong></p>
+                      <p><strong><Text string={sms?.date} /></strong></p>
                     </div>
                   </div>
                   <div className="col">
                     <div className="inner">
                       <p><small>Service</small></p>
-                      <p><strong>Pipe Installation and Repair</strong></p>
+                      <p><strong><Text string={sms?.service} /></strong></p>
                     </div>
                   </div>
                   <div className="col col_l">
                     <div className="inner">
                       <p><small>Address</small></p>
-                      <p><strong>123 Main Street, Anytown, USA, 12345</strong></p>
+                      <p><strong><Text string={sms?.to_mem_address} /></strong></p>
                     </div>
                   </div>
                   
               </div>
+
+                  );
+                })
+              }
+              
               {/* =========end loop========== */}
-              <div className="contract_list custom_blk">
-                  <div className="col">
-                    <div className="user_info">
-                      <div className="dp_icon">
-                        <img src="/images/mini_user.svg" alt=""/>
-                      </div>
-                      <div className="cntnt">
-                        <h5>Aleena Gilbert</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Date</small></p>
-                      <p><strong>Feb 26,2023</strong></p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Service</small></p>
-                      <p><strong>Water Filtration and Treatment</strong></p>
-                    </div>
-                  </div>
-                  <div className="col col_l">
-                    <div className="inner">
-                      <p><small>Address</small></p>
-                      <p><strong>123 Main Street, Anytown, USA, 12345</strong></p>
-                    </div>
-                  </div>
-                  
-              </div>
-              <div className="contract_list custom_blk">
-                  <div className="col">
-                    <div className="user_info">
-                      <div className="dp_icon">
-                        <img src="/images/testi1.png" alt=""/>
-                      </div>
-                      <div className="cntnt">
-                        <h5>Stefen Chris</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Date</small></p>
-                      <p><strong>Feb 26,2023</strong></p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Service</small></p>
-                      <p><strong>Remodeling and Renovation</strong></p>
-                    </div>
-                  </div>
-                  <div className="col col_l">
-                    <div className="inner">
-                      <p><small>Address</small></p>
-                      <p><strong>123 Main Street, Anytown, USA, 12345</strong></p>
-                    </div>
-                  </div>
-                  
-              </div>
+            
             </div>
          </section>
       </main>

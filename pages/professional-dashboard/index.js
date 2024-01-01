@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
+import { cmsFileUrl, isArrayEmpty, isEmpty } from "@/components/helpers/helpers";
+import Image from "next/image";
 
 
 export default function Dashboard() {
@@ -16,8 +18,9 @@ export default function Dashboard() {
   const member = useSelector((state) => state.proProfile.mem);
   const isLoading = useSelector((state) => state.proProfile.isLoading);
   const pro_profile = useSelector((state) => state.proProfile.pro_profile);
+  const received_sms = useSelector((state) => state.proProfile.received_sms)
 
-  // console.log("dashboard",data);
+  // console.log("dashboard",typeof(received_sms));
   const { site_settings, page_title } = data;
 
   useEffect(() => {
@@ -35,7 +38,9 @@ export default function Dashboard() {
             <div className="contain">
             
             {(pro_profile?.phone_verified == "0" && pro_profile?.phone_verified == 0) && 
-              <div className="alert alert-danger text-center">Your Bussiness Phone is not Verified</div>
+              <div className="alert alert-danger text-center">Your Bussiness Phone is missing or not Verified. <a href="professional-dashboard/services" className="btn btn-lg btn-danger"><u> Click Here To verify</u></a></div>
+
+              
             }
             
               <div className="sec_heading">
@@ -81,100 +86,63 @@ export default function Dashboard() {
                 <h4>Contracts Converged</h4>
               </div>
               {/* ====start loop====== */}
-              <div className="contract_list custom_blk">
+              {isEmpty(received_sms) && 
+                <div className="alert alert-danger text-center">No Reuests Founds </div>
+                
+              }
+              {!isEmpty(received_sms) &&
+              
+
+              received_sms?.map((sms, i ) => {
+                
+                  return (
+                    <div className="contract_list custom_blk" key={i}>
                   <div className="col">
                     <div className="user_info">
                       <div className="dp_icon">
-                        <img src="/images/testi6.png" alt=""/>
+                      <Image 
+                      src={cmsFileUrl(sms?.from_mem_dp, "members")}
+                      width={60}
+                      height={60}
+                      alt={"dp"}
+                       />
+                        
                       </div>
                       <div className="cntnt">
-                        <h5>Aleena Gilbert</h5>
+                        <h5><Text string={sms?.from_mem_name} /></h5>
                       </div>
                     </div>
                   </div>
                   <div className="col">
                     <div className="inner">
                       <p><small>Date</small></p>
-                      <p><strong>Feb 26,2023</strong></p>
+                      <p><strong><Text string={sms?.date} /></strong></p>
                     </div>
                   </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Service</small></p>
-                      <p><strong>Pipe Installation and Repair</strong></p>
-                    </div>
-                  </div>
+                  
                   <div className="col col_l">
                     <div className="inner">
                       <p><small>Address</small></p>
-                      <p><strong>123 Main Street, Anytown, USA, 12345</strong></p>
+                      <p><strong><Text string={sms?.from_mem_address} /></strong></p>
+                    </div>
+                  </div>
+
+                  <div className="col">
+                    <div className="inner">
+                      <p><small>WorkScope</small></p>
+                      <p><strong><a href="" className="btn btn-lg btn-danger">See Workscope</a></strong></p>
                     </div>
                   </div>
                   
               </div>
-              {/* =========end loop========== */}
-              <div className="contract_list custom_blk">
-                  <div className="col">
-                    <div className="user_info">
-                      <div className="dp_icon">
-                        <img src="/images/mini_user.svg" alt=""/>
-                      </div>
-                      <div className="cntnt">
-                        <h5>Aleena Gilbert</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Date</small></p>
-                      <p><strong>Feb 26,2023</strong></p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Service</small></p>
-                      <p><strong>Water Filtration and Treatment</strong></p>
-                    </div>
-                  </div>
-                  <div className="col col_l">
-                    <div className="inner">
-                      <p><small>Address</small></p>
-                      <p><strong>123 Main Street, Anytown, USA, 12345</strong></p>
-                    </div>
-                  </div>
-                  
-              </div>
-              <div className="contract_list custom_blk">
-                  <div className="col">
-                    <div className="user_info">
-                      <div className="dp_icon">
-                        <img src="/images/testi1.png" alt=""/>
-                      </div>
-                      <div className="cntnt">
-                        <h5>Stefen Chris</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Date</small></p>
-                      <p><strong>Feb 26,2023</strong></p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Service</small></p>
-                      <p><strong>Remodeling and Renovation</strong></p>
-                    </div>
-                  </div>
-                  <div className="col col_l">
-                    <div className="inner">
-                      <p><small>Address</small></p>
-                      <p><strong>123 Main Street, Anytown, USA, 12345</strong></p>
-                    </div>
-                  </div>
-                  
-              </div>
+                  );
+                })}
+                               
+              
+                
+            
+              
+              
             </div>
          </section>
       </main>

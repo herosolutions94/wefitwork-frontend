@@ -20,6 +20,7 @@ import {
     content: {},
     mem: {},
     error: false,
+    sent_sms: {},
   };
   
   export default function (state = initialState, { type, payload }) {
@@ -29,6 +30,7 @@ import {
           ...state,
           isLoading: true,
           mem: {},
+          sent_sms: {}
         };
       case FETCH_BUYER_DASHBOARD_DATA_SUCCESS:
         return {
@@ -36,6 +38,7 @@ import {
           isLoading: false,
           content: payload,
           mem: payload.member,
+          sent_sms: payload.sent_sms
         };
       case FETCH_BUYER_DASHBOARD_DATA_FAILED:
         return {
@@ -43,6 +46,7 @@ import {
           isLoading: false,
           mem: {},
           error: payload,
+          sent_sms: {}
         };
   
       case FETCH_BUYER_ACCOUNT_SETTINGS:
