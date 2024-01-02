@@ -272,6 +272,7 @@ dispatch(createProfessionalProfile(data));
     console.log(watch());
   }, [locationCords]);
 
+
   
 
   return (
@@ -787,6 +788,9 @@ dispatch(createProfessionalProfile(data));
                             memData={memData}
                             handleCreateProfile={handleCreateProfile}
                             watcFields={watch()}
+                            mem_email={memData?.mem_email}
+                            mem_customer_code={memData?.mem_paystack_customer_code}
+
                           />
                         ) : (
                           <button
