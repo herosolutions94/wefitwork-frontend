@@ -152,6 +152,18 @@ export function timeAgo(date) {
 export function format_amount(amount = parseFloat(0.00)) {
   return "₦ " + amount
 }
+
+export function format_amount_comma(amount = parseFloat(0)) {
+  // Check if amount is a valid number
+  if (typeof amount !== 'number' || isNaN(amount)) {
+    return "Invalid amount";
+  }
+
+  // Assuming you want to display two decimal places and add commas
+  const formattedAmount = "₦ " + amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return formattedAmount;
+}
+
 export function generateRandomNumber() {
   return Math.floor(100000 + Math.random() * 900000);
 }
@@ -198,3 +210,41 @@ export function isArrayEmpty(arr) {
 export function getObjKeyCount(obj){
   return Object.keys(obj).length;
 };
+
+export function capitalizeFirstLetter(str) {
+  if (typeof str !== 'string' || str.length === 0) {
+    return str;
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function formatDateTime(dateTimeString) {
+  const date = new Date(dateTimeString);
+
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'short' });
+  const year = date.getFullYear();
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const formattedHours = hours.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+
+  return `${day} ${month} ${year} | ${formattedHours} : ${formattedMinutes}`;
+}
+
+export function subscriptionStatus(status) {
+  // console.log(typeof(status));
+  if(status == 'active'){
+    return <span className="badge rounded-pill bg-success">Active</span>
+  }else if(status == 'non-renewing'){
+    return <span className="badge rounded-pill bg-warning">Non Renewing</span>
+
+  }else{
+    return <span className="badge rounded-pill bg-danger">Cancelled</span>
+  }
+
+  
+}
