@@ -1,10 +1,30 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
-
+import { fetchBookingDetails } from "@/components/states/actions/buyer/bookings";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { Toaster } from "react-hot-toast";
+import Head from "next/head";
+import Text from "@/components/components/text";
+import Image from "next/image";
+import { cmsFileUrl } from "@/components/helpers/helpers";
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 
 export default function BookingDetails() {
+    const router = useRouter();
+    const {slug} = router.query;
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.bookings.content);
+    const member = useSelector((state) => state.bookings.mem);
+    const isLoading = useSelector((state) => state.bookings.isLoading);
+
+    useEffect(() => {
+        dispatch(fetchBookingDetails(slug))
+    }, [])
     
+    const { site_settings, page_title, row_data, pro_mem_data, pro_mem_profile, workscope } = data;
+
     const [isYesSelected, setIsYesSelected] = useState(false);
 
     const handleYesClick = () => {
@@ -25,18 +45,36 @@ export default function BookingDetails() {
     };
   return (
     <>
+    <Toaster position="top-center" />
+    <Head>
+    <title>{page_title ? page_title : "fetching..."}</title>
+    </Head>
       <main>
-         <section className="dashboard professional_details">
+      {isLoading && (
+                  <>
+                    <div className="br"></div>
+                    <div className="text-center">
+                      <div
+                        className="spinner-border text-danger"
+                        role="status"
+                        style={{ width: "3rem", height: "3rem" }}
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+         {!isLoading && <section className="dashboard professional_details">
             <div className="contain">
                 <div className="professiona_view_tile">
                     <div className="col custom_blk">
-                        <h4 className="color">Choosed Service</h4>
-                        <h6>Plumber, Sewer Line Repair</h6>
+                        <h4 className="color"><Text string={row_data?.service} /></h4>
+                        {/* <h6>Plumber, Sewer Line Repair</h6> */}
                         <div className="mini_br"></div>
-                        <div className="address_booking"><img src="/images/MapPin.svg" alt=""/><span>4346 Abelardo Ford Apt. 483, Connecticut, UK</span></div>
+                        <div className="address_booking"><img src="/images/MapPin.svg" alt=""/><span><Text string={row_data?.to_mem_address} /></span></div>
                         <div className="br"></div>
                         <h4 className="color">Work Scope</h4>
-                        <p>Addressing issues with the main sewer line is crucial to prevent sewage backups and maintain proper sanitation. Plumbers install, repair, or replace gas lines for appliances like stoves, ovens, and water heaters. Plumbers can install water filtration systems to improve water quality or address specific water treatment needs. Plumbers can install water filtration systems to improve water quality or address specific water treatment needs. They install and maintain backflow prevention devices to ensure that contaminated water does not enter the clean water supply.</p>
+                        <p><Text string={workscope?.work_scope} /></p>
                     </div>
                     <div className="col custom_blk">
                         <div className="action_buttons">
@@ -50,10 +88,22 @@ export default function BookingDetails() {
                         <div className="inner">
                             <div className="head_professional">
                                 <div className="image">
-                                    <img src="/images/pro3.png" alt="Thomas Alenjery"/>
+                                {pro_mem_data?.mem_image ? (
+                                  <Image
+                                    src={cmsFileUrl(pro_mem_data?.mem_image, "members")}
+                                    width={130}
+                                    height={130}
+                                    alt={pro_mem_data?.mem_fname}
+                                  />
+                                ) : (
+                                  <img
+                                    src="/images/no-user.svg"
+                                    alt={pro_mem_data?.mem_fname}
+                                  />
+                                )}
                                 </div>
                                 <div className="cntnt">
-                                    <h4>Thomas Alenjery</h4>
+                                    <h4>{pro_mem_data?.mem_fname}</h4>
                                     <div className="rating_lbl">
                                         <img src="/images/star.svg" alt=""/>
                                         <span>5.0 (10 Reviews)</span>
@@ -66,7 +116,7 @@ export default function BookingDetails() {
                             </div>
                             <div className="done_work">
                                 <p>Specialization</p>
-                                <h3>Commercial & Residential</h3>
+                                <h3>{pro_mem_profile?.specialization}</h3>
                             </div>
                             
                         </div>
@@ -75,7 +125,7 @@ export default function BookingDetails() {
                         <ul className="booking_ul">
                             <li>
                                 <div className="ques">
-                                    <h4>Have <em>Thomas Alenjery</em> Contacted you?</h4>
+                                    <h4>Have <em>{pro_mem_data?.mem_fname}</em> Contacted you?</h4>
                                 </div>
                                 <div className="button-container">
                                     <button onClick={handleYesClick} className={isYesSelected ? 'active' : ''}>
@@ -89,7 +139,7 @@ export default function BookingDetails() {
 
                             <li>
                                 <div className="ques">
-                                    <h4>Have you hired <em>Thomas Alenjery</em> ?</h4>
+                                    <h4>Have you hired <em>{pro_mem_data?.mem_fname}</em> ?</h4>
                                 </div>
                                 <div className="button-container">
                                     <button onClick={handleYesClickTwo} className={isYesSelectedTwo ? 'active' : ''}>
@@ -103,12 +153,12 @@ export default function BookingDetails() {
                         </ul>
                         <div className="br"></div><div className="br"></div>
                         <div className="btn_blk text-center">
-                            <Link href="leave-review" className="site_btn">Leave Review</Link>
+                            <Link href={`/buyer-dashboard/leave-review/${encrypt_decrypt('encrypt', pro_mem_data?.mem_id)}`} className="site_btn">Leave Review</Link>
                         </div>
                     </div>
                 </div>
             </div>
-         </section>
+         </section>}
       </main>
       
     </>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { cmsFileUrl } from '../helpers/helpers';
 
 const Gallery = ({ images }) => {
 
@@ -6,8 +7,8 @@ const Gallery = ({ images }) => {
     <>
         <div id="my-gallery-popup">
         {images.map((image, index) => (
-            <div key={index} href={image.large} data-lg-size={image.large} className='image_grid'>
-            <img src={image.thumb} alt={`Image ${index + 1}`} />
+            <div key={index} href={cmsFileUrl(image.image, 'members/portfolio')} data-lg-size={cmsFileUrl(image.image, 'members/portfolio')} className='image_grid'>
+            <img src={cmsFileUrl(image.image, 'members/portfolio')} alt={`Image ${index + 1}`} />
             </div>
         ))}
     </div>

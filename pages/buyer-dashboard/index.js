@@ -11,6 +11,7 @@ import Text from "@/components/components/text";
 import { Toaster } from "react-hot-toast";
 import { cmsFileUrl, isEmpty } from "@/components/helpers/helpers";
 import Image from "next/image";
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -86,7 +87,7 @@ export default function Dashboard() {
               {!isEmpty(sent_sms) && 
                 sent_sms?.map((sms, i) => {
                   return (
-                    <div className="contract_list custom_blk" key={i}>
+                    <div className="contract_list custom_blk " key={i}>
                   <div className="col">
                     <div className="user_info">
                       <div className="dp_icon">
@@ -120,6 +121,12 @@ export default function Dashboard() {
                       <p><strong><Text string={sms?.to_mem_address} /></strong></p>
                     </div>
                   </div>
+
+                  <div className="col col_s">
+                                <div className="inner text-right ">
+                                <Link href={`buyer-dashboard/booking-details/${sms?.id}`} className="site_btn">View</Link>
+                                </div>
+                            </div>
                   
               </div>
 

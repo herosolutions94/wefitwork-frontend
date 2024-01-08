@@ -6,16 +6,43 @@ import PopupLarge from "@/components/components/popupLarge";
 import ReactStars from 'react-stars'
 import SendMessage from "@/components/components/sendMessage";
 import PopupSmall from "@/components/components/popupSmall";
-export default function SearchResult() {
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
+import { parse } from "cookie";
+import http from "@/components/helpers/http";
+import { doObjToFormData, isArrayEmpty } from "@/components/helpers/helpers";
+import MetaGenerator from "@/components/components/meta-generator";
+import Text from "@/components/components/text";
+import Image from "next/image";
+import { cmsFileUrl } from "@/components/helpers/helpers";
+
+export const getServerSideProps = async (context) => {
+    const cookies = parse(context?.req?.headers?.cookie || "");
+    const authToken = cookies?.authToken || "";
+  
+    const { id } = context.query;
+    const pro_mem_id = encrypt_decrypt('decrypt', id)
+  
+    const result = await http
+      .post(`search-detail/${pro_mem_id}`, doObjToFormData({ token: authToken }))
+      .then((response) => response.data)
+      .catch((error) => error.response.data.message);
+  
+    return { props: { result, authToken } };
+  };
+
+export default function SearchResult({result, authToken}) {
+    console.log("detsil",result);
+    let { page_title, meta_desc, pro_mem_profile, pro_mem_data, pro_mem_sub_services, portfolio_images, pro_mem_service } = result;
+
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isPopupOpenSend, setIsPopupOpenSend] = useState(false);
     
-    const handleOpenPopupSend = () => {
-        setIsPopupOpenSend(true);
-    };
-    const handleClosePopupSend = () => {
-        setIsPopupOpenSend(false);
-    };
+    // const handleOpenPopupSend = () => {
+    //     setIsPopupOpenSend(true);
+    // };
+    // const handleClosePopupSend = () => {
+    //     setIsPopupOpenSend(false);
+    // };
     const handleOpenPopup = () => {
         setIsPopupOpen(true);
     };
@@ -67,89 +94,31 @@ export default function SearchResult() {
             comment:"I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
         },
     ]
-    const galleryImages = [
-        {
-          large: '/images/portfolio1_1.jpg',
-          thumb: '/images/portfolio1.png',
-        },
-        {
-            large: '/images/portfolio2_1.webp',
-            thumb: '/images/portfolio2.png',
-        },
-        {
-            large: '/images/portfolio3_1.jpg',
-            thumb: '/images/portfolio3.png',
-        },
-        {
-            large: '/images/portfolio4_1.jpg',
-            thumb: '/images/portfolio4.png',
-        },
-        
-      ];
-      const galleryImagesPopup = [
-        {
-          large: '/images/portfolio1_1.jpg',
-          thumb: '/images/portfolio1.png',
-        },
-        {
-            large: '/images/portfolio2_1.webp',
-            thumb: '/images/portfolio2.png',
-        },
-        {
-            large: '/images/portfolio3_1.jpg',
-            thumb: '/images/portfolio3.png',
-        },
-        {
-            large: '/images/portfolio4_1.jpg',
-            thumb: '/images/portfolio4.png',
-        },
-        {
-            large: '/images/portfolio1_1.jpg',
-            thumb: '/images/portfolio1.png',
-          },
-          {
-              large: '/images/portfolio3_1.jpg',
-              thumb: '/images/portfolio3.png',
-          },
-          {
-              large: '/images/portfolio4_1.jpg',
-              thumb: '/images/portfolio4.png',
-          },
-          {
-            large: '/images/portfolio1_1.jpg',
-            thumb: '/images/portfolio1.png',
-          },
-          {
-              large: '/images/portfolio2_1.webp',
-              thumb: '/images/portfolio2.png',
-          },
-          {
-              large: '/images/portfolio3_1.jpg',
-              thumb: '/images/portfolio3.png',
-          },
-          {
-              large: '/images/portfolio4_1.jpg',
-              thumb: '/images/portfolio4.png',
-          },
-          {
-            large: '/images/portfolio1_1.jpg',
-            thumb: '/images/portfolio1.png',
-          },
-          {
-              large: '/images/portfolio2_1.webp',
-              thumb: '/images/portfolio2.png',
-          },
-          {
-              large: '/images/portfolio3_1.jpg',
-              thumb: '/images/portfolio3.png',
-          },
-          {
-              large: '/images/portfolio4_1.jpg',
-              thumb: '/images/portfolio4.png',
-          }
-      ];
+    
+    const [proData, setProData] = useState(false);
+    const [authPopup, setAuthPopup] = useState(false);
+
+    const handleOpenPopupSend = (pro_mem_data, mem_token = authToken) => {
+        if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
+          setProData(pro_mem_data);
+          setIsPopupOpenSend(true);
+        }else{
+          toast.error("You sre not logedin. Please Login to your account to send SMS");
+          setAuthPopup(true);
+          setProData(pro_mem_data);
+          
+        }
+          
+      };
+      const handleClosePopupSend = () => {
+          setProData(false);
+          setIsPopupOpenSend(false);   
+          setAuthPopup(false);    
+      };
+
   return (
     <>
+     <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="professional_details">
             <div className="contain">
@@ -166,10 +135,22 @@ export default function SearchResult() {
                         <div className="inner">
                             <div className="head_professional">
                                 <div className="image">
-                                    <img src="/images/pro3.png" alt="Thomas Alenjery"/>
+                                {pro_mem_data?.mem_image ? (
+                                  <Image
+                                    src={cmsFileUrl(pro_mem_data?.mem_image, "members")}
+                                    width={130}
+                                    height={130}
+                                    alt={pro_mem_data?.mem_fname}
+                                  />
+                                ) : (
+                                  <img
+                                    src="/images/no-user.svg"
+                                    alt={pro_mem_data?.mem_fname}
+                                  />
+                                )}
                                 </div>
                                 <div className="cntnt">
-                                    <h4>Thomas Alenjery</h4>
+                                    <h4><Text string={pro_mem_data?.mem_fname} /></h4>
                                     <div className="rating_lbl">
                                         <img src="/images/star.svg" alt=""/>
                                         <span>5.0 (10 Reviews)</span>
@@ -182,47 +163,57 @@ export default function SearchResult() {
                             </div>
                             <div className="done_work">
                                 <p>Specialization</p>
-                                <h3>Commercial & Residential</h3>
+                                <h3>{pro_mem_profile?.specialization !== null ? pro_mem_profile?.specialization : 'Not Mention'}</h3>
                             </div>
                             <div className="btn_blk">
                                 <Link href="" className="site_btn color block">Start Chat</Link>
-                                <button type="button" onClick={handleOpenPopupSend} className="site_btn block">Send SMS</button>
+                                <button type="button" onClick={() => handleOpenPopupSend(pro_mem_data)} className="site_btn block">Send SMS</button>
                             </div>
                         </div>
                     </div>
                     <div className="col other_intro">
                         <h5>INTRODUCTION</h5>
-                        <p>With over 10 years of experience in electrical work, I provide reliable and high-quality services to meet all your electrical needs. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters.</p>
+                        <p><Text string={pro_mem_profile?.bio ? pro_mem_profile?.bio : 'default'} /></p>
                         <div className="br"></div>
                         <h5>SERVICES OFFERED</h5>
-                        <h6 className="color">General Plumbing</h6>
+                        <h6 className="color"><Text string={pro_mem_service ? pro_mem_service : 'default'} /></h6>
                         <ul>
-                            <li>Bathroom & Kitchen Plumbing</li>
-                            <li>Emergency Plumber Service</li>
-                            <li>Water Mains Specialist</li>
-                            <li>Blocked Baths</li>
-                            <li>Pipe Fitter</li>
-                            <li>Water Leak Detection</li>
-                            <li>Blocked Sinks</li>
-                            <li>Plumbing Repairs</li>
-                            <li>Blocked Toilets</li>
+                        {pro_mem_sub_services?.map((sub, i) => {
+                            return <li key={i}>{sub}</li>
+                        })}
+                            
+                            
                         </ul>
                         <div className="br"></div>
                         <h5>portfolio</h5>
                         <div className="portfolio_grid">
                             {/* <Gallery images={galleryImages}/> */}
-                            <div id="my-gallery">
-                                {galleryImages.map((val)=>{
+                            <div id="my-gallery" >
+                            
+                                {isArrayEmpty(portfolio_images) ? 
+                                 <div className="alert alert-danger text-center">No Portfolio Images were added</div> :
+                                 <>
+                                    {portfolio_images.map((val,i)=>{
                                     return(
-                                        <div className='image_grid'>
-                                            <img src={val.large} alt="gallery" />
+                                        <div className='image_grid' key={i}>
+                                        <Image 
+                                            src={cmsFileUrl(val.image, 'members/portfolio')}
+                                            width={265}
+                                            height={228}
+                                            alt="portfolio-imgae"
+                                        />
+                                            
                                         </div>
                                     );
                                 })}
-                            </div>
-                            <div className="btn_blk">
+
+                                <div className="btn_blk">
                                 <button type="button" className="site_btn" onClick={handleOpenPopup}>View all Images</button>
                             </div>
+                                 </>
+                                    }
+                            </div>
+                            
                         </div>
                     </div>
                     <div className="col">
@@ -289,11 +280,22 @@ export default function SearchResult() {
         </section>
       </main>
       <PopupLarge isOpen={isPopupOpen} onClose={handleClosePopup}>
-        <GalleryPopup onClose={handleClosePopup} images={galleryImagesPopup}/>
+        <GalleryPopup onClose={handleClosePopup} images={portfolio_images}/>
       </PopupLarge>
-      <PopupSmall isOpen={isPopupOpenSend} onClose={handleClosePopupSend}>
+      {/* <PopupSmall isOpen={isPopupOpenSend} onClose={handleClosePopupSend}>
         <SendMessage />
+      </PopupSmall> */}
+
+      {authPopup &&
+        <PopupSmall isOpen={authPopup} onClose={handleClosePopupSend}>
+          <LoginPopup handleOpenPopupSend={handleOpenPopupSend} proData={proData} setAuthPopup={setAuthPopup} />
+        </PopupSmall>
+      }
+
+      <PopupSmall isOpen={isPopupOpenSend} onClose={handleClosePopupSend}>
+      {proData && <SendMessage data={proData} handleClosePopupSend={handleClosePopupSend} />}
       </PopupSmall>
+
     </>
   );
 }

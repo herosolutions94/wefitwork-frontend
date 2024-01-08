@@ -11,6 +11,8 @@ import services from "./professional/services";
 import saveSearch from "./saveSearch";
 import phoneVerification from "./professional/phoneVerification";
 import subscriptions from "./professional/subscriptions";
+import bookings from "./buyer/bookings";
+import reviews from "./buyer/reviews";
 
 export default combineReducers({
  siteSettings,
@@ -25,6 +27,8 @@ export default combineReducers({
  saveSearch,
  phoneVerification,
  subscriptions,
+ bookings,
+ reviews,
  
  
  
