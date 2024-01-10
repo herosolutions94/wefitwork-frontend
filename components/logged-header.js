@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Text from "./text";
 import { fetchProfessioanlDashboardData } from "../states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
-import { cmsFileUrl } from "../helpers/helpers";
+import { cmsFileUrl, getArrayCount, getObjKeyCount, isArrayEmpty, isEmpty, timeAgo } from "../helpers/helpers";
 import Image from "next/image";
 import { deleteCookie } from "cookies-next";
+import { isEmptyObject } from "jquery";
 
 export default function LoggedHeader() {
   const router = useRouter();
@@ -15,11 +16,13 @@ export default function LoggedHeader() {
   const member = useSelector((state) => state.proProfile.mem);
   const isLoading = useSelector((state) => state.proProfile.isLoading);
 
-  const { site_settings, page_title } = data;
+  const { site_settings, page_title, notifications, notifications_count } = data;
 
   useEffect(() => {
     dispatch(fetchProfessioanlDashboardData());
   }, []);
+
+  console.log(data);
 
   const [userDrop, setUserDrop] = useState(false);
   const [envelopeDrop, setEnvelopeDrop] = useState(false);
@@ -68,31 +71,40 @@ export default function LoggedHeader() {
                   <ul className="drop_lst">
                     <li>
                       <div className="notify_header">
-                        <h5>You have 5 notifications</h5>
+                        <h5>You have {notifications !== null ? notifications_count : 0} new notifications</h5>
                       </div>
                     </li>
-                    <li>
+                    {notifications !== null  ? 
+                      notifications?.map((notify, i) => {
+                        return (
+                          <li key={i}>
                       <Link href="" className="inner" onClick={ToggleNotifyDrop}>
                         <div className="user_sm_icon color_icon_notify">
                           <img src="/images/envelope_color.svg" alt="" />
                         </div>
                         <div className="notify_cntnt">
-                          <p><strong>2 new Messages</strong></p>
-                          <div className="time_ago">2 mins ago</div>
+                          <p><strong>{notify?.txt}</strong></p>
+                          <div className="time_ago">{timeAgo(notify?.created_at)}</div>
                         </div>
                       </Link>
                     </li>
-                    <li>
+                        )
+                      })
+                      : 
+                      <li>
                       <Link href="" className="inner" onClick={ToggleNotifyDrop}>
                         <div className="user_sm_icon color_icon_notify">
-                          <img src="/images/ChatCircleText.svg" alt="" />
+                          <img src="/images/envelope_color.svg" alt="" />
                         </div>
                         <div className="notify_cntnt">
-                          <p><strong>3 new Comments</strong></p>
-                          <div className="time_ago">2 mins ago</div>
+                          <p className="alert alert-danger" ><strong>No New Notifications</strong></p>
+                          {/* <div className="time_ago">2 mins ago</div> */}
                         </div>
                       </Link>
                     </li>
+                    }
+                    
+                    
                     <li>
                       <div className="notify_footer">
                         <Link href="/professional-dashboard/notifications" onClick={ToggleNotifyDrop}>View all notifications</Link>

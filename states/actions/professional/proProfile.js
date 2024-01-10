@@ -25,6 +25,10 @@ import { CREATE_PROFESSIONAL_PROFILE,
     CHANGE_PROFESSIONAL_PASSWORD,
     CHANGE_PROFESSIONAL_PASSWORD_SUCCESS,
     CHANGE_PROFESSIONAL_PASSWORD_FAILED,
+
+    FETCH_PRO_NOTIFICATIONS,
+FETCH_PRO_NOTIFICATIONS_SUCCESS,
+FETCH_PRO_NOTIFICATIONS_FAILED,
   } from "../actionTypes";
 
 
@@ -218,3 +222,31 @@ export const changeProfessionalPassword = (formData) => (dispatch) => {
     });
 };
 
+
+export const fetchProfessioanlNotifications = () => (dispatch) => {
+  dispatch({
+    type: FETCH_PRO_NOTIFICATIONS,
+    payload: null,
+  });
+  http
+    .post("user/professional-notifications", doObjToFormData({ token: authToken() }))
+    .then(({ data }) => {
+      // console.log(data);
+      dispatch({
+        type: FETCH_PRO_NOTIFICATIONS_SUCCESS,
+        payload: data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      
+      dispatch({
+        type: FETCH_PRO_NOTIFICATIONS_FAILED,
+        payload: error,
+      });
+      
+        toast.error('Technical Issue', {duration : 4000});
+
+      useRedirectInvalidToken();
+    });
+};

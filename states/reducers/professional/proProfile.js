@@ -13,6 +13,9 @@ import { CREATE_PROFESSIONAL_PROFILE,
     CHANGE_PROFESSIONAL_PASSWORD,
     CHANGE_PROFESSIONAL_PASSWORD_SUCCESS,
     CHANGE_PROFESSIONAL_PASSWORD_FAILED,
+    FETCH_PRO_NOTIFICATIONS,
+FETCH_PRO_NOTIFICATIONS_SUCCESS,
+FETCH_PRO_NOTIFICATIONS_FAILED,
   } from "../../actions/actionTypes";
   import { setCookie } from "cookies-next";
   
@@ -25,7 +28,7 @@ import { CREATE_PROFESSIONAL_PROFILE,
     mem: {},
     pro_profile: {},
     received_sms: {},
-   
+    
   };
   
   export default function (state = initialState, { type, payload }) {
@@ -129,6 +132,32 @@ import { CREATE_PROFESSIONAL_PROFILE,
           error: payload,
         };
       
+
+        case FETCH_PRO_NOTIFICATIONS:
+        return {
+          ...state,
+          isLoading: true,
+          mem: {},
+        };
+      case FETCH_PRO_NOTIFICATIONS_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          content: payload,
+          mem: payload.member,
+          pro_profile: payload.pro_profile,
+          // received_sms: payload.received_sms
+        };
+      case FETCH_PRO_NOTIFICATIONS_FAILED:
+        return {
+          ...state,
+          isLoading: false,
+          mem: {},
+          error: payload,
+          pro_profile: {},
+          // received_sms: {}
+        };
+
       default:
         return state;
     }

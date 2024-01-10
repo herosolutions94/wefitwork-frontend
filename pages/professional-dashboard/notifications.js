@@ -1,13 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import LayoutDashboard from '@/components/components/layoutDashbord';
 import ProfessionalSidebar from "@/components/components/professionalSidebar";
-
+import { fetchProfessioanlNotifications } from "@/components/states/actions/professional/proProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { Toaster } from "react-hot-toast";
+import Head from "next/head";
+import { cmsFileUrl, formatDate, formatDateTime } from "@/components/helpers/helpers";
+import { DrawingManager } from "@react-google-maps/api";
 
 export default function Notifications() {
+    const router = useRouter();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.proProfile.content);
+  const member = useSelector((state) => state.proProfile.mem);
+  const isLoading = useSelector((state) => state.proProfile.isLoading);
+  const pro_profile = useSelector((state) => state.proProfile.pro_profile);
+  
+
+  console.log(data);
+  const { site_settings, page_title, notifications, notifications_count } = data;
+
+  useEffect(() => {
+    dispatch(fetchProfessioanlNotifications());
+  }, []);
   
   return (
     <>
+    <Toaster position="top-center" />
+      <Head>
+          <title>{page_title ? page_title : "fetching..."}</title>
+        </Head>
       <main>
          <section className="dashboard">
             <div className="contain">
@@ -20,66 +44,32 @@ export default function Notifications() {
                             <h2>Notifications</h2>
                         </div>
                         <div className="notification_blk custom_blk">
-                            <div className="list_inner_notify">
+                        {notifications !== null ? notifications?.map((notifs, i ) => {
+                            return (
+                                <div className="list_inner_notify" key={i}>
                                 <div className="user_info">
                                     <div className="dp_icon">
-                                        <img src="/images/mini_user.svg" alt=""/>
+                                    {notifs?.sender_pic !== null ? 
+                                        <img src={cmsFileUrl(notifs?.sender_pic, "members")} alt=""/>
+                                        :
+                                        <img src="/images/no-user.svg" alt=""/>
+                                    }
+                                        
                                     </div>
                                     <div className="cntnt">
-                                        <p><Link href="">Meg Griffin has left you a review. Both of your reviews from this trip are now public.</Link></p>
-                                        <div className="time_out">March 1, 2023</div>
+                                        <p><Link href="">{notifs?.txt}</Link></p>
+                                        <div className="time_out">{formatDateTime(notifs?.created_at)}</div>
                                     </div>
                                 </div>
                                 <button className="x_btn" type="button"></button>
                             </div>
-                            <div className="list_inner_notify">
-                                <div className="user_info">
-                                    <div className="dp_icon">
-                                        <img src="/images/testi3.png" alt=""/>
-                                    </div>
-                                    <div className="cntnt">
-                                        <p><Link href="">Please confirm your email address by clicking on the link we just emailed you. If you cannot find the email, you can request a new confirmation email or change your email address.</Link></p>
-                                        <div className="time_out">March 1, 2023</div>
-                                    </div>
-                                </div>
-                                <button className="x_btn" type="button"></button>
-                            </div>
-                            <div className="list_inner_notify">
-                                <div className="user_info">
-                                    <div className="dp_icon">
-                                        <img src="/images/mini_user.svg" alt=""/>
-                                    </div>
-                                    <div className="cntnt">
-                                        <p><Link href="">Meg Griffin has left you a review. Both of your reviews from this trip are now public.</Link></p>
-                                        <div className="time_out">March 1, 2023</div>
-                                    </div>
-                                </div>
-                                <button className="x_btn" type="button"></button>
-                            </div>
-                            <div className="list_inner_notify">
-                                <div className="user_info">
-                                    <div className="dp_icon">
-                                        <img src="/images/mini_user.svg" alt=""/>
-                                    </div>
-                                    <div className="cntnt">
-                                        <p><Link href="">Meg Griffin has left you a review. Both of your reviews from this trip are now public.</Link></p>
-                                        <div className="time_out">March 1, 2023</div>
-                                    </div>
-                                </div>
-                                <button className="x_btn" type="button"></button>
-                            </div>
-                            <div className="list_inner_notify">
-                                <div className="user_info">
-                                    <div className="dp_icon">
-                                        <img src="/images/mini_user.svg" alt=""/>
-                                    </div>
-                                    <div className="cntnt">
-                                        <p><Link href="">Meg Griffin has left you a review. Both of your reviews from this trip are now public.</Link></p>
-                                        <div className="time_out">March 1, 2023</div>
-                                    </div>
-                                </div>
-                                <button className="x_btn" type="button"></button>
-                            </div>
+                            )
+                        }): 
+                        <div className="alert alert-danger">No Notifications</div>
+                        }
+                            
+                            
+                            
                         </div>
                     </div>
                 </div>

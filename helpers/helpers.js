@@ -1,7 +1,7 @@
 import { getCookie } from "cookies-next";
 import parse from "html-react-parser";
 import FormData from "form-data";
-// import moment from "moment";
+import moment from "moment";
 // import FormData from "form-data";
 // import variables from "styles/globals.module.scss";
 
@@ -205,6 +205,10 @@ export function checkForEmptyValues(data) {
 
 export function isArrayEmpty(arr) {
   return arr.length === 0;
+}
+
+export function getArrayCount(arr) {
+  return arr.length;
 }
 
 export function getObjKeyCount(obj){
