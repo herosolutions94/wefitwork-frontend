@@ -18,6 +18,7 @@ export const signin = (formData, redirectTo) => (dispatch) => {
   http
     .post("auth/signin", doObjToFormData(formData))
     .then(({ data }) => {
+      // console.log(data);
       if (data.status) {
         
         toast.success(SUCCESSFUL_SIGNIN_MESSAGE, { duration: 6000 });
@@ -28,6 +29,11 @@ export const signin = (formData, redirectTo) => (dispatch) => {
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
           setCookie('mem_professionl_profile', data.mem_professionl_profile);
+
+          if(data.memData?.mem_verified !== 1 || data.memData?.mem_verified !== '1'){
+            localStorage.setItem("email", data.memData?.mem_email);
+            window.location.replace(`/email-verification`);
+          }
 
             if(data.mem_type == 'member'){
               if (redirectTo) window.location.replace(redirectTo);

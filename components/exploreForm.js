@@ -6,9 +6,12 @@ import { doObjToFormData } from "../helpers/helpers";
 import toast from "react-hot-toast";
 import { saveSearch } from "../states/actions/saveSearch";
 import { useDispatch, useSelector } from "react-redux";
-import MapComponent from "./map-container";
+// import MapComponent from "./map-container";
 import AddressAutocomplete from "./map-autocomplete";
-
+import dynamic from 'next/dynamic';
+const LeafletMapComponent = dynamic(() => import('../components/leaflet-map'), {
+  ssr: false, // Disable server-side rendering
+});
 
 const ExploreFrom = ({ onClose, services }) => {
   const dispatch = useDispatch();
@@ -128,7 +131,11 @@ const ExploreFrom = ({ onClose, services }) => {
 
   const [businessAddress, setBusinessAddress] = useState('');
 
+const [reloadMap, setReloadMap] = useState(false);
+
+
   const handlePlaceSelect = (place) => {
+    setReloadMap(false);
     setGetingLocation(true);
     setLocationCords({lat: place.latitude, long: place.longitude});
     // Use reverse geocoding to get the address from coordinates
@@ -146,7 +153,10 @@ const ExploreFrom = ({ onClose, services }) => {
 
   };
 
+  
+
   const getCurrentLocation = () => {
+    setReloadMap(false)
     setGetingLocation(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -172,6 +182,7 @@ const ExploreFrom = ({ onClose, services }) => {
   };
 
   useEffect(() => {
+    setReloadMap(true);
     // This will log the updated state whenever locationCords changes
     if (locationCords.lat !== null && locationCords.long !== null) {
       document.getElementById("latlong").innerHTML = "";
@@ -186,6 +197,9 @@ const ExploreFrom = ({ onClose, services }) => {
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
     setValue("business_address",businessAddress)
+
+
+
   }, [locationCords]);
 
   const [file, setFile] = useState(null);
@@ -470,24 +484,13 @@ const ExploreFrom = ({ onClose, services }) => {
             </div>
             <div className="colR">
               <div className="map_sec">
-                {/* <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13363.859400788691!2d-117.158019!3d33.136288!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80db8ab3b9f18c1b%3A0x22de000cd55202d6!2s160%20Industrial%20St%20%23200%2C%20San%20Marcos%2C%20CA%2092078!5e0!3m2!1sen!2sus!4v1672885602751!5m2!1sen!2sus"
-                  width="100%"
-                  height="350"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe> */}
-                {console.log(watchAllFields)}
-                {watchAllFields?.latitude !== null &&
+
+               
+                {reloadMap && watchAllFields?.latitude !== null &&
                 watchAllFields?.latitude !== undefined &&
                 watchAllFields?.longitude !== null &&
                 watchAllFields?.longitude !== undefined ? (
-                  <MapComponent
-                    latitude={watchAllFields?.latitude}
-                    longitude={watchAllFields?.longitude}
-                  />
+                  <LeafletMapComponent locationCords={locationCords} setLocationCords={setLocationCords} />
                 ) : (
                   ""
                 )}

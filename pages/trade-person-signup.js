@@ -9,7 +9,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { createProfessionalProfile } from "../states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
-import MapComponent from "../components/map-container";
+// import MapComponent from "../components/map-container";
+
+import dynamic from 'next/dynamic';
+const LeafletMapComponent = dynamic(() => import('../components/leaflet-map'), {
+  ssr: false, // Disable server-side rendering
+});
 import { parse } from "cookie";
 import {
   business_type,
@@ -200,8 +205,10 @@ dispatch(createProfessionalProfile(data));
 
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
+  const [reloadMap, setReloadMap] = useState(false);
 
   const handlePlaceSelect = (place) => {
+    setReloadMap(false);
     setGetingLocation(true);
     setLocationCords({lat: place.latitude, long: place.longitude});
     // Use reverse geocoding to get the address from coordinates
@@ -220,6 +227,8 @@ dispatch(createProfessionalProfile(data));
   };
 
   const getCurrentLocation = () => {
+    setReloadMap(false)
+
     setGetingLocation(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -264,6 +273,8 @@ dispatch(createProfessionalProfile(data));
   };
 
   useEffect(() => {
+    setReloadMap(true);
+
     // This will log the updated state whenever locationCords changes
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
@@ -481,17 +492,17 @@ dispatch(createProfessionalProfile(data));
                           ></i>
                         </button>
                       </div>
-                      {locationCords?.lat !== null &&
+                      <div className="map_sec">
+                      {reloadMap && locationCords?.lat !== null &&
                       locationCords?.lat !== undefined &&
                       locationCords?.long !== null &&
                       locationCords?.long !== undefined ? (
-                        <MapComponent
-                          latitude={locationCords?.lat}
-                          longitude={locationCords?.long}
-                        />
+                        <LeafletMapComponent locationCords={locationCords} setLocationCords={setLocationCords} />
                       ) : (
                         ""
                       )}
+                      </div>
+                      
                     </div>
 
                     <div className="form_blk">

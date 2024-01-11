@@ -15,6 +15,12 @@ import { cmsFileUrl } from "@/components/helpers/helpers";
 import MapComponent from "@/components/components/map-container";
 import PopupSmall from "@/components/components/popupSmall";
 import VerifyPhone from "@/components/components/verifyPhone";
+import AddressAutocomplete from "@/components/components/map-autocomplete";
+
+import dynamic from 'next/dynamic';
+const LeafletMapComponent = dynamic(() => import('@/components/components/leaflet-map'), {
+  ssr: false, // Disable server-side rendering
+});
 
 export default function Services() {
   const dispatch = useDispatch();
@@ -98,12 +104,34 @@ const updateMemberService=(frmData)=>{
 
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
+  const [reloadMap, setReloadMap] = useState(false);
+  const [businessAddress, setBusinessAddress] = useState(pro_profile?.business_address);
 
   useEffect(() => {
     setLocationCords({lat: pro_profile?.latitude, long: pro_profile?.longitude})
   },[pro_profile])
 
+  const handlePlaceSelect = (place) => {
+    setReloadMap(false);
+    setGetingLocation(true);
+    setLocationCords({lat: place.latitude, long: place.longitude});
+    // Use reverse geocoding to get the address from coordinates
+    setValue('business_address', businessAddress);
+
+    if (place.latitude && place.longitude) {
+      toast.success("Location picked. Continue to next Step");
+    } else {
+      toast.error("Location Not picked");
+    }
+
+    setGetingLocation(false);
+
+
+
+  };
+
   const getCurrentLocation = () => {
+    setReloadMap(false);
     setGetingLocation(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -130,9 +158,12 @@ const updateMemberService=(frmData)=>{
   };
 
   useEffect(() => {
+    setReloadMap(true);
+
     // This will log the updated state whenever locationCords changes
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
+    setValue("business_address",businessAddress)
   }, [locationCords]);
 
   const[verifyPopup, setVerifyPopup] = useState(false);
@@ -393,7 +424,9 @@ const updateMemberService=(frmData)=>{
                           <div className="blk_form">
                             <h6>Business Address</h6>
                             <div className="form_blk">
-                              <input
+                      <AddressAutocomplete onPlaceSelect={handlePlaceSelect} setAddress={setBusinessAddress}/>
+
+                              {/* <input
                                 type="text"
                                 name="address"
                                 defaultValue={pro_profile?.business_address}
@@ -402,7 +435,7 @@ const updateMemberService=(frmData)=>{
                                 {...register("business_address", {
                                   required: "Business Address is required.",
                                 })}
-                              />
+                              /> */}
                               <div
                                 className="validation-error"
                                 style={{ color: "red" }}
@@ -474,8 +507,19 @@ const updateMemberService=(frmData)=>{
                           <div className="blk_form">
                             <h6>Map</h6>
                             <div className="form_blk">
-                            <MapComponent latitude={locationCords?.lat} longitude={locationCords?.long} />
-                              
+                            <div className="map_sec">
+                            <div className="map_sec">
+                      {reloadMap && locationCords?.lat !== null &&
+                      locationCords?.lat !== undefined &&
+                      locationCords?.long !== null &&
+                      locationCords?.long !== undefined ? (
+                        <LeafletMapComponent locationCords={locationCords} setLocationCords={setLocationCords} />
+                      ) : (
+                        ""
+                      )}
+                      </div>
+
+                              </div>
                             </div>
                           </div>
                         </div>
