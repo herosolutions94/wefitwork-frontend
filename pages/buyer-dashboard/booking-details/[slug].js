@@ -4,12 +4,15 @@ import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
 import { fetchBookingDetails } from "@/components/states/actions/buyer/bookings";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Head from "next/head";
 import Text from "@/components/components/text";
 import Image from "next/image";
-import { cmsFileUrl } from "@/components/helpers/helpers";
+import http from "@/components/helpers/http";
+import { cmsFileUrl, doObjToFormData } from "@/components/helpers/helpers";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
+import { useForm } from "react-hook-form";
+import { authToken } from "@/components/helpers/authToken";
 
 export default function BookingDetails() {
     const router = useRouter();
@@ -19,30 +22,78 @@ export default function BookingDetails() {
     const member = useSelector((state) => state.bookings.mem);
     const isLoading = useSelector((state) => state.bookings.isLoading);
 
+    const [isYesSelected, setIsYesSelected] = useState(false);
+    const [isYesSelectedTwo, setIsYesSelectedTwo] = useState(false);
+
     useEffect(() => {
         dispatch(fetchBookingDetails(slug))
+
     }, [])
     
     const { site_settings, page_title, row_data, pro_mem_data, pro_mem_profile, workscope } = data;
+    // console.log(row_data)
 
-    const [isYesSelected, setIsYesSelected] = useState(false);
+    
 
     const handleYesClick = () => {
         setIsYesSelected(true);
+        setValue('pro_contacted', 'yes')
+        handleUpdateContactHierd(watch().pro_contacted, watch().pro_hierd);
     };
 
     const handleNoClick = () => {
         setIsYesSelected(false);
+        setValue('pro_contacted', 'no')
+        handleUpdateContactHierd(watch().pro_contacted, watch().pro_hierd);
+
+
     };
-    const [isYesSelectedTwo, setIsYesSelectedTwo] = useState(false);
+    
 
     const handleYesClickTwo = () => {
         setIsYesSelectedTwo(true);
+        setValue('pro_hierd', 'yes')
+        handleUpdateContactHierd(watch().pro_contacted, watch().pro_hierd);
+
+
     };
 
     const handleNoClickTwo = () => {
         setIsYesSelectedTwo(false);
+        setValue('pro_hierd', 'no')
+        handleUpdateContactHierd(watch().pro_contacted, watch().pro_hierd);
+
+
     };
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        watch,
+        setValue
+      } = useForm();
+
+      const handleUpdateContactHierd = (pro_contacted, pro_hierd) => {
+    
+        try {
+          http
+            .post(`user/update-booking-statuses/${slug}`, doObjToFormData({ pro_contacted: pro_contacted, pro_hierd: pro_hierd, token: authToken() }))
+            .then((data) => {
+              
+              if (data?.data?.status == true) {
+                toast.success('updated');
+              } else {
+                toast.error('not updated');
+                
+              }
+            });
+        } catch (errors) {
+          
+          console.log("Errors", errors);
+        }
+      };
+
   return (
     <>
     <Toaster position="top-center" />
@@ -135,6 +186,13 @@ export default function BookingDetails() {
                                     No
                                     </button>
                                 </div>
+
+                                <input
+                    type="hidden"
+                    name="pro_contacted"
+                    value={isYesSelected ? "yes" : "no"}
+                    {...register("pro_contacted")}
+                  />
                             </li>
 
                             <li>
@@ -150,6 +208,12 @@ export default function BookingDetails() {
                                     </button>
                                 </div>
                             </li>
+                            <input
+                    type="hidden"
+                    name="pro_hierd"
+                    value={isYesSelectedTwo ? "yes" : "no"}
+                    {...register("pro_hierd")}
+                  />
                         </ul>
                         <div className="br"></div><div className="br"></div>
                         <div className="btn_blk text-center">

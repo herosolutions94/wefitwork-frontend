@@ -274,7 +274,7 @@ export default function Home({ result }) {
                     <h4><Text string={content?.sec3_card_heading4} /></h4>
                     <p><Text string={content?.sec3_card_tagline4} /></p>
                     <div className="btn_blk">
-                      <Link href={content?.sec3_card_btn_link4} className="site_btn">{content?.sec3_card_btn_text4}</Link>
+                      <button type="button" onClick={handleOpenPopup} className="site_btn">{content?.sec3_card_btn_text4}</button>
                     </div>
                   </div>
                 </div>

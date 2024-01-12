@@ -459,7 +459,7 @@ export default function SearchResult({ result }) {
 
                                 <div className="rating_lbl">
                                                     <img src="/images/star.svg" alt=""/>
-                                                    <span>{'5.0'} ({'10'} Reviews)</span>
+                                                    <span>{val?.avg_rating} ({val?.reviews_counts} Reviews)</span>
                                                 </div>
                               </div>
                             </div>
