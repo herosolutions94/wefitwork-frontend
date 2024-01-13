@@ -132,6 +132,7 @@ export default function Home({ result }) {
                   <input type="text" className="input" name="" placeholder={"Professional  (eg, Electrician)"} onClick={handleOpenPopup} />
                   <button type="button" onClick={handleOpenPopup}><img src="/images/search.svg" alt="" /></button>
                 </form>
+                <Link href="" className="new_lbl_banner">Or search by professional name</Link>
                 <div className="most_searched_cat">
                   <p><strong><Text string={content?.banner_tagline} /></strong></p>
                   <div className="flex_cat">

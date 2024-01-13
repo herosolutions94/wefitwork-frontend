@@ -31,7 +31,7 @@ export default function Header({siteSettings}) {
           <div className={toggle ? "toggle active" : "toggle"} onClick={ToggleAction}><span></span></div>
           <nav id="nav" className={toggle ? "active" : ""}>
             <ul>
-              <li><Link href="/" onClick={ToggleAction}>Leave a Review</Link></li>
+              <li><Link href="/search" onClick={ToggleAction}>Leave a Review</Link></li>
               <li><Link href="/contact" onClick={ToggleAction}>Contact Us</Link></li>
               {/* <li><Link href="/become-professional">Become a professional</Link></li> */}
             </ul>
