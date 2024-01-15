@@ -53,6 +53,7 @@ export default function SearchResult({ result, authToken }) {
     avg_tidiness,
     avg_courtesy,
 
+    mem_wishlists
   } = result;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -137,6 +138,10 @@ export default function SearchResult({ result, authToken }) {
     setAuthPopup(false);
   };
 
+  const addToWishlist = (pro_mem_id) => {
+      console.log(pro_mem_id);
+  }
+
   return (
     <>
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
@@ -146,8 +151,8 @@ export default function SearchResult({ result, authToken }) {
             <div className="professiona_view_tile">
               <div className="col">
                 <div className="action_buttons">
-                  <button type="button" className="like_btn">
-                    <img src="/images/heart.svg" alt="save" />
+                  <button type="button" className="like_btn" onClick={() => addToWishlist(pro_mem_data?.mem_id)}>
+                    <img src="/images/heart.svg" alt="save"  />
                   </button>
                   <button type="button" className="share_btn">
                     <img src="/images/ShareNetwork.svg" alt="save" />
