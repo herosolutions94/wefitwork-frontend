@@ -304,7 +304,17 @@ const updateMemberService=(frmData)=>{
                           <div className="blk_form">
                             <h6>Specialization</h6>
                             <div className="form_blk">
-                              <input
+                            <select name="specialization" id="specialization" className="input" {...register("specialization", {
+                                  required: "Specialization is Required",
+                                })}>
+                                <option value="">Select Specialization</option>
+
+                                <option value="Residential" selected={pro_profile?.specialization == 'Residential' ? true : false}>Residential</option>
+
+                                <option value="Commercial" selected={pro_profile?.specialization == 'Commercial' ? true : false}>Commercial</option>
+
+                            </select>
+                              {/* <input
                                 type="text"
                                 name="specialization"
                                 defaultValue={pro_profile?.specialization}
@@ -313,7 +323,7 @@ const updateMemberService=(frmData)=>{
                                 {...register("specialization", {
                                   required: "Specialization is Required",
                                 })}
-                              />
+                              /> */}
                               <div
                                 className="validation-error"
                                 style={{ color: "red" }}
