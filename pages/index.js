@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import SubSerForm from "../components/subSerForm";
 import { useForm } from "react-hook-form";
+import { encrypt_decrypt } from "../helpers/rsa-helper";
 
 export const getServerSideProps = async () => {
   const result = await http
@@ -207,7 +208,7 @@ export default function Home({ result }) {
                           {searchResult?.professions?.map((val, i) => {
                             return (
                               <Link
-                                href={`/practice-test/${val?.slug}`}
+                                href={`/search-result/${encrypt_decrypt("encrypt",val?.mem_id)}`}
                                 className="list-group-item list-group-item-action d-flex align-items-center"
                               >
                                 <img
