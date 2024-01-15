@@ -211,12 +211,23 @@ export default function Home({ result }) {
                                 href={`/search-result/${encrypt_decrypt("encrypt",val?.mem_id)}`}
                                 className="list-group-item list-group-item-action d-flex align-items-center"
                               >
-                                <img
-                                  src="images/no-user.svg"
-                                  alt=""
-                                  style={{ width: "50px" }}
-                                  className="p-3"
-                                />
+                              {val?.mem_image ? (
+                                  
+                                  <img
+                                    src={cmsFileUrl(val?.mem_image, "members")}
+                                    style={{ width: "50px" }}
+                                    className="p-3"
+                                    alt={val?.mem_fname}
+                                  />
+                                ) : (
+                                  <img
+                                    src="/images/no-user.svg"
+                                    style={{ width: "50px" }}
+                                    className="p-3"
+                                    alt={val?.mem_fname}
+                                  />
+                                )}
+
                                 <Text string={val?.mem_fname} />
                               </Link>
                             );
