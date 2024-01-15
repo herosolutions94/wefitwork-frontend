@@ -187,6 +187,7 @@ export default function Home({ result }) {
                     placeholder={searchMode == 'popup' ? "Search by Professional Categories (eg, Electrician)" : "Entre Professional name to search"}
                     onClick={handleOpenPopup}
                     onChange={handleSearchByName}
+                    autoComplete={false}
                   />
                   <button type="button" onClick={handleOpenPopup}>
                     <img src="/images/search.svg" alt="" />
@@ -211,7 +212,8 @@ export default function Home({ result }) {
                                 href={`/search-result/${encrypt_decrypt("encrypt",val?.mem_id)}`}
                                 className="list-group-item list-group-item-action d-flex align-items-center"
                               >
-                              {val?.mem_image ? (
+                              <div className="image">
+                              {val?.mem_image  ? (
                                   
                                   <img
                                     src={cmsFileUrl(val?.mem_image, "members")}
@@ -227,6 +229,7 @@ export default function Home({ result }) {
                                     alt={val?.mem_fname}
                                   />
                                 )}
+                                </div>
 
                                 <Text string={val?.mem_fname} />
                               </Link>
