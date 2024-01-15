@@ -4,9 +4,9 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: process.env.PROTOCOL,
-        hostname: process.env.HOSTNAME,
-        pathname: process.env.IMAGE_REMOTE_PATTERNS_PATHANME,
+        protocol: 'https',
+        hostname: 'herosolutions.com.pk',
+        pathname: '/naeem/wefitwork/**',
       }
     ]
   },
