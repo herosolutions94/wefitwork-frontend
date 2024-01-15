@@ -158,6 +158,21 @@ export default function SearchResult({ result }) {
         setAuthPopup(false);    
     };
 
+
+    //pagination
+  const itemsPerPage = 8; // Set the number of professions per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const indexOfLastProfession = currentPage * itemsPerPage;
+  const indexOfFirstProfession = indexOfLastProfession - itemsPerPage;
+  const currentProfessions = professions.slice(
+    indexOfFirstProfession,
+    indexOfLastProfession
+  );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
     
 
   return (
@@ -419,7 +434,7 @@ export default function SearchResult({ result }) {
                   }
                 >
                   {professions ? (
-                    professions?.map((val) => {
+                    currentProfessions?.map((val) => {
                       return (
                         <div className="col" key={val?.mem_id}>
                           <div className="inner">
@@ -468,7 +483,7 @@ export default function SearchResult({ result }) {
                             </div>
                             <div className="done_work">
                               <p>Projects Completed</p>
-                              <h3>{"30"}</h3>
+                              <h3>{val?.completed_projects > 0 ? val?.completed_projects : 0}</h3>
                             </div>
                             <div className="btn_blk">
                               <Link href="" className="site_btn color block">
@@ -488,9 +503,13 @@ export default function SearchResult({ result }) {
                     </div>
                   )}
                 </div>
-                {/* <div className="text-center pagination_outer">
-                                    <Pagination />
-                                </div> */}
+                <div className="text-center pagination_outer">
+                <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(professions.length / itemsPerPage)}
+                onPageChange={handlePageChange}
+              />
+                                </div>
               </div>
             </div>
           </div>

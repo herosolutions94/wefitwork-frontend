@@ -12,21 +12,43 @@ const SubSerForm = ({ onClose, service_id, serviceTitle, getingSubServices, setG
   const router = useRouter();
    const [isFormProcessing, setIsFormProcessing] = useState(false)
   const [subServices, setSubServices] = useState(false);
+  
+    // try {
+    //   setGetingSubServices(true);
+    //   http
+    //     .post("get-sub-services", doObjToFormData({ service_id: service_id }))
+    //     .then((data) => {
+    //       if (data?.data?.status == true) {
+    //         setGetingSubServices(false);
+    //         setSubServices(data?.data?.sub_services);
+    //       } else {
+    //         setGetingSubServices(false);
+    //         setSubServices(false);
+    //       }
+    //     });
+      
+    // } catch (errors) {
+    //   setGetingSubServices(false);
+    //   console.log("Errors", errors);
+    // }
 
-    try {
-      http
-        .post("get-sub-services", doObjToFormData({ service_id: service_id }))
-        .then((data) => {
-          if (data?.data?.status == true) {
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          setGetingSubServices(true);
+          const data = await http.post("get-sub-services", doObjToFormData({ service_id: service_id }));
+          if (data?.data?.status === true) {
             setSubServices(data?.data?.sub_services);
-          } else {
-            setSubServices(false);
           }
-        });
-      setGetingSubServices(false);
-    } catch (errors) {
-      console.log("Errors", errors);
-    }
+          setGetingSubServices(false);
+        } catch (error) {
+          setGetingSubServices(false);
+          console.log("An error occurred:", error);
+        }
+      };
+  
+      fetchData(); // Invoke the function to fetch data when the component mounts
+    }, []);
 
 
   const [selectedSubServiceValue, setSelectedSubServiceValue] = useState(null);
@@ -70,14 +92,21 @@ const SubSerForm = ({ onClose, service_id, serviceTitle, getingSubServices, setG
         >
           <h3>What do you need a {serviceTitle} to help with?</h3>
           <ul className="l_flex two_flex">
-            {getingSubServices && (
+            {/* {getingSubServices && (
               <div class="text-center">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
-            )}
-            {subServices ? (
+            )} */}
+            {getingSubServices ? 
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              :
+              subServices ? (
               subServices?.map((sub_ser) => {
                 return (
                   <li key={sub_ser?.id}>

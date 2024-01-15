@@ -182,7 +182,7 @@ export default function SearchResult({ result, authToken }) {
                       </div>
                       <div className="_done_work">
                         <p>Projects Completed</p>
-                        <h3>3</h3>
+                        <h3>{pro_mem_data?.completed_projects > 0 ? pro_mem_data?.completed_projects : 0}</h3>
                       </div>
                     </div>
                   </div>

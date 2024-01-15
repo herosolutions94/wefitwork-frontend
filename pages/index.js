@@ -187,7 +187,7 @@ export default function Home({ result }) {
                     placeholder={searchMode == 'popup' ? "Search by Professional Categories (eg, Electrician)" : "Entre Professional name to search"}
                     onClick={handleOpenPopup}
                     onChange={handleSearchByName}
-                    autoComplete={false}
+                    autoComplete="off"
                   />
                   <button type="button" onClick={handleOpenPopup}>
                     <img src="/images/search.svg" alt="" />

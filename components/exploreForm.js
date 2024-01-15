@@ -74,17 +74,21 @@ const ExploreFrom = ({ onClose, services }) => {
     setServiceTitle(selected_title);
 
     try {
+      setGetingSubServices(true);
       http
         .post("get-sub-services", doObjToFormData({ service_id: id }))
         .then((data) => {
           if (data?.data?.status == true) {
+            setGetingSubServices(false);
             setSubServices(data?.data?.sub_services);
           } else {
+            setGetingSubServices(false);
             setSubServices(false);
           }
         });
-      setGetingSubServices(false);
+      
     } catch (errors) {
+      setGetingSubServices(false);
       console.log("Errors", errors);
     }
   };
@@ -311,14 +315,21 @@ const [reloadMap, setReloadMap] = useState(false);
         >
           <h3>What do you need a {serviceTitle} to help with?</h3>
           <ul className="l_flex two_flex">
-            {getingSubServices && (
+            {/* {getingSubServices && (
               <div class="text-center">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
-            )}
-            {subServices ? (
+            )} */}
+            {getingSubServices ? 
+              <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              :
+              subServices ? (
               subServices?.map((sub_ser) => {
                 return (
                   <li key={sub_ser?.id}>
