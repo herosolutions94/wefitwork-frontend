@@ -13,6 +13,7 @@ SAVE_REVIEW_FAILED,
 import Text from "@/components/components/text";
 import { authToken } from "@/components/helpers/authToken";
 import useRedirectInvalidToken from "@/components/helpers/useRedirectInvalidToken";
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 
 
 export const fetchReviewPageData = (pro_mem_id) => (dispatch) => {
@@ -46,6 +47,7 @@ export const fetchReviewPageData = (pro_mem_id) => (dispatch) => {
 
   export const saveReview = (formData) => (dispatch) => {
     formData = { ...formData, token: authToken() };
+    let pro_id = formData.pro_mem_id;
     let images = formData.proof_images;
     delete formData.proof_images;
   
@@ -71,7 +73,7 @@ export const fetchReviewPageData = (pro_mem_id) => (dispatch) => {
             payload: data,
           });
           setTimeout(() => {
-            window.location.replace('/buyer-dashboard')
+            window.location.replace(`/search-result/${encrypt_decrypt("encrypt", pro_id)}`)
         }, 3000)
         } else {
           if (data.validationErrors) {

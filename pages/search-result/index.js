@@ -14,8 +14,9 @@ import PopupSmall from "@/components/components/popupSmall";
 import SendMessage from "@/components/components/sendMessage";
 import Text from "@/components/components/text";
 import { authToken } from "@/components/helpers/authToken";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import LoginPopup from "@/components/components/authPopup";
+import MetaGenerator from "@/components/components/meta-generator";
 
 
 export const getServerSideProps = async (context) => {
@@ -55,7 +56,7 @@ export default function SearchResult({ result }) {
   const loc_radius = route_query?.radius;
 
 
-  let { professions, services, selected_service, selected_sub_service } =
+  let { professions, services, selected_service, selected_sub_service, page_title, meta_desc, } =
     result;
 
     console.log(result)
@@ -161,6 +162,8 @@ export default function SearchResult({ result }) {
 
   return (
     <>
+    <Toaster position="top-center" />
+    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="search_result">
           <div className="contain">
