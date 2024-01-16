@@ -18,6 +18,7 @@ import MetaGenerator from "@/components/components/meta-generator";
 import Text from "@/components/components/text";
 import Image from "next/image";
 import { cmsFileUrl } from "@/components/helpers/helpers";
+import toast from "react-hot-toast";
 
 export const getServerSideProps = async (context) => {
   const cookies = parse(context?.req?.headers?.cookie || "");
@@ -35,7 +36,7 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function SearchResult({ result, authToken }) {
-//   console.log("detsil", result);
+  // console.log("detsil", result);
   let {
     page_title,
     meta_desc,
@@ -53,7 +54,7 @@ export default function SearchResult({ result, authToken }) {
     avg_tidiness,
     avg_courtesy,
 
-    mem_wishlists
+    pro_wishlisted
   } = result;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -138,8 +139,49 @@ export default function SearchResult({ result, authToken }) {
     setAuthPopup(false);
   };
 
-  const addToWishlist = (pro_mem_id) => {
-      console.log(pro_mem_id);
+  let pro_wishl = pro_wishlisted ? true : false;
+
+  const [wishlisted, setWishlisted] = useState(pro_wishl);
+  const [wishlisting, setWishlisting] = useState(false);
+
+
+  const addRemoveToWishlist = (pro_mem_id) => {
+    setWishlisting(true);
+    if(authToken == '' || authToken == null || authToken == undefined){
+      toast.error('You must be loged in to add professional to your wishlist');
+    }else{
+      try {
+        http
+          .post("user/add-remove-to-wishlist", doObjToFormData({ pro_mem_id: pro_mem_id, token: authToken }))
+          .then((data) => {
+            if (data?.data?.status == true) {
+              setWishlisting(false)
+              if(data?.data?.added == true){
+                toast.success('This Professional added to your Wishlist');
+                setWishlisted(true)
+              }else if(data?.data?.removed == true){
+                toast.success('Removed from your Wishlist');
+                setWishlisted(false)
+              }
+              
+            } else {
+              setWishlisting(false)
+
+              toast.error('This Professional not added to your Wishlist');
+
+              setWishlisted(false)
+            }
+          });
+      } catch (errors) {
+        setWishlisting(false)
+
+        setWishlisted(false);
+        toast.error('This Professional not added to your Wishlist');
+
+        console.log("Errors", errors);
+      }
+    }
+    
   }
 
   return (
@@ -151,8 +193,9 @@ export default function SearchResult({ result, authToken }) {
             <div className="professiona_view_tile">
               <div className="col">
                 <div className="action_buttons">
-                  <button type="button" className="like_btn" onClick={() => addToWishlist(pro_mem_data?.mem_id)}>
-                    <img src="/images/heart.svg" alt="save"  />
+                  <button type="button" className={wishlisted ? "like_btn active" : "like_btn"} disabled={wishlisting} onClick={() => addRemoveToWishlist(pro_mem_data?.mem_id)}>
+                  {!wishlisting ? <img src="/images/heart.svg" alt="save"  /> : <div class="text-center"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div></div>}
+                      
                   </button>
                   <button type="button" className="share_btn">
                     <img src="/images/ShareNetwork.svg" alt="save" />
