@@ -13,6 +13,7 @@ import phoneVerification from "./professional/phoneVerification";
 import subscriptions from "./professional/subscriptions";
 import bookings from "./buyer/bookings";
 import reviews from "./buyer/reviews";
+import chat from "./chat";
 
 export default combineReducers({
  siteSettings,
@@ -29,6 +30,7 @@ export default combineReducers({
  subscriptions,
  bookings,
  reviews,
+ chat,
  
  
  

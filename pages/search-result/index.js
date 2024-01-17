@@ -17,6 +17,8 @@ import { authToken } from "@/components/helpers/authToken";
 import toast, { Toaster } from "react-hot-toast";
 import LoginPopup from "@/components/components/authPopup";
 import MetaGenerator from "@/components/components/meta-generator";
+import { startConversation } from "@/components/states/actions/chat";
+import { useDispatch, useSelector } from "react-redux";
 
 
 export const getServerSideProps = async (context) => {
@@ -145,7 +147,7 @@ export default function SearchResult({ result }) {
         setProData(pro_mem_data);
         setIsPopupOpenSend(true);
       }else{
-        toast.error("You sre not logedin. Please Login to your account to send SMS");
+        toast.error("You sare not logedin. Please Login to your account to send SMS");
         setAuthPopup(true);
         setProData(pro_mem_data);
         
@@ -174,6 +176,21 @@ export default function SearchResult({ result }) {
     setCurrentPage(page);
   };
     
+  const dispatch = useDispatch();
+    
+  const isFormProcessing = useSelector((state) => state.chat.isFormProcessing);
+
+
+  const handleStartChat = (receiver_id, mem_token = token) => {
+    if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
+      const form_data = {receiver_id : receiver_id};
+      dispatch(startConversation(form_data));
+    }else{
+      toast.error("You are not logedin. Please Login to your account to start the chat with Professional");
+      // setAuthPopup(true);
+       
+    }
+  }
 
   return (
     <>
@@ -486,9 +503,15 @@ export default function SearchResult({ result }) {
                               <h3>{val?.completed_projects > 0 ? val?.completed_projects : 0}</h3>
                             </div>
                             <div className="btn_blk">
-                              <Link href="" className="site_btn color block">
-                                Start Chat
-                              </Link>
+                              <button type="button" className="site_btn color block" onClick={() => handleStartChat(val?.mem_id)} disabled={isFormProcessing}>
+                                Start Chat{isFormProcessing && (
+                      <i
+                        className={
+                          isFormProcessing ? "spinner" : "spinnerHidden"
+                        }
+                      ></i>
+                    )}
+                              </button>
                               <button type="button" onClick={() => handleOpenPopupSend(val)} className="site_btn block">
                                 Send SMS
                               </button>
