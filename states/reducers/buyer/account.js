@@ -11,6 +11,9 @@ import {
     CHANGE_BUYER_PASSWORD,
     CHANGE_BUYER_PASSWORD_SUCCESS,
     CHANGE_BUYER_PASSWORD_FAILED,
+    FETCH_BUYER_WISHLIST,
+FETCH_BUYER_WISHLIST_SUCCESS,
+FETCH_BUYER_WISHLIST_FAILED,
   } from "../../actions/actionTypes";
   
   const initialState = {
@@ -103,6 +106,31 @@ import {
           isPassChangeProcessing: false,
           error: payload,
         };
+
+        case FETCH_BUYER_WISHLIST:
+        return {
+          ...state,
+          isLoading: true,
+          mem: {},
+          
+        };
+      case FETCH_BUYER_WISHLIST_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          content: payload,
+          mem: payload.member,
+          
+        };
+      case FETCH_BUYER_WISHLIST_FAILED:
+        return {
+          ...state,
+          isLoading: false,
+          mem: {},
+          error: payload,
+          
+        };
+
       default:
         return state;
     }

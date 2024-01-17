@@ -19,6 +19,9 @@ import {
   CHANGE_BUYER_PASSWORD,
   CHANGE_BUYER_PASSWORD_SUCCESS,
   CHANGE_BUYER_PASSWORD_FAILED,
+  FETCH_BUYER_WISHLIST,
+FETCH_BUYER_WISHLIST_SUCCESS,
+FETCH_BUYER_WISHLIST_FAILED,
 } from "../actionTypes";
 import Text from "@/components/components/text";
 import { authToken } from "@/components/helpers/authToken";
@@ -159,5 +162,34 @@ export const changeBuyerPassword = (formData) => (dispatch) => {
       });
       toast.error('Technical Issue', {duration : 4000});
       // useRedirectInvalidToken();
+    });
+};
+
+
+export const fetchBuyerWishlist = () => (dispatch) => {
+  dispatch({
+    type: FETCH_BUYER_WISHLIST,
+    payload: null,
+  });
+  http
+    .post("user/buyer-wishlist", doObjToFormData({ token: authToken() }))
+    .then(({ data }) => {
+      // console.log(data);
+      dispatch({
+        type: FETCH_BUYER_WISHLIST_SUCCESS,
+        payload: data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      
+      dispatch({
+        type: FETCH_BUYER_WISHLIST_FAILED,
+        payload: error,
+      });
+      
+        toast.error('Technical Issue', {duration : 4000});
+
+      useRedirectInvalidToken();
     });
 };

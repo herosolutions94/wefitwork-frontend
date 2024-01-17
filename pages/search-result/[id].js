@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 // import Gallery from "@/components/components/Gallery";
 import GalleryPopup from "@/components/components/GalleryPopup";
@@ -19,6 +19,8 @@ import Text from "@/components/components/text";
 import Image from "next/image";
 import { cmsFileUrl } from "@/components/helpers/helpers";
 import toast from "react-hot-toast";
+import SocialShare from "@/components/components/socialShare";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async (context) => {
   const cookies = parse(context?.req?.headers?.cookie || "");
@@ -36,7 +38,8 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function SearchResult({ result, authToken }) {
-  // console.log("detsil", result);
+  const router = useRouter();
+  // console.log("detsil", router);
   let {
     page_title,
     meta_desc,
@@ -184,6 +187,27 @@ export default function SearchResult({ result, authToken }) {
     
   }
 
+  //share
+  const [isSharePopup, setIsSharePopup] = useState(false);
+  const [proId, setProId] = useState(false);
+
+  const handleOpenSharePopup = ([pro_id]) =>{
+    setProId(pro_id);
+    setIsSharePopup(true);
+  }
+
+  const handleCloseSharePopup = () => {
+    setProId(false);
+    setIsSharePopup(false);
+  }
+
+  const [baseURL, setBaseURL] = useState('');
+
+  useEffect(() => {
+    // Access base URL when the component mounts
+    setBaseURL(`${window.location.protocol}//${window.location.host}${router.asPath}`);
+  }, [router.pathname]);
+
   return (
     <>
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
@@ -197,7 +221,7 @@ export default function SearchResult({ result, authToken }) {
                   {!wishlisting ? <img src="/images/heart.svg" alt="save"  /> : <div class="text-center"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div></div>}
                       
                   </button>
-                  <button type="button" className="share_btn">
+                  <button type="button" className="share_btn" onClick={() => handleOpenSharePopup(pro_mem_data?.mem_id)}>
                     <img src="/images/ShareNetwork.svg" alt="save" />
                   </button>
                 </div>
@@ -421,6 +445,11 @@ export default function SearchResult({ result, authToken }) {
           />
         )}
       </PopupSmall>
+
+      <PopupSmall isOpen={isSharePopup} onClose={handleCloseSharePopup}>
+        <SocialShare handleClosePopupSend={handleCloseSharePopup} url={baseURL} title={`WefitWork Professional`} />
+      </PopupSmall>
+
     </>
   );
 }
