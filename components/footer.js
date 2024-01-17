@@ -21,35 +21,50 @@ export default function Footer({ siteSettings }) {
       },
       {
         id: 2,
-        text: "About Us",
-        link: "/about",
-      },
-      {
-        id: 3,
         text: "Become a Professional",
         link: "/become-professional",
       },
       {
-        id: 4,
+        id: 3,
         text: "Contact Us",
         link: "/contact",
+      },
+      {
+        id: 4,
+        text: "Privacy policies",
+        link: "/privacy-policy",
+      },
+      {
+        id: 5,
+        text: "Terms & Conditions",
+        link: "/terms-conditions",
       },
     ],
     list_03: [
       {
         id: 1,
-        text: "My Account",
-        link: "/",
+        text: "About Us",
+        link: "/about",
       },
       {
         id: 3,
-        text: "Privacy policies",
-        link: "/privacy-policy",
+        text: "Our Team",
+        link: "/about",
       },
       {
         id: 4,
-        text: "Terms & Conditions",
-        link: "/terms-conditions",
+        text: "Blog",
+        link: "/",
+      },
+      {
+        id: 5,
+        text: "Media Center",
+        link: "/",
+      },
+      {
+        id: 6,
+        text: "Our Impact",
+        link: "/",
       },
     ],
   };

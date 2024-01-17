@@ -219,9 +219,7 @@ export default function Signup({ result }) {
                       id="agree"
                       {...register("agree", { required: "Required" })}
                     />
-                    <div className="validation-error" style={{ color: "red" }}>
-                      {errors.agree?.message}
-                    </div>
+                    
 
                     <label htmlFor="agree">
                       <Text string={content?.check_box_text} />{" "}
@@ -229,7 +227,11 @@ export default function Signup({ result }) {
                       <Link href="/privacy-policy">privacy notice</Link>.
                     </label>
                   </div>
+                  
                 </div>
+                <div className="validation-error" style={{ color: "red" }}>
+                      {errors.agree?.message}
+                    </div>
                 <div className="btn_blk">
                   <button
                     className="site_btn block"

@@ -7,6 +7,14 @@ import { authToken } from "../helpers/authToken";
 import { getCookie } from "cookies-next";
 
 export default function Header({siteSettings}) {
+  const [homeOwner, setHomeOwner] = useState();
+  const [professional, setProfessional] = useState();
+  const toggleHomeOwner = () => {
+    setHomeOwner(!homeOwner);
+  }
+  const toggleProfessional = () => {
+    setProfessional(!professional);
+  }
   const token = authToken();
   // console.log(siteSettings);
     const[toggle,setToggle] = useState(false);
@@ -31,27 +39,23 @@ export default function Header({siteSettings}) {
           <div className={toggle ? "toggle active" : "toggle"} onClick={ToggleAction}><span></span></div>
           <nav id="nav" className={toggle ? "active" : ""}>
             <ul>
-              <li><Link href="/search" onClick={ToggleAction}>Leave a Review</Link></li>
-              <li><Link href="/contact" onClick={ToggleAction}>Contact Us</Link></li>
-              {/* <li><Link href="/become-professional">Become a professional</Link></li> */}
+              <li className="drop">
+                  <div onClick={toggleHomeOwner}>For Homeowner</div>
+                  <ul className={homeOwner ? "sub active" : "sub"}>
+                      <li><Link href="/login" onClick={ToggleAction}>Login</Link></li>
+                      <li><Link href="/signup" onClick={ToggleAction}>Signup</Link></li>
+                      <li><Link href="/search" onClick={ToggleAction}>Leave a review</Link></li>
+                  </ul>
+              </li>
+              <li className="drop">
+                  <div onClick={toggleProfessional}>For Professionals</div>
+                  <ul className={professional ? "sub active" : "sub"}>
+                      <li><Link href="/login" onClick={ToggleAction}>Login</Link></li>
+                  </ul>
+              </li>
+              <li><Link href="/" onClick={ToggleAction}>Maintenance cover</Link></li>
             </ul>
           </nav>
-          {/* =========user no login====== */}
-          <div className="login_btns">
-            <ul>
-              {token ? ( 
-              <li className="btn_blk"><Link href={mem_type === 'professional' ? '/professional-dashboard' : '/buyer-dashboard'} className="site_btn">Dashboard</Link></li>
-
-              ) : (
-                <>
-                <li><Link href="/login">Login</Link></li>
-              <li className="btn_blk"><Link href="/signup" className="site_btn">Register</Link></li>
-                </>
-                
-              )}
-              
-            </ul>
-          </div>
           {/* =============logged user====== */}
           {/* <div className="logged_side">
             <ul>

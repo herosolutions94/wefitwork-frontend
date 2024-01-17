@@ -211,7 +211,7 @@ h4{
 .toggle {
 @include flex(center);
 display: none;
-@include pos($l: 16px, $r: null, $z: 4 ,$t:-0.7px);
+@include pos($r: 16px, $l: null, $z: 4 ,$t:-0.7px);
 // width: 2rem;
 // height: 1.6rem;
 width: 1.6rem;
@@ -2677,9 +2677,9 @@ header {
       height: 6rem;
       max-width: 14rem;
     }
-    @include ipad_sm{
-      margin-left: 3rem;
-    }
+    // @include ipad_sm{
+    //   margin-left: 3rem;
+    // }
   }
   .session_header &{
     @include ipad_sm{
@@ -2732,8 +2732,8 @@ header {
 nav {
   @include flex(center, flex-end);
   height: 8rem;
-  width: max-content;
-  @include pos($t:null,$b:null);
+  // width: max-content;
+  @include pos($t:null,$b:null,$l:null);
   margin: auto;
   @include ipad{
     height: 6rem;
@@ -2839,6 +2839,22 @@ nav {
           color: $color !important;
         }
       }
+      > div{
+        @include flex(center, center);
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        height: 4rem;
+        font-family: 'SemiBold';
+        color: $primary-color;
+        font-size: 1.6rem;
+        text-align: center;
+        text-decoration: none;
+        &:hover,
+        &.active {
+          color: $color !important;
+        }
+      }
       &.active a{
         color: $color;
       }
@@ -2887,7 +2903,7 @@ nav {
             color: $primary-color;
             padding:0.4rem 2rem 0.5rem;
             font-size: 1.6rem;
-            font-family: 'LinkText';
+            font-family: 'SemiBold';
             text-decoration: none;
             @include ipad_sm {
               @include i_flex;
@@ -2904,8 +2920,9 @@ nav {
         margin-top: 0;
         pointer-events: auto;
       }
-      &.drop > a {
+      &.drop > div {
         position: relative;
+        cursor: pointer;
         &:after {
           content: "";
           @include chev;
@@ -2998,7 +3015,7 @@ footer {
   overflow: hidden;
   border-top:2px solid rgb(184 184 184 / 19%);
   .mid_col{
-    @include flex(center , center);
+    @include flex;
     @include ipad{
       justify-content: flex-start;
     }

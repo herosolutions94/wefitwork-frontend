@@ -3,7 +3,9 @@
     padding-bottom: 0;
     @include mobile_md{
         background-image:url(/images/banner1.png);
-        @include bg(contain,right bottom);
+        background-size: cover;
+        background-position: 121px 26px;
+        background-repeat: no-repeat;
     }
     .flex{
         .colL{
@@ -17,6 +19,9 @@
             h1{
                 color: $light;
                 margin-bottom: 3rem;
+                @include mobile_sm{
+                    max-width: 87%;
+                }
             }
             p{
                 font-size: 1.8rem;
@@ -1024,8 +1029,8 @@
                     }
                 }
                 .logon_logo{
-                    max-width: 22rem;
-                    height: 4rem;
+                    max-width: 30rem;
+                    height: 7rem;
                     position: relative;
                     display: flex;
                     align-items: center;
