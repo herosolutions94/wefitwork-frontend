@@ -11,9 +11,11 @@ export default function Header({siteSettings}) {
   const [professional, setProfessional] = useState();
   const toggleHomeOwner = () => {
     setHomeOwner(!homeOwner);
+    setProfessional(false);
   }
   const toggleProfessional = () => {
     setProfessional(!professional);
+    setHomeOwner(false);
   }
   const token = authToken();
   // console.log(siteSettings);
@@ -40,22 +42,74 @@ export default function Header({siteSettings}) {
           <nav id="nav" className={toggle ? "active" : ""}>
             <ul>
               <li className="drop">
-                  <div onClick={toggleHomeOwner}>For Homeowner</div>
-                  <ul className={homeOwner ? "sub active" : "sub"}>
-                      <li><Link href="/login" onClick={ToggleAction}>Login</Link></li>
-                      <li><Link href="/signup" onClick={ToggleAction}>Signup</Link></li>
-                      <li><Link href="/search" onClick={ToggleAction}>Leave a review</Link></li>
-                  </ul>
+                  <div onClick={toggleHomeOwner} className="btn_nav">Homeowner</div>
+                  <div className={homeOwner ? "sub active" : "sub"}>
+                      <ul>
+                        <li>
+                          <div className="inner_sub_nav">
+                              <h5>Login</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/login" onClick={ToggleAction} className="site_btn color">Login</Link>
+                              </div>
+                              <Link href="/login" onClick={ToggleAction} className="hide_hide_hide">Login</Link>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="inner_sub_nav">
+                              <h5>Signup</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/signup" onClick={ToggleAction} className="site_btn color">Signup</Link>
+                              </div>
+                              <Link href="/signup" onClick={ToggleAction} className="hide_hide_hide">Signup</Link>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="inner_sub_nav">
+                              <h5>Leave a Review</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/search" onClick={ToggleAction} className="site_btn">Leave a review</Link>
+                              </div>
+                              <Link href="/search" onClick={ToggleAction} className="site_btn hide_hide_hide">Leave a review</Link>
+                          </div>
+                        </li>
+                      </ul>
+                  </div>
               </li>
               <li className="drop">
-                  <div onClick={toggleProfessional}>For Professionals</div>
-                  <ul className={professional ? "sub active" : "sub"}>
-                      <li><Link href="/login" onClick={ToggleAction}>Login</Link></li>
-                  </ul>
+                  <div onClick={toggleProfessional} className="btn_nav">Professionals</div>
+                  <div className={professional ? "sub active" : "sub"}>
+                      <ul>
+                        <li>
+                          <div className="inner_sub_nav">
+                              <h5>Login</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/login" onClick={ToggleAction} className="site_btn">Login</Link>
+                              </div>
+                              <Link href="/login" onClick={ToggleAction} className="hide_hide_hide">Login</Link>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="inner_sub_nav">
+                              <h5>Signup</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/signup" onClick={ToggleAction} className="site_btn">Signup</Link>
+                              </div>
+                              <Link href="/signup" onClick={ToggleAction} className="hide_hide_hide">Signup</Link>
+                          </div>
+                        </li>
+                      </ul>
+                  </div>
               </li>
-              <li><Link href="/" onClick={ToggleAction}>Maintenance cover</Link></li>
+              
+              <li><Link href="/" onClick={ToggleAction} className="site_btn color">Maintenance cover</Link></li>
             </ul>
           </nav>
+          
           {/* =============logged user====== */}
           {/* <div className="logged_side">
             <ul>

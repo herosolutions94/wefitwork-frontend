@@ -1,20 +1,25 @@
 .banner_main{
     background-color: $color;
     padding-bottom: 0;
-    @include mobile_md{
-        background-image:url(/images/banner1.png);
-        background-size: cover;
-        background-position: 121px 26px;
+    @include ipad_sm{
+        background-image:url(/images/banner2.png);
+        background-size: contain;
+        background-position: 321px 26px;
         background-repeat: no-repeat;
+        padding-top: 3rem;
+    }
+    @include mobile_sm{
+        background-position: 140px 13px;
     }
     .flex{
         .colL{
             width: 55%;
             padding-bottom: 8rem;
             align-self: center;
-            @include ipad{
+            @include ipad_sm{
                 width: 100%;
                 padding-right: 0;
+                padding-bottom: 3rem;
             }
             h1{
                 color: $light;
@@ -22,11 +27,17 @@
                 @include mobile_sm{
                     max-width: 87%;
                 }
+                @include mobile_sm{
+                    margin-bottom: 2rem;
+                }
             }
             p{
                 font-size: 1.8rem;
                 margin: 1.5rem 0 2.5rem;
                 color: $light;
+                @include mobile_sm{
+                    margin-bottom: 2rem;
+                }
             }
             form{
                 position: relative;
@@ -61,6 +72,9 @@
             }
             .most_searched_cat{
                 margin-top: 3rem;
+                @include mobile_sm{
+                    margin-top: 0rem;
+                }
                 p{
                     margin-bottom: 1rem;
                 }
@@ -102,7 +116,7 @@
             padding-left: 2rem;
             align-self: flex-end;
             position: relative;
-            @include ipad{
+            @include ipad_sm{
                 width: 100%;
                 padding-left: 0;
                 margin-top: 3rem;
@@ -133,6 +147,11 @@
     }
     .sec_heading{
         margin-bottom: 2rem;
+        h2{
+            @include mobile_sm{
+                font-size: 2rem;
+            }
+        }
     }
     .item{
         padding: 1rem 0 2rem;
@@ -161,16 +180,38 @@
     // .owl-stage-outer{
     //     margin-right: -20rem;
     // }
+    .hide_ds_sc{
+        display: none;
+        @include mobile_sm{
+            display: block;
+            .item{
+                .inner{
+                    &:nth-child(1){
+                        margin-bottom: 1.5rem;
+                    }
+                }
+            }
+        }
+    }
+    .show_ds_sc{
+        @include mobile_sm{
+            display: none;
+        }
+    }
     .owl-carousel{
         &.owl-theme{
             .owl-nav{
                 top: -5.5rem;
                 @include ipad_sm{
-                    top: auto;
+                    top: 40%;
                 }
                 .owl-prev{
                     left: unset;
                     right: 5.5rem;
+                    @include ipad_sm{
+                        left: 1rem;
+                        right: unset;
+                    }
                 }
                 .owl-next{
                     @include ipad_sm{
@@ -3250,5 +3291,42 @@
             }
         }
         
+    }
+}
+
+.team_sec{
+    .flex{
+        margin: -1rem;
+        .col{
+            flex: unset;
+            width: 25%;
+            padding: 1rem;
+            @include ipad{
+                width: calc(100% / 3);
+            }
+            @include mobile{
+                width: 50%;
+            }
+            .image{
+                @include img(120%);
+                box-shadow: none;
+                img{
+                    @include pos;
+                    @include object;
+                }
+            }
+            .cntnt{
+                margin-top: 2rem;
+                p{
+                    margin-bottom: 0;
+                    font-size: 1.4rem;
+                    color: $color2;
+                    font-family: 'Medium';
+                }
+                h4{
+                    margin-bottom: .5rem;
+                }
+            }
+        }
     }
 }

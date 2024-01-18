@@ -334,6 +334,7 @@ export default function Home({ result }) {
                 <Text string={content?.sec2_heading} />
               </h2>
             </div>
+            <div className="show_ds_sc">
             <OwlCarousel className="owl-carousel owl-theme" {...categories}>
               {featured_services?.map((val) => {
                 return (
@@ -360,6 +361,48 @@ export default function Home({ result }) {
                 );
               })}
             </OwlCarousel>
+            </div>
+            <div className="hide_ds_sc">
+            <OwlCarousel className="owl-carousel owl-theme" {...categories}>
+              {featured_services?.map((val) => {
+                return (
+                  <div
+                    className="item"
+                    style={{ cursor: "pointer" }}
+                    key={val.id}
+                    onClick={() => handleOpenSubPopup(val?.id, val?.title)}
+                  >
+                    <div className="inner">
+                      <div className="icon_img">
+                        <Image
+                          src={cmsFileUrl(val?.icon, "services")}
+                          width={60}
+                          height={60}
+                          alt={val?.title}
+                        />
+                      </div>
+                      <h5>
+                        <Text string={val.title} />
+                      </h5>
+                    </div>
+                    <div className="inner">
+                      <div className="icon_img">
+                        <Image
+                          src={cmsFileUrl(val?.icon, "services")}
+                          width={60}
+                          height={60}
+                          alt={val?.title}
+                        />
+                      </div>
+                      <h5>
+                        <Text string={val.title} />
+                      </h5>
+                    </div>
+                  </div>
+                );
+              })}
+            </OwlCarousel>
+            </div>
           </div>
         </section>
         <section className="step_one">

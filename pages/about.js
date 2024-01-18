@@ -144,6 +144,87 @@ export default function About({result}) {
              </div>
           </div>
         </section>
+        <section className="team_sec">
+          <div className="contain">
+            <div className="sec_heading text-center">
+              <h2>Our Team</h2>
+            </div>
+            <div className="flex">
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new1.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Aleena Gilber</h4>
+                  <p>Senior Graphics Designer</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new3.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Stefen Disoza</h4>
+                  <p>Senior Video Editor</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new2.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Jenifer Kim</h4>
+                  <p>Marketing Agency</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new4.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Peter Digber</h4>
+                  <p>Marketing Agency</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new1.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Aleena Gilber</h4>
+                  <p>Senior Graphics Designer</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new3.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Stefen Disoza</h4>
+                  <p>Senior Video Editor</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new2.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Jenifer Kim</h4>
+                  <p>Marketing Agency</p>
+                </div>
+              </div>
+              <div className="col">
+                <div className="image">
+                  <img src="/images/new4.png" alt="" />
+                </div>
+                <div className="cntnt">
+                  <h4>Peter Digber</h4>
+                  <p>Marketing Agency</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="cta_sec">
           <div className="contain">
             <div className="cntnt">

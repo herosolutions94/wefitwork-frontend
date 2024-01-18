@@ -58,7 +58,7 @@ export default function Footer({ siteSettings }) {
       },
       {
         id: 5,
-        text: "Media Center",
+        text: "Careers",
         link: "/",
       },
       {

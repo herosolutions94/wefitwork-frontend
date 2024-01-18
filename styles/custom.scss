@@ -2839,7 +2839,8 @@ nav {
           color: $color !important;
         }
       }
-      > div{
+      
+      > .btn_nav{
         @include flex(center, center);
         display: -webkit-inline-box;
         display: -ms-inline-flexbox;
@@ -2854,47 +2855,133 @@ nav {
         &.active {
           color: $color !important;
         }
+        @include ipad_sm{
+          font-size: 1.6rem;
+          color: $color;
+        }
       }
       &.active a{
         color: $color;
       }
+      
       > .sub {
-        @include pos($t: calc(100% - 0.4rem), $b: null, $z: 2);
+        // @include pos($t: calc(100% - 0.4rem), $b: null, $z: 2);
+        // background: $light;
+        // text-align: left;
+        // padding:1rem 0;
+        // margin-top: 1rem;
+        // visibility: hidden;
+        // opacity: 0;
+        // border: 0.1rem solid rgba($black, 0.05);
+        // border-radius: 0.6rem;
+        // -webkit-transition: none;
+        // transition: none;
+        // -webkit-box-shadow: $shadow2;
+        // box-shadow: $shadow2;
+        // pointer-events: none;
+        // @include trans;
+        // overflow: hidden;
+        @include pos($pos:fixed, $t: 8rem, $b: null, $z: 2);
         background: $light;
-        text-align: left;
-        padding:1rem 0;
-        margin-top: 1rem;
+        display: flex;
+        width: 100%;
+        max-height: none;
         visibility: hidden;
         opacity: 0;
-        border: 0.1rem solid rgba($black, 0.05);
-        border-radius: 0.6rem;
+        pointer-events: none;
+        text-align: left;
+        padding: 0;
+        margin: 0 auto !important;
+        border: 0;
+        border-radius: 0;
         -webkit-transition: none;
         transition: none;
-        -webkit-box-shadow: $shadow2;
-        box-shadow: $shadow2;
-        pointer-events: none;
-        @include trans;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border: 0.1rem solid rgba($black, 0.05);
         overflow: hidden;
-        @include ipad_sm {
+        border-top: 3px solid $color2;
+        border-bottom: 3px solid $color2;
+        @include ipad_sm{
           position: static;
-          display: none;
-          width: 100%;
-          max-height: none;
-          background: transparent;
           visibility: visible;
           opacity: 1;
-          text-align: center;
-          padding: 0;
-          margin: 0 auto !important;
-          border: 0;
-          border-radius: 0;
-          -webkit-transition: none;
-          transition: none;
-          -webkit-box-shadow: none;
-          box-shadow: none;
+          margin-top: 0;
+          pointer-events: auto;
+          border-top: none;
+        border-bottom: none;
+        background-color: transparent;
+        border: none;
+        }
+        ul{
+          position: relative;
+          max-width: 1200px;
+          min-height: 0.1rem;
+          @include list;
+          @include flex;
+          padding: 3rem 1.5rem;
+          margin: 0 auto;
+          width: 100%;
+          column-gap: 3rem;
+          @include ipad_sm{
+            flex-direction: column;
+            padding: 1rem 1.5rem;
+          }
+          li{
+            flex: 1;
+            p{
+              font-size: 1.3rem;
+              line-height: 1.4;
+              margin-bottom: 2rem;
+              opacity: 0.7;
+              @include ipad_sm{
+                display: none;
+              }
+            }
+            h5{
+              font-size: 1.7rem;
+              font-family: 'Medium';
+              color: $color;
+              @include ipad_sm{
+                display: none;
+              }
+            }
+            .hide_hide_hide{
+              display: none;
+              @include ipad_sm{
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                margin-bottom: 2rem;
+                font-size: 1.5rem;
+                font-family: 'Medium';
+              }
+              
+            }
+            .btn_blk{
+              @include ipad_sm{
+                display: none;
+              }
+            }
+            &:nth-child(1) , &:nth-child(2){
+              padding-right: 3rem;
+              border-right: 1px solid $color;
+              @include ipad_sm{
+                padding-right: 0;
+                border-right: none;
+              }
+            }
+            &:last-child{
+              border-right: none;
+              padding-right: 0;
+            }
+          }
         }
         &.active {
-          display: block;
+          visibility: visible;
+          opacity: 1;
+          margin-top: 0;
+          pointer-events: auto;
         }
         > li {
           display: block;
@@ -2914,13 +3001,13 @@ nav {
           }
         }
       }
-      &:hover > .sub {
-        visibility: visible;
-        opacity: 1;
-        margin-top: 0;
-        pointer-events: auto;
-      }
-      &.drop > div {
+      // &:hover > .sub {
+      //   visibility: visible;
+      //   opacity: 1;
+      //   margin-top: 0;
+      //   pointer-events: auto;
+      // }
+      &.drop > .btn_nav {
         position: relative;
         cursor: pointer;
         &:after {
@@ -2959,6 +3046,10 @@ nav {
 .login_btns{
   @include pos($l:null,$r:1.5rem);
   @include flex($align:center);
+  display: none;
+  @include ipad_sm{
+    display: flex;
+  }
   ul{
     @include list;
     @include flex;
