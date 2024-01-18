@@ -5597,4 +5597,13 @@ margin-bottom: 0;
       display: block;
   }
   }
+
+  .no_chat {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+  }
 @import "style.module";

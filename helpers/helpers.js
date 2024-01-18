@@ -250,5 +250,41 @@ export function subscriptionStatus(status) {
     return <span className="badge rounded-pill bg-danger">Cancelled</span>
   }
 
-  
+}
+
+export function bytesToMegaBytes(bytes) {
+  return bytes / (1024 * 1024);
+}
+
+export async function FileUpload(event, type = 'attchments') {
+  const fd = new FormData();
+  fd.append("file", event);
+  fd.append("type", type);
+  return axios.post(project_ap_url + "api/" + 'upload-file', fd).then((res) => {
+      return res.data;
+  });
+}
+export async function uploadMultiFiles(event, type) {
+  let newImages = [];
+  let images_arr = event.target.files;
+  for (let i = 0; i < images_arr.length; i++) {
+      let fileSize = images_arr[i].size;
+      let sizeMb = bytesToMegaBytes(fileSize);
+      if (sizeMb < 40) {
+          let image = await FileUpload(images_arr[i], type).then((data) => {
+              // console.log(data)
+              if (data.file_name != undefined && data?.status === 1) {
+                  newImages.push({ file_name: data.file_name, image_name: data?.file_name_text });
+              }
+              else if (data?.status === 0) {
+                  toast.error(data?.msg,
+                      TOAST_SETTINGS
+                  ); return;
+              }
+          });
+      }
+  }
+  return newImages;
+
+
 }

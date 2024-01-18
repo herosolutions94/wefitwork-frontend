@@ -11,8 +11,12 @@ import { FETCH_CONVERSATIONS,
     content: {},
     mem: {},
     convo_data: {},
-
+    chat_users: [],
     error: false,
+    isChatLoading: false,
+    chat_messages: [],
+
+    
   };
   
   export default function (state = initialState, { type, payload }) {
@@ -38,23 +42,31 @@ import { FETCH_CONVERSATIONS,
       case FETCH_CONVERSATIONS:
         return {
           ...state,
-          isLoading: true,
+          isChatLoading: true,
           mem: {},
         };
       case FETCH_CONVERSATIONS_SUCCESS:
         return {
           ...state,
           isLoading: false,
+          isChatLoading:false,
           content: payload,
           mem: payload.member,
-          convo_data: payload.convo_data,
+          convo_data: payload.chat_data,
+          chat_users: payload.mem_conversations,
+          chat_messages: payload.chat_messages,
           
         };
       case FETCH_CONVERSATIONS_FAILED:
         return {
           ...state,
           isLoading: false,
+          isChatLoading:false,
+
           mem: {},
+          convo_data: {},
+          chat_users:[],
+          chat_messages: [],
           error: payload,
 
         };

@@ -60,13 +60,13 @@ export const startConversation = (formData) => (dispatch) => {
 
 export const fetchConversationData = (formData) => (dispatch) => {
     formData = {...formData, token: authToken()}
-    const convo_id = formData.convo_id
+
   dispatch({
     type: FETCH_CONVERSATIONS,
     payload: null,
   });
   http
-    .post(`user/fetch-conversation-data/${convo_id}`, doObjToFormData(formData))
+    .post(`user/fetch-conversation-data`, doObjToFormData(formData))
     .then(({ data }) => {
       console.log(data);
       dispatch({
@@ -83,8 +83,8 @@ export const fetchConversationData = (formData) => (dispatch) => {
       });
       
         toast.error('Technical Issue', {duration : 4000});
-
-      useRedirectInvalidToken();
+      console.log(error)
+      // useRedirectInvalidToken();
     });
 };
 

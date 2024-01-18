@@ -10154,3 +10154,12 @@ table .table_name_flex span {
   background: transparent;
   padding: 0;
 }/*# sourceMappingURL=custom.css.map */
+
+.no_chat {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+}

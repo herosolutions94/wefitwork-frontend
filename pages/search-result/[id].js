@@ -21,6 +21,8 @@ import { cmsFileUrl } from "@/components/helpers/helpers";
 import toast from "react-hot-toast";
 import SocialShare from "@/components/components/socialShare";
 import { useRouter } from "next/router";
+import { startConversation } from "@/components/states/actions/chat";
+import { useDispatch, useSelector } from "react-redux";
 
 export const getServerSideProps = async (context) => {
   const cookies = parse(context?.req?.headers?.cookie || "");
@@ -39,7 +41,7 @@ export const getServerSideProps = async (context) => {
 
 export default function SearchResult({ result, authToken }) {
   const router = useRouter();
-  // console.log("detsil", router);
+  console.log("detsil", result);
   let {
     page_title,
     meta_desc,
@@ -57,7 +59,8 @@ export default function SearchResult({ result, authToken }) {
     avg_tidiness,
     avg_courtesy,
 
-    pro_wishlisted
+    pro_wishlisted,
+    memData
   } = result;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -94,32 +97,7 @@ export default function SearchResult({ result, authToken }) {
       star: avg_courtesy,
     },
   ];
-  // const reviews = [
-  //     {
-  //         id:"review1",
-  //         icon:"/images/pro5.png",
-  //         name:"John Doeing",
-  //         time_message:"in the last week",
-  //         star:"5",
-  //         comment:"I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
-  //     },
-  //     {
-  //         id:"review2",
-  //         icon:"/images/testi8.webp",
-  //         name:"Stefen Gilbert",
-  //         time_message:"in the last week",
-  //         star:"5",
-  //         comment:"I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
-  //     },
-  //     {
-  //         id:"review3",
-  //         icon:"/images/testi9.png",
-  //         name:"Kreg Geo",
-  //         time_message:"in the last week",
-  //         star:"5",
-  //         comment:"I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
-  //     },
-  // ]
+ 
 
   const [proData, setProData] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
@@ -208,6 +186,24 @@ export default function SearchResult({ result, authToken }) {
     setBaseURL(`${window.location.protocol}//${window.location.host}${router.asPath}`);
   }, [router.pathname]);
 
+
+  const dispatch = useDispatch();
+    
+  const isFormProcessing = useSelector((state) => state.chat.isFormProcessing);
+
+
+  const handleStartChat = (receiver_id, mem_token = authToken) => {
+    if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
+      const form_data = {receiver_id : receiver_id};
+      dispatch(startConversation(form_data));
+    }else{
+      toast.error("You are not logedin. Please Login to your account to start the chat with Professional");
+      // setAuthPopup(true);
+       
+    }
+  }
+
+
   return (
     <>
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
@@ -217,10 +213,12 @@ export default function SearchResult({ result, authToken }) {
             <div className="professiona_view_tile">
               <div className="col">
                 <div className="action_buttons">
+                {pro_mem_data?.mem_id !== memData?.mem_id && 
                   <button type="button" className={wishlisted ? "like_btn active" : "like_btn"} disabled={wishlisting} onClick={() => addRemoveToWishlist(pro_mem_data?.mem_id)}>
                   {!wishlisting ? <img src="/images/heart.svg" alt="save"  /> : <div class="text-center"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div></div>}
                       
                   </button>
+                }
                   <button type="button" className="share_btn" onClick={() => handleOpenSharePopup(pro_mem_data?.mem_id)}>
                     <img src="/images/ShareNetwork.svg" alt="save" />
                   </button>
@@ -267,9 +265,17 @@ export default function SearchResult({ result, authToken }) {
                     </h3>
                   </div>
                   <div className="btn_blk">
-                    <Link href="" className="site_btn color block">
-                      Start Chat
-                    </Link>
+                  {pro_mem_data?.mem_id == memData?.mem_id ? '' : 
+                        <>
+                        <button type="button" className="site_btn color block" disabled={isFormProcessing} onClick={() => handleStartChat(pro_mem_data?.mem_id)}>
+                      Start Chat{isFormProcessing && (
+                      <i
+                        className={
+                          isFormProcessing ? "spinner" : "spinnerHidden"
+                        }
+                      ></i>
+                    )}
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleOpenPopupSend(pro_mem_data)}
@@ -277,6 +283,9 @@ export default function SearchResult({ result, authToken }) {
                     >
                       Send SMS
                     </button>
+                        </>
+                  }
+                    
                   </div>
                 </div>
               </div>

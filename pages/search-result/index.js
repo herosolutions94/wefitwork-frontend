@@ -19,7 +19,7 @@ import LoginPopup from "@/components/components/authPopup";
 import MetaGenerator from "@/components/components/meta-generator";
 import { startConversation } from "@/components/states/actions/chat";
 import { useDispatch, useSelector } from "react-redux";
-
+import { parse } from "cookie";
 
 export const getServerSideProps = async (context) => {
   const query = context?.query;
@@ -28,6 +28,9 @@ export const getServerSideProps = async (context) => {
   const latitude = query?.latitude;
   const longitude = query?.longitude;
   const radius = query?.radius;
+
+  const cookies = parse(context?.req?.headers?.cookie || "");
+  const memauthToken = cookies?.authToken || "";
 
 
   const result = await http
@@ -38,7 +41,8 @@ export const getServerSideProps = async (context) => {
         latitude: latitude,
         longitude: longitude,
         sub_service_id: sub_service_id,
-        radius: radius
+        radius: radius,
+        token: memauthToken,
       })
     )
     .then((response) => response.data)
@@ -58,10 +62,10 @@ export default function SearchResult({ result }) {
   const loc_radius = route_query?.radius;
 
 
-  let { professions, services, selected_service, selected_sub_service, page_title, meta_desc, } =
+  let { professions, services, selected_service, selected_sub_service, page_title, meta_desc,memData } =
     result;
 
-    console.log(result)
+    // console.log(result)
 
     const token = authToken();
 
@@ -503,7 +507,17 @@ export default function SearchResult({ result }) {
                               <h3>{val?.completed_projects > 0 ? val?.completed_projects : 0}</h3>
                             </div>
                             <div className="btn_blk">
-                              <button type="button" className="site_btn color block" onClick={() => handleStartChat(val?.mem_id)} disabled={isFormProcessing}>
+                            {val?.mem_id == memData?.mem_id ? 
+                            <>
+                            <Link href={`/search-result/${encrypt_decrypt("encrypt",val?.mem_id)}`} className="site_btn white block">
+                                    View Your Profile
+                                  </Link>
+                                  
+                            </>
+                              
+                                  : 
+                                  <>
+                                  <button type="button" className="site_btn color block" onClick={() => handleStartChat(val?.mem_id)} disabled={isFormProcessing}>
                                 Start Chat{isFormProcessing && (
                       <i
                         className={
@@ -515,6 +529,10 @@ export default function SearchResult({ result }) {
                               <button type="button" onClick={() => handleOpenPopupSend(val)} className="site_btn block">
                                 Send SMS
                               </button>
+                                  </>
+
+                            }
+                              
                             </div>
                           </div>
                         </div>
