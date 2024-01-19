@@ -7,7 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
 import Image from "next/image";
-import { cmsFileUrl } from "@/components/helpers/helpers";
+import { cmsFileUrl, uploadMultiFiles } from "@/components/helpers/helpers";
+import FileIconsByExtensyion from "@/components/components/fileIconsByExt";
+import { useForm } from "react-hook-form";
+
 
 export default function Inbox() {
     const router = useRouter();
@@ -54,7 +57,7 @@ export default function Inbox() {
  
 /// Attachments
 
-const [attachments, setAttachments] = useState({files : []});
+const [attachments, setAttachments] = useState({files : [], loading: false });
 
 const fileRef = useRef(null);
 const handleClick = (e) => {
@@ -62,11 +65,28 @@ const handleClick = (e) => {
   fileRef.current.click();
 };
 
-const handleAttachmentsUpload = (e) => {
-    setAttachments({...attachments});
-    console.log(e.target.files);
+const handleAttachmentsUpload = async (e) => {
+    setAttachments({ ...attachments, loading: true });
+    let uploadedImages = await uploadMultiFiles(e, 'attachments');
+    console.log("Atach before", attachments);
+
+    {
+        attachments !== undefined && attachments !== null && attachments !== '' && attachments?.files?.length > 0 ?
+            setAttachments({ ...attachments, files: attachments?.files.concat(uploadedImages), loading: false })
+            :
+            setAttachments({ ...attachments, files: uploadedImages, loading: false });
+    }
+    document.getElementById('chat_attachments').value = '';
 }
 
+    
+    function handleRemoveImage(idx) {
+        setAttachments({
+            ...attachments, files: attachments?.files.filter((s, sidx) => idx !== sidx)
+        });
+    }
+
+    const {register} = useForm()
 
 
   return (
@@ -277,6 +297,36 @@ const handleAttachmentsUpload = (e) => {
                 })}
                 
                 <div className="write">
+
+                {
+                attachments?.loading ?
+                    <div className="loading_attachment">
+                        <div className="progress progress-striped active">
+                            <div role="progressbar " style={{ width: "100%" }} className="progress-bar progress-bar-info"><span></span></div>
+                        </div>
+                    </div>
+                    :
+                    ""
+            }
+            {
+                attachments?.files?.length > 0 ?
+                    <ul className="attachment_files">
+                        {
+                            attachments?.files?.map((attachment, index) => {
+                                return (
+                                    <li key={index} data={attachment?.file_name}> 
+                                        <span className="cx_btn" onClick={() => handleRemoveImage(index)}></span>
+                                        <FileIconsByExtensyion file={attachment?.file} display_name={attachment?.file_name}/>
+                                        
+                                    </li>
+                                )
+                            })
+                        }
+                    </ul>
+                    :
+                    ""
+            }
+
                     <form className="relative">
                         
                         <div className="btm">

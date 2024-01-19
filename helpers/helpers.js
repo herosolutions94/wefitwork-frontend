@@ -2,6 +2,8 @@ import { getCookie } from "cookies-next";
 import parse from "html-react-parser";
 import FormData from "form-data";
 import moment from "moment";
+import http from "./http";
+import toast from "react-hot-toast";
 // import FormData from "form-data";
 // import variables from "styles/globals.module.scss";
 
@@ -256,11 +258,13 @@ export function bytesToMegaBytes(bytes) {
   return bytes / (1024 * 1024);
 }
 
-export async function FileUpload(event, type = 'attchments') {
+export async function FileUpload(event, type = 'attchments', file_name) {
   const fd = new FormData();
   fd.append("file", event);
   fd.append("type", type);
-  return axios.post(project_ap_url + "api/" + 'upload-file', fd).then((res) => {
+  fd.append("file_name", file_name);
+
+  return http.post("upload-file", fd).then((res) => {
       return res.data;
   });
 }
@@ -269,17 +273,18 @@ export async function uploadMultiFiles(event, type) {
   let images_arr = event.target.files;
   for (let i = 0; i < images_arr.length; i++) {
       let fileSize = images_arr[i].size;
+      let fileName = images_arr[i].name;
+
       let sizeMb = bytesToMegaBytes(fileSize);
       if (sizeMb < 40) {
-          let image = await FileUpload(images_arr[i], type).then((data) => {
-              // console.log(data)
-              if (data.file_name != undefined && data?.status === 1) {
-                  newImages.push({ file_name: data.file_name, image_name: data?.file_name_text });
+          let image = await FileUpload(images_arr[i], type, fileName).then((data) => {
+              console.log("uploadMultiFiles", data)
+              if (data.file != undefined && data?.status === 1) {
+                  newImages.push({ file: data.file, file_name: data?.file_name_text });
               }
               else if (data?.status === 0) {
-                  toast.error(data?.msg,
-                      TOAST_SETTINGS
-                  ); return;
+                toast.error(data?.msg);
+                   return;
               }
           });
       }

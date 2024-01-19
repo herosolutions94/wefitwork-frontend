@@ -1,5 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/custom.scss";
+import "../css/mycss.css";
+
 import { Provider } from "react-redux";
 import store from "../states/store";
 import Layout from "../components/layout";
