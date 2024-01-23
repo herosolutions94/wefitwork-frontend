@@ -858,6 +858,9 @@ column-gap: 1.5rem;
     &.lg {
         ._inner {
         max-width: 100rem;
+        @include mobile{
+          max-width: 100%;
+        }
         }
     }
     &.sm {

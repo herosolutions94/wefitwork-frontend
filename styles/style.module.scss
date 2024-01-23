@@ -9,7 +9,7 @@
         padding-top: 3rem;
     }
     @include mobile_sm{
-        background-position: 140px 13px;
+        background-position: 193px 13px;
     }
     .flex{
         .colL{
@@ -25,10 +25,12 @@
                 color: $light;
                 margin-bottom: 3rem;
                 @include mobile_sm{
-                    max-width: 87%;
+                    max-width: 49%;
+                    line-height: 1.5;
                 }
                 @include mobile_sm{
-                    margin-bottom: 2rem;
+                    margin-bottom: 3rem;
+                    font-size: 2rem;
                 }
             }
             p{
@@ -68,6 +70,9 @@
                 width: fit-content;
                 &:hover{
                     opacity: 0.7;
+                }
+                @include mobile_sm{
+                    margin-top: 2rem;
                 }
             }
             .most_searched_cat{
@@ -3308,15 +3313,17 @@
                 width: 50%;
             }
             .image{
-                @include img(120%);
+                @include img(100%);
                 box-shadow: none;
+                @include radius(50%);
                 img{
                     @include pos;
-                    @include object;
+                    @include object(cover, top);
                 }
             }
             .cntnt{
                 margin-top: 2rem;
+                text-align: center;
                 p{
                     margin-bottom: 0;
                     font-size: 1.4rem;
@@ -3325,6 +3332,155 @@
                 }
                 h4{
                     margin-bottom: .5rem;
+                }
+            }
+        }
+    }
+}
+
+// ==========blog_pg=====
+.blog_pg{
+    .colL{
+        width: 30%;
+        padding-right: 2rem;
+        .inner{
+            @include block;
+            ul{
+                @include list;
+                &.cat_ul{
+                    li{
+                        padding: .7rem 0;
+                        &:not(:last-child){
+                            border-bottom: 1px solid #ddddddb0;
+                        }
+                        a{
+                            width: 100%;
+                            font-family: 'SemiBold';
+                        }
+                    }
+                }
+                &.top_ul{
+                    margin-top: 2rem;
+                   li{
+                    @include flex;
+                    column-gap: 1.5rem;
+                    &:not(:last-child){
+                        margin-bottom:2rem;
+                    }
+                    .image{
+                        width: 8rem;
+                        height: 8rem;
+                        overflow: hidden;
+                        @include radius(5px);
+                        display: block;
+                        img{
+                            @include object;
+                        }
+                    }
+                    .cntnt{
+                        flex: 1;
+                        align-self: center;
+                        h5{
+                            margin-bottom: .4rem;
+                            font-size: 1.7rem;
+                            a{
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
+                                line-height: 1.3;
+                            }
+                        }
+                        .other{
+                            @include flex;
+                            column-gap: 2rem;
+                            span{
+                                font-size: 1.4rem;
+                                opacity: 0.6;
+                                font-family: 'Medium';
+                                position: relative;
+                                &:not(:last-child){
+                                    &:after{
+                                        @include pos($t:12px,$r:-13px,$l:null,$b:null);
+                                        content: '';
+                                        width: 0.6rem;
+                                        height: 0.2rem;
+                                        background-color: #343434;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                   }
+                }
+                
+            }
+        }
+    }
+    .colR{
+        width: 70%;
+        padding-left: 2rem;
+        .col{
+            flex: unset;
+            width: calc(100% / 1);
+            @include block;
+            padding: 0;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            .post_image{
+                @include img(60%);
+                box-shadow: none;
+                background-color: transparent;
+                display: block;
+                @include radius(0);
+                img{
+                    @include object;
+                    @include pos;
+                }
+            }
+            .post_cntnt{
+                padding: 2rem;
+                h3{
+                    font-size: 2.5rem;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    line-height: 1.3;
+                }
+                p{
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+                .other{
+                    @include flex;
+                    column-gap: 2rem;
+                    margin-bottom: 1rem;
+                    span{
+                        font-size: 1.4rem;
+                        opacity: 0.6;
+                        font-family: 'Medium';
+                        position: relative;
+                        &:not(:last-child){
+                            &:after{
+                                @include pos($t:12px,$r:-13px,$l:null,$b:null);
+                                content: '';
+                                width: 0.6rem;
+                                height: 0.2rem;
+                                background-color: #343434;
+                            }
+                        }
+                    }
+                }
+                .read_more{
+                    font-family: 'SemiBold';
+                    color: $color;
+                    font-size: 1.4rem;
                 }
             }
         }

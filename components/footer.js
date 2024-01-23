@@ -54,7 +54,7 @@ export default function Footer({ siteSettings }) {
       {
         id: 4,
         text: "Blog",
-        link: "/",
+        link: "/blog",
       },
       {
         id: 5,
