@@ -3343,11 +3343,46 @@
     .colL{
         width: 30%;
         padding-right: 2rem;
+        @include ipad_sm{
+            width: 100%;
+            padding-right: 0;
+        }
         .inner{
             @include block;
+            &:first-child{
+                @include ipad_sm{
+                    padding: 0;
+                }
+                h4{
+                    @include ipad_sm{
+                        margin-bottom: 0;
+                        padding: 2rem;
+                        position: relative;
+                        cursor: pointer;
+                        &:after{
+                            @include pos($l:null,$r:2rem);
+                            content: '';
+                            background-image: url(/images/arrow-down.svg);
+                            background-position: center;
+                            background-size: contain;
+                            background-repeat: no-repeat;
+                            width: 2rem;
+                        }
+                    }
+                }
+            }
             ul{
                 @include list;
+                
                 &.cat_ul{
+                    @include ipad_sm{
+                        display: none;
+                        padding: 2rem;
+                        padding-top: 0;
+                        &.active{
+                            display: block;
+                        }
+                    }
                     li{
                         padding: .7rem 0;
                         &:not(:last-child){
@@ -3393,7 +3428,7 @@
                             }
                         }
                         .other{
-                            @include flex;
+                            @include flex($flow:wrap);
                             column-gap: 2rem;
                             span{
                                 font-size: 1.4rem;
@@ -3421,6 +3456,11 @@
     .colR{
         width: 70%;
         padding-left: 2rem;
+        @include ipad_sm{
+            width: 100%;
+            padding-left: 0;
+            margin-top: 3rem;
+        }
         .col{
             flex: unset;
             width: calc(100% / 1);
@@ -3458,7 +3498,7 @@
                     -webkit-box-orient: vertical;
                 }
                 .other{
-                    @include flex;
+                    @include flex($flow:wrap);
                     column-gap: 2rem;
                     margin-bottom: 1rem;
                     span{
@@ -3481,6 +3521,59 @@
                     font-family: 'SemiBold';
                     color: $color;
                     font-size: 1.4rem;
+                }
+            }
+        }
+    }
+    &.blog_detail_page{
+        .flex{
+            .colR{
+                .col{
+                    .post_cntnt{
+                        h3{
+                            font-size: 3.5rem;
+                            overflow: unset;
+                            text-overflow: unset;
+                            display: block;
+                            -webkit-line-clamp: unset;
+                            line-height: 1.3;
+                        }
+                        p{
+                            overflow: unset;
+                            text-overflow: unset;
+                            display: block;
+                            -webkit-line-clamp: unset;
+                        }
+                    }
+                    .share_opt{
+                        padding: 2rem;
+                        @include flex;
+                        border-top: 1px solid #ddd;
+                        column-gap: 1rem;
+                        span{
+                            align-self: center;
+                            font-family: 'SemiBold';
+                        }
+                        ul{
+                            @include list;
+                            @include flex;
+                            column-gap: .4rem;
+                            li{
+                                a{
+                                    width: 3rem;
+                                    height: 3rem;
+                                    overflow: hidden;
+                                    display: block;
+                                    img{
+                                        @include object(contain);
+                                    }
+                                    &:hover{
+                                        opacity: 0.7;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

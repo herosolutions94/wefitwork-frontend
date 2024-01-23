@@ -4,6 +4,10 @@ import { map } from "jquery";
 import Pagination from "@/components/components/pagination-default";
 
 export default function Blog() {
+    const[cat,setCat] = useState(false);
+    const ToggleCat = () =>{
+        setCat(!cat);
+    }
  const categories = [
     {
       id:"1",
@@ -72,8 +76,8 @@ export default function Blog() {
                 <div className="flex">
                     <div className="colL">
                         <div className="inner">
-                            <h4>Categories</h4>
-                            <ul className="cat_ul">
+                            <h4 onClick={ToggleCat}>Categories</h4>
+                            <ul className={cat ? "cat_ul active" : "cat_ul"}>
                                 {categories.map((val)=> {
                                     return(
                                         <li key={val.id}>
