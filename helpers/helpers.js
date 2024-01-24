@@ -196,6 +196,18 @@ export function formatDate(dateString) {
   return `${day} ${month} ${year}`;
 }
 
+export function blogDate(dateString) {
+  const date = new Date(dateString);
+
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'short' });
+  const year = date.getFullYear();
+
+  
+
+  return `${month} ${day}, ${year}`;
+}
+
 export function checkForEmptyValues(data) {
   for (const key in data) {
     if (data[key] === null || data[key] === "") {

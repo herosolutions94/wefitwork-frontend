@@ -363,45 +363,68 @@ export default function Home({ result }) {
             </OwlCarousel>
             </div>
             <div className="hide_ds_sc">
-            <OwlCarousel className="owl-carousel owl-theme" {...categories}>
-              {featured_services?.map((val) => {
-                return (
+            <OwlCarousel id="mob-v" className="owl-carousel owl-theme" {...categories}>
+        {featured_services?.map((val, index) => {
+          // Render two items per iteration
+          if (index % 2 === 0) {
+            return (
+              <div className="item-pair" key={index}>
+                {/* First item in the pair */}
+                <div
+                  className="item"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleOpenSubPopup(val?.id, val?.title)}
+                >
+                  <div className="inner">
+                    <div className="icon_img">
+                      <Image
+                        src={cmsFileUrl(val?.icon, "services")}
+                        width={60}
+                        height={60}
+                        alt={val?.title}
+                      />
+                    </div>
+                    <h5>
+                      <Text string={val.title} />
+                    </h5>
+                  </div>
+                </div>
+                {/* Second item in the pair */}
+                {featured_services[index + 1] && (
                   <div
                     className="item"
                     style={{ cursor: "pointer" }}
-                    key={val.id}
-                    onClick={() => handleOpenSubPopup(val?.id, val?.title)}
+                    onClick={() =>
+                      handleOpenSubPopup(
+                        featured_services[index + 1]?.id,
+                        featured_services[index + 1]?.title
+                      )
+                    }
                   >
                     <div className="inner">
                       <div className="icon_img">
                         <Image
-                          src={cmsFileUrl(val?.icon, "services")}
+                          src={cmsFileUrl(
+                            featured_services[index + 1]?.icon,
+                            "services"
+                          )}
                           width={60}
                           height={60}
-                          alt={val?.title}
+                          alt={featured_services[index + 1]?.title}
                         />
                       </div>
                       <h5>
-                        <Text string={val.title} />
-                      </h5>
-                    </div>
-                    <div className="inner">
-                      <div className="icon_img">
-                        <Image
-                          src={cmsFileUrl(val?.icon, "services")}
-                          width={60}
-                          height={60}
-                          alt={val?.title}
-                        />
-                      </div>
-                      <h5>
-                        <Text string={val.title} />
+                        <Text string={featured_services[index + 1]?.title} />
                       </h5>
                     </div>
                   </div>
-                );
-              })}
-            </OwlCarousel>
+                )}
+              </div>
+            );
+          }
+          return null; // Skip rendering for odd indices
+        })}
+      </OwlCarousel>
             </div>
           </div>
         </section>

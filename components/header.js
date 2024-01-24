@@ -45,7 +45,10 @@ export default function Header({siteSettings}) {
                   <div onClick={toggleHomeOwner} className="btn_nav">Homeowner</div>
                   <div className={homeOwner ? "sub active" : "sub"}>
                       <ul>
-                        <li>
+                      {!token ? 
+                      
+                      <>
+                      <li>
                           <div className="inner_sub_nav">
                               <h5>Login</h5>
                               <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
@@ -65,6 +68,21 @@ export default function Header({siteSettings}) {
                               <Link href="/signup" onClick={ToggleAction} className="hide_hide_hide">Signup</Link>
                           </div>
                         </li>
+                      </>
+                      :
+                      <li>
+                          <div className="inner_sub_nav">
+                              <h5>See Your Dashboard</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/buyer-dashboard" onClick={ToggleAction} className="site_btn color">Dashboard</Link>
+                              </div>
+                              <Link href="/buyer-dashboard" onClick={ToggleAction} className="hide_hide_hide">Dashboard</Link>
+                          </div>
+                        </li>
+                      }
+
+                        
                         <li>
                           <div className="inner_sub_nav">
                               <h5>Leave a Review</h5>
@@ -82,7 +100,9 @@ export default function Header({siteSettings}) {
                   <div onClick={toggleProfessional} className="btn_nav">Professionals</div>
                   <div className={professional ? "sub active" : "sub"}>
                       <ul>
-                        <li>
+                      {!token ? 
+<>
+<li>
                           <div className="inner_sub_nav">
                               <h5>Login</h5>
                               <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
@@ -97,11 +117,37 @@ export default function Header({siteSettings}) {
                               <h5>Signup</h5>
                               <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
                               <div className="btn_blk">
-                              <Link href="/signup" onClick={ToggleAction} className="site_btn">Signup</Link>
+                              <Link href="/become-professional" onClick={ToggleAction} className="site_btn">Signup</Link>
                               </div>
-                              <Link href="/signup" onClick={ToggleAction} className="hide_hide_hide">Signup</Link>
+                              <Link href="/become-professional" onClick={ToggleAction} className="hide_hide_hide">Signup</Link>
                           </div>
                         </li>
+</>
+: 
+(token && mem_type == 'member') ? 
+<li>
+                          <div className="inner_sub_nav">
+                              <h5>Become A Pro</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/become-professional" onClick={ToggleAction} className="site_btn">Become A Pro</Link>
+                              </div>
+                              <Link href="/become-professional" onClick={ToggleAction} className="hide_hide_hide">Become A Pro</Link>
+                          </div>
+                        </li>
+                        : 
+                        <li>
+                          <div className="inner_sub_nav">
+                              <h5>Professional Dashboard</h5>
+                              <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                              <div className="btn_blk">
+                              <Link href="/professional-dashboard" onClick={ToggleAction} className="site_btn">Pro Dashboard</Link>
+                              </div>
+                              <Link href="/professional-dashboard" onClick={ToggleAction} className="hide_hide_hide">Pro Dashboard</Link>
+                          </div>
+                        </li>
+                      }
+                        
                       </ul>
                   </div>
               </li>

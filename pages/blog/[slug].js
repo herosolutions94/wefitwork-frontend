@@ -1,75 +1,35 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { map } from "jquery";
-import Pagination from "@/components/components/pagination-default";
+import http from "@/components/helpers/http";
+import MetaGenerator from "@/components/components/meta-generator";
+import Text from "@/components/components/text";
+import { blogDate, cmsFileUrl } from "@/components/helpers/helpers";
+import SocialShare from "@/components/components/socialShare";
 
-export default function Blog() {
+
+export const getServerSideProps = async (context) => {
+    const { slug } = context.query;
+  
+    const result = await http
+      .get(`blog-detail/${slug}`)
+      .then((response) => response.data)
+      .catch((error) => error.response.data.message);
+  
+    return { props: { result } };
+  };
+
+
+export default function Blog({result}) {
+    let { page_title, meta_desc, content, cats, blog, top_posts } = result;
     const[cat,setCat] = useState(false);
     const ToggleCat = () =>{
         setCat(!cat);
     }
- const categories = [
-    {
-      id:"1",
-      name: "Culture"
-    },
-    {
-        id:"2",
-        name: "Creativity"
-    },
-    {
-        id:"3",
-        name:"Food"
-    },
-    {
-        id:"4",
-        name:"Travel"
-    },
-    {
-        id:"5",
-        name:"Humor"
-    },
-    {
-        id:"6",
-        name:"Music"
-    }
- ]
- const posts = [
-    {
-        id:"post1",
-        image:"/images/about.png",
-        title:"Need an electrician to fix your light",
-        pera:"Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.",
-        cate:"Food",
-        date:"Nov 17,2023"
-    },
-    {
-        id:"post2",
-        image:"/images/989.png",
-        title:"Find a quality professionals in your area",
-        pera:"Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.",
-        cate:"Humor",
-        date:"Nov 19,2023"
-    },
-    {
-        id:"post3",
-        image:"/images/tab_image2.jpg",
-        title:"Find a quality professionals in your area",
-        pera:"Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.",
-        cate:"Travel",
-        date:"Oct 22,2023"
-    },
-    {
-        id:"post4",
-        image:"/images/portfolio3_1.jpg",
-        title:"Find a quality professionals in your area",
-        pera:"Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.",
-        cate:"Travel",
-        date:"Oct 22,2023"
-    },
- ]
+ 
   return (
     <>
+    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="blog_pg blog_detail_page">
             <div className="contain">
@@ -78,10 +38,13 @@ export default function Blog() {
                         <div className="inner">
                             <h4 onClick={ToggleCat}>Categories</h4>
                             <ul className={cat ? "cat_ul active" : "cat_ul"}>
-                                {categories.map((val)=> {
+                            <li>
+                    <Link href="/blog" >All BLogs</Link>
+                </li>
+                                {cats?.map((val)=> {
                                     return(
-                                        <li key={val.id}>
-                                            <Link href="/blog/1">{val.name}</Link>
+                                        <li key={val?.id}>
+                                            <Link href="/blog/1">{val?.title}</Link>
                                         </li>
                                     );
                                 })}
@@ -91,17 +54,17 @@ export default function Blog() {
                         <div className="inner">
                             <h4>Top Posts</h4>
                             <ul className="top_ul">
-                                {posts.map((val)=> {
+                                {top_posts?.map((val)=> {
                                     return(
-                                        <li key={val.id}>
-                                            <Link href="/blog/1" className="image">
-                                                <img src={val.image} alt={val.title} />
+                                        <li key={val?.id}>
+                                            <Link href={`/blog/${val?.slug}`} className="image">
+                                                <img src={cmsFileUrl(val?.image, "blogs")} alt={val?.title} />
                                             </Link>
                                             <div className="cntnt">
-                                                <h5><Link href="/blog/2">{val.title}</Link></h5>
+                                                <h5><Link href={`/blog/${val?.slug}`}><Text string={val?.title} /></Link></h5>
                                                 <div className="other">
-                                                    <span>{val.cate}</span>
-                                                    <span>{val.date}</span>
+                                                    {/* <span>{val?.cate}</span> */}
+                                                    <span>{blogDate(val?.created_date)}</span>
                                                 </div>
                                             </div>
                                         </li>
@@ -113,21 +76,19 @@ export default function Blog() {
                     <div className="colR">
                         <div className="col">
                             <div className="post_image">
-                                <img src="/images/tab_image2.jpg" alt="" />
+                                <img src={cmsFileUrl(blog?.image, "blogs")} alt={blog?.title} />
                             </div>
                             <div className="post_cntnt">
                                 <div className="other">
-                                    <span>Food</span>
-                                    <span>Nov 17, 2023</span>
+                                    <span>{blog?.category_id}</span>
+                                    <span>{blogDate(blog?.created_date)}</span>
                                 </div>
-                                <h3>Find a quality professionals in your area</h3>
-                                <p>Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.</p>
-                                <h4>Find a quality professionals in your area</h4>
-                                <p>Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.</p>
-                                <p>Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.Browse our categories of services, describe the help you need, and we'll instantly connect you to professionals tailored to your job.</p>
+                                <h3><Text string={blog?.title} /></h3>
+                                <Text string={blog?.description} />
                             </div>
                             <div className="share_opt">
                                 <span>Share on</span>
+                                
                                 <ul>
                                     <li><Link href=""><img src="/images/facebook.svg" alt="" /></Link></li>
                                     <li><Link href=""><img src="/images/twitter.svg" alt="" /></Link></li>

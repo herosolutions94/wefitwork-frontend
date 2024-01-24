@@ -86,7 +86,17 @@ const handleAttachmentsUpload = async (e) => {
         });
     }
 
-    const {register} = useForm()
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+      } = useForm();
+
+      const onSubmit = data => {
+        let frmData = { conversationId: chat_id, senderId: member?.mem_id, message: data?.msg, file: attachments?.files !== undefined && attachments?.files !== null ? attachments?.files : [] };
+        console.log(frmData)
+       
+    }
 
 
   return (
@@ -327,12 +337,17 @@ const handleAttachmentsUpload = async (e) => {
                     ""
             }
 
-                    <form className="relative">
-                        
+                    <form className="relative" action="" method="POST" onSubmit={handleSubmit(onSubmit)}>
+                    <div
+                              className="validation-error"
+                              style={{ color: "red" }}
+                            >
+                              {errors.msg?.message}
+                            </div>
                         <div className="btm">
                             <button type="button" className="site_btn arrowBtn blank" title="Upload Files" onClick={handleClick}><img src="/images/clip.svg" alt=""/></button>
-                            <textarea className="input" placeholder="Type a message"></textarea>
-                            <button type="submit" className="site_btn icoBtn"><img src="/images/send.svg" alt=""/></button>
+                            <textarea className="input" placeholder="Type a message" id="msg" {...register("msg", { required: "Required" })}></textarea>
+                            <button type="submit" className="site_btn icoBtn" disabled={attachments?.loading}><img src="/images/send.svg" alt=""/>{attachments?.loading ? <i className="spinner"></i> : ""}</button>
 
 
                             <input type="file" name="" id="chat_attachments" className="uploadFile" data-upload="gallery_image" ref={fileRef} multiple onChange={(e) => handleAttachmentsUpload(e) } />
