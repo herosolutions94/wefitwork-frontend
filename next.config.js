@@ -3,16 +3,12 @@ const webpack = require("webpack");
 const nextConfig = {
   images: {
     remotePatterns: [
-      // {
-      //   protocol: 'https',
-      //   hostname: 'herosolutions.com.pk',
-      //   pathname: '/naeem/wefitwork/**',
-      // }
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        pathname: '/wefitwork/**',
+        protocol: 'https',
+        hostname: 'herosolutions.com.pk',
+        pathname: '/naeem/wefitwork/**',
       }
+      
     ]
   },
   reactStrictMode: true,
