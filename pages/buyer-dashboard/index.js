@@ -38,11 +38,12 @@ export default function Dashboard() {
       {/* <NextNProgress color="#004AAD" /> */}
       <main>
         <Toaster position="top-center" />
-        <Head>
-          <title>{page_title ? page_title : "fetching..."}</title>
-        </Head>
+        
         {isLoading && (
           <>
+          <Head>
+          <title>{"fetching..."}</title>
+        </Head>
             <div className="br"></div>
             <div className="text-center">
               <div
@@ -56,7 +57,11 @@ export default function Dashboard() {
           </>
         )}
         {!isLoading && (
-          <section className="dashboard">
+          <>
+          <Head>
+          <title>{page_title ? page_title : "fetching..."}</title>
+        </Head>
+        <section className="dashboard">
             <div className="contain">
               <div className="sec_heading">
                 <h3>
@@ -199,6 +204,8 @@ export default function Dashboard() {
               {/* =========end loop========== */}
             </div>
           </section>
+          </>
+          
         )}
       </main>
     </>
