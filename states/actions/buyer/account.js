@@ -20,8 +20,14 @@ import {
   CHANGE_BUYER_PASSWORD_SUCCESS,
   CHANGE_BUYER_PASSWORD_FAILED,
   FETCH_BUYER_WISHLIST,
-FETCH_BUYER_WISHLIST_SUCCESS,
-FETCH_BUYER_WISHLIST_FAILED,
+  FETCH_BUYER_WISHLIST_SUCCESS,
+  FETCH_BUYER_WISHLIST_FAILED,
+  FETCH_BUYER_BOOKINGS_DATA,
+  FETCH_BUYER_BOOKINGS_DATA_SUCCESS,
+  FETCH_BUYER_BOOKINGS_DATA_FAILED,
+  FETCH_BUYER_NOTIFICATIONS,
+  FETCH_BUYER_NOTIFICATIONS_SUCCESS,
+  FETCH_BUYER_NOTIFICATIONS_FAILED,
 } from "../actionTypes";
 import Text from "@/components/components/text";
 import { authToken } from "@/components/helpers/authToken";
@@ -43,13 +49,13 @@ export const fetchBuyerDashboardData = () => (dispatch) => {
     })
     .catch((error) => {
       console.log(error);
-      
+
       dispatch({
         type: FETCH_BUYER_DASHBOARD_DATA_FAILED,
         payload: error,
       });
-      
-        toast.error('Technical Issue', {duration : 4000});
+
+      toast.error("Technical Issue", { duration: 4000 });
 
       useRedirectInvalidToken();
     });
@@ -61,7 +67,10 @@ export const fetchBuyerAccountSettings = () => (dispatch) => {
     payload: null,
   });
   http
-    .post("user/buyer-profile-settings", doObjToFormData({ token: authToken() }))
+    .post(
+      "user/buyer-profile-settings",
+      doObjToFormData({ token: authToken() })
+    )
     .then(({ data }) => {
       dispatch({
         type: FETCH_BUYER_ACCOUNT_SETTINGS_SUCCESS,
@@ -75,7 +84,7 @@ export const fetchBuyerAccountSettings = () => (dispatch) => {
         type: FETCH_BUYER_ACCOUNT_SETTINGS_FAILED,
         payload: error,
       });
-      toast.error('Technical Issue', {duration : 4000});
+      toast.error("Technical Issue", { duration: 4000 });
 
       useRedirectInvalidToken();
     });
@@ -118,7 +127,7 @@ export const saveBuyerAccountSettings = (formData) => (dispatch) => {
       }
     })
     .catch((error) => {
-      toast.error('Technical Issue', {duration : 4000});
+      toast.error("Technical Issue", { duration: 4000 });
       dispatch({
         type: SAVE_BUYER_ACCOUNT_SETTINGS_FAILED,
         payload: error,
@@ -160,11 +169,10 @@ export const changeBuyerPassword = (formData) => (dispatch) => {
         type: CHANGE_BUYER_PASSWORD_FAILED,
         payload: error,
       });
-      toast.error('Technical Issue', {duration : 4000});
+      toast.error("Technical Issue", { duration: 4000 });
       // useRedirectInvalidToken();
     });
 };
-
 
 export const fetchBuyerWishlist = () => (dispatch) => {
   dispatch({
@@ -182,13 +190,69 @@ export const fetchBuyerWishlist = () => (dispatch) => {
     })
     .catch((error) => {
       console.log(error);
-      
+
       dispatch({
         type: FETCH_BUYER_WISHLIST_FAILED,
         payload: error,
       });
-      
-        toast.error('Technical Issue', {duration : 4000});
+
+      toast.error("Technical Issue", { duration: 4000 });
+
+      useRedirectInvalidToken();
+    });
+};
+
+export const fetchBuyerBookingsData = () => (dispatch) => {
+  dispatch({
+    type: FETCH_BUYER_BOOKINGS_DATA,
+    payload: null,
+  });
+  http
+    .post("user/buyer-bookings", doObjToFormData({ token: authToken() }))
+    .then(({ data }) => {
+      // console.log(data);
+      dispatch({
+        type: FETCH_BUYER_BOOKINGS_DATA_SUCCESS,
+        payload: data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+
+      dispatch({
+        type: FETCH_BUYER_BOOKINGS_DATA_FAILED,
+        payload: error,
+      });
+
+      toast.error("Technical Issue", { duration: 4000 });
+
+      useRedirectInvalidToken();
+    });
+};
+
+export const fetchBuyerNotifications = () => (dispatch) => {
+  dispatch({
+    type: FETCH_BUYER_NOTIFICATIONS,
+    payload: null,
+  });
+  http
+    .post("user/buyer_notifications", doObjToFormData({ token: authToken() }))
+    .then(({ data }) => {
+      // console.log(data);
+      dispatch({
+        type: FETCH_BUYER_NOTIFICATIONS_SUCCESS,
+        payload: data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+
+      dispatch({
+        type: FETCH_BUYER_NOTIFICATIONS_FAILED,
+        payload: error,
+      });
+
+      toast.error("Technical Issue", { duration: 4000 });
 
       useRedirectInvalidToken();
     });

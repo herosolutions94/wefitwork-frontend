@@ -88,7 +88,7 @@ export default function EmailVerification({ result }) {
 
   return (
     <>
-        <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
 
       <main className="logon_main">
@@ -168,7 +168,7 @@ export default function EmailVerification({ result }) {
                     onClick={resendEmail}
                     disabled={emailVerify}
                   >
-                    <Text string={content?.left_tagline_link_text} />{" "}
+                    <Text string={content?.left_tagline_link_text} />
                     {emailVerify && (
                       <i
                         className={emailVerify ? "spinner" : "spinnerHidden"}
@@ -181,7 +181,7 @@ export default function EmailVerification({ result }) {
                     type="submit"
                     disabled={isFormProcessing}
                   >
-                    <Text string={content?.submit_text} />{" "}
+                    <Text string={content?.submit_text} />
                     {isFormProcessing && (
                       <i
                         className={

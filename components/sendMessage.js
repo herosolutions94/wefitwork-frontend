@@ -19,7 +19,7 @@ export default function SendMessage({data, handleClosePopupSend}) {
       let formData = {work_scope: workscope, token: authToken(), pro: data?.mem_id, pro_name: data?.mem_fname, pro_phone: data?.mem_phone, base_path: window.location.origin} 
       try {
         http.post("user/send-message", doObjToFormData(formData)).then((data) => {
-          console.log(data);
+          // console.log(data);
           if (data.data.status) {
           
             toast.success(data.data.msg);

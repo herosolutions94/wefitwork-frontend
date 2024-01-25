@@ -19,59 +19,97 @@ export default function Dashboard() {
   const data = useSelector((state) => state.account.content);
   const member = useSelector((state) => state.account.mem);
   const isLoading = useSelector((state) => state.account.isLoading);
- const sent_sms = useSelector((state) => state.account.sent_sms);
+  const sent_sms = useSelector((state) => state.account.sent_sms);
   // console.log("dashboard",data);
-  const { site_settings, page_title } = data;
+  const {
+    site_settings,
+    page_title,
+    wishlist_count,
+    contract_converged_count,
+    message_count,
+  } = data;
 
   useEffect(() => {
     dispatch(fetchBuyerDashboardData());
   }, []);
-  
-  
+
   return (
     <>
-    {/* <NextNProgress color="#004AAD" /> */}
+      {/* <NextNProgress color="#004AAD" /> */}
       <main>
-      <Toaster position="top-center" />
-      <Head>
+        <Toaster position="top-center" />
+        <Head>
           <title>{page_title ? page_title : "fetching..."}</title>
         </Head>
-         <section className="dashboard">
+        {isLoading && (
+          <>
+            <div className="br"></div>
+            <div className="text-center">
+              <div
+                className="spinner-border text-danger"
+                role="status"
+                style={{ width: "3rem", height: "3rem" }}
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </>
+        )}
+        {!isLoading && (
+          <section className="dashboard">
             <div className="contain">
               <div className="sec_heading">
-                <h3>Welcome Back <span className="color"><Text string={member?.mem_fname} /></span></h3>
+                <h3>
+                  Welcome Back
+                  <span className="color">
+                    <Text string={member?.mem_fname} />
+                  </span>
+                </h3>
               </div>
               <div className="dash_tile_main custom_blk">
                 <div className="col">
                   <div className="inner">
                     <div className="icon">
-                      <img src="/images/envelope_color.svg" alt="Total Messages Received" />
+                      <img
+                        src="/images/envelope_color.svg"
+                        alt="Total Messages Received"
+                      />
                     </div>
                     <div className="cntnt">
                       <p>Total Messages Received</p>
-                      <h3>73</h3>
+                      <h3>{message_count > 0 ? message_count : 0}</h3>
                     </div>
                   </div>
                 </div>
                 <div className="col">
                   <div className="inner">
                     <div className="icon">
-                      <img src="/images/ThumbsUp.svg" alt="Total Wishlist Profiles" />
+                      <img
+                        src="/images/ThumbsUp.svg"
+                        alt="Total Wishlist Profiles"
+                      />
                     </div>
                     <div className="cntnt">
                       <p>Total Wishlist Profiles</p>
-                      <h3>205</h3>
+                      <h3>{wishlist_count > 0 ? wishlist_count : 0}</h3>
                     </div>
                   </div>
                 </div>
                 <div className="col">
                   <div className="inner">
                     <div className="icon">
-                      <img src="/images/file.svg" alt="Total Contracts Converged" />
+                      <img
+                        src="/images/file.svg"
+                        alt="Total Contracts Converged"
+                      />
                     </div>
                     <div className="cntnt">
                       <p>Total Contracts Converged</p>
-                      <h3>53</h3>
+                      <h3>
+                        {contract_converged_count > 0
+                          ? contract_converged_count
+                          : 0}
+                      </h3>
                     </div>
                   </div>
                 </div>
@@ -81,68 +119,91 @@ export default function Dashboard() {
                 <h4>Contracts Converged</h4>
               </div>
               {/* ====start loop====== */}
-              {isEmpty(sent_sms) && 
-                <div className="alert alert-danger text-center">You haven't sent any request </div>
-              }
-              {!isEmpty(sent_sms) && 
+              {isEmpty(sent_sms) && (
+                <div className="alert alert-danger text-center">
+                  You haven't sent any request
+                </div>
+              )}
+              {!isEmpty(sent_sms) &&
                 sent_sms?.map((sms, i) => {
                   return (
                     <div className="contract_list custom_blk " key={i}>
-                  <div className="col">
-                    <div className="user_info">
-                      <div className="dp_icon">
-                      <Image 
-                      src={cmsFileUrl(sms?.to_mem_dp, "members")}
-                      width={60}
-                      height={60}
-                      alt={"dp"}
-                       />
+                      <div className="col">
+                        <div className="user_info">
+                          <div className="dp_icon">
+                            <Image
+                              src={cmsFileUrl(sms?.to_mem_dp, "members")}
+                              width={60}
+                              height={60}
+                              alt={"dp"}
+                            />
+                          </div>
+                          <div className="cntnt">
+                            <h5>
+                              <Text string={sms?.to_mem_name} />
+                            </h5>
+                          </div>
+                        </div>
                       </div>
-                      <div className="cntnt">
-                        <h5><Text string={sms?.to_mem_name} /></h5>
+                      <div className="col">
+                        <div className="inner">
+                          <p>
+                            <small>Date</small>
+                          </p>
+                          <p>
+                            <strong>
+                              <Text string={sms?.date} />
+                            </strong>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="inner">
+                          <p>
+                            <small>Service</small>
+                          </p>
+                          <p>
+                            <strong>
+                              <Text string={sms?.service} />
+                            </strong>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col col_l">
+                        <div className="inner">
+                          <p>
+                            <small>Address</small>
+                          </p>
+                          <p>
+                            <strong>
+                              <Text string={sms?.to_mem_address} />
+                            </strong>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="col col_s">
+                        <div className="inner text-right ">
+                          <Link
+                            href={`/buyer-dashboard/booking-details/${sms?.id}`}
+                            className="site_btn"
+                          >
+                            View
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Date</small></p>
-                      <p><strong><Text string={sms?.date} /></strong></p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="inner">
-                      <p><small>Service</small></p>
-                      <p><strong><Text string={sms?.service} /></strong></p>
-                    </div>
-                  </div>
-                  <div className="col col_l">
-                    <div className="inner">
-                      <p><small>Address</small></p>
-                      <p><strong><Text string={sms?.to_mem_address} /></strong></p>
-                    </div>
-                  </div>
-
-                  <div className="col col_s">
-                                <div className="inner text-right ">
-                                <Link href={`buyer-dashboard/booking-details/${sms?.id}`} className="site_btn">View</Link>
-                                </div>
-                            </div>
-                  
-              </div>
-
                   );
-                })
-              }
-              
+                })}
+
               {/* =========end loop========== */}
-            
             </div>
-         </section>
+          </section>
+        )}
       </main>
-      
     </>
   );
 }
-Dashboard.getLayout = function(page) {
-    return <LayoutBuyerDashboard>{page}</LayoutBuyerDashboard>;
+Dashboard.getLayout = function (page) {
+  return <LayoutBuyerDashboard>{page}</LayoutBuyerDashboard>;
 };

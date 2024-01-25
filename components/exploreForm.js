@@ -8,8 +8,8 @@ import { saveSearch } from "../states/actions/saveSearch";
 import { useDispatch, useSelector } from "react-redux";
 // import MapComponent from "./map-container";
 import AddressAutocomplete from "./map-autocomplete";
-import dynamic from 'next/dynamic';
-const LeafletMapComponent = dynamic(() => import('../components/leaflet-map'), {
+import dynamic from "next/dynamic";
+const LeafletMapComponent = dynamic(() => import("../components/leaflet-map"), {
   ssr: false, // Disable server-side rendering
 });
 
@@ -86,7 +86,6 @@ const ExploreFrom = ({ onClose, services }) => {
             setSubServices(false);
           }
         });
-      
     } catch (errors) {
       setGetingSubServices(false);
       console.log("Errors", errors);
@@ -133,17 +132,16 @@ const ExploreFrom = ({ onClose, services }) => {
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
 
-  const [businessAddress, setBusinessAddress] = useState('');
+  const [businessAddress, setBusinessAddress] = useState("");
 
-const [reloadMap, setReloadMap] = useState(false);
-
+  const [reloadMap, setReloadMap] = useState(false);
 
   const handlePlaceSelect = (place) => {
     setReloadMap(false);
     setGetingLocation(true);
-    setLocationCords({lat: place.latitude, long: place.longitude});
+    setLocationCords({ lat: place.latitude, long: place.longitude });
     // Use reverse geocoding to get the address from coordinates
-    setValue('business_address', businessAddress);
+    setValue("business_address", businessAddress);
 
     if (place.latitude && place.longitude) {
       toast.success("Location picked. Continue to next Step");
@@ -152,15 +150,10 @@ const [reloadMap, setReloadMap] = useState(false);
     }
 
     setGetingLocation(false);
-
-
-
   };
 
-  
-
   const getCurrentLocation = () => {
-    setReloadMap(false)
+    setReloadMap(false);
     setGetingLocation(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -168,9 +161,9 @@ const [reloadMap, setReloadMap] = useState(false);
         const longitude = position.coords.longitude;
 
         setLocationCords({ lat: latitude, long: longitude });
-        console.log(locationCords);
+        // console.log(locationCords);
 
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
         if (latitude && longitude) {
           toast.success("Location picked. Continue to next Step");
@@ -180,7 +173,7 @@ const [reloadMap, setReloadMap] = useState(false);
       });
     } else {
       toast.error("Geolocation is not supported by this browser.");
-      console.log("Geolocation is not supported by this browser.");
+      // console.log("Geolocation is not supported by this browser.");
     }
     setGetingLocation(false);
   };
@@ -200,10 +193,7 @@ const [reloadMap, setReloadMap] = useState(false);
 
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
-    setValue("business_address",businessAddress)
-
-
-
+    setValue("business_address", businessAddress);
   }, [locationCords]);
 
   const [file, setFile] = useState(null);
@@ -213,27 +203,32 @@ const [reloadMap, setReloadMap] = useState(false);
     dispatch(saveSearch(data));
   };
   const [isSearching, setIsSearching] = useState(false);
-  const [searchedServices, setSearchedServices] = useState({res: services, searched:false});
+  const [searchedServices, setSearchedServices] = useState({
+    res: services,
+    searched: false,
+  });
 
   const handleSearchService = (e) => {
     // console.log("hi", e.target.value);
     setIsSearching(true);
     let search = e.target.value;
-    
-    try {
-      http.post("search-services", doObjToFormData({search: search})).then((data) => {
-        if (data?.data?.status == true) {
-          setSearchedServices({ res: data.data.services, searched: true });
-          setIsSearching(false);
-        } else {
-          setIsSearching(false);
-          setSearchedServices({ res: services, searched: false });
 
-          setTimeout(() => {
+    try {
+      http
+        .post("search-services", doObjToFormData({ search: search }))
+        .then((data) => {
+          if (data?.data?.status == true) {
+            setSearchedServices({ res: data.data.services, searched: true });
+            setIsSearching(false);
+          } else {
+            setIsSearching(false);
             setSearchedServices({ res: services, searched: false });
-          }, 6000);
-        }
-      });
+
+            setTimeout(() => {
+              setSearchedServices({ res: services, searched: false });
+            }, 6000);
+          }
+        });
     } catch (errors) {
       console.log("Errors", errors);
     }
@@ -256,55 +251,60 @@ const [reloadMap, setReloadMap] = useState(false);
             />
           </div>
           <h3>Choose Service</h3>
-          {isSearching && 
-          <div className="text-center">
-            <div
-              className="spinner-border text-primary"
-              style={{ width: "3rem", height: "3rem" }}
-              role="status"
-            >
-              <span className="visually-hidden">Loading...</span>
+          {isSearching && (
+            <div className="text-center">
+              <div
+                className="spinner-border text-primary"
+                style={{ width: "3rem", height: "3rem" }}
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
-          </div>
-          }
+          )}
 
-          {!isSearching && <ul className="l_flex">
-            {searchedServices?.res.length > 0 ?
-              searchedServices?.res?.map((val) => {
-              return (
-                <li key={val.id}>
-                  <div
-                    className={`lbl_btn ${
-                      selectedServiceValue === val?.id ? "active" : ""
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="service_id"
-                      value={val?.id}
-                      id={`ser_id${val?.id}`}
-                      checked={selectedServiceValue === val?.id}
-                      onChange={() => setSelectedServiceValue(val?.id)}
-                      {...register("service_id", {
-                        required: "Please choose the service you wants",
-                      })}
-                    />
-                    <label
-                      htmlFor={`ser_id${val?.id}`}
-                      onClick={(e) =>
-                        handleServiceLabelClick(e, val?.id, val?.title)
-                      }
-                    >
-                      {val?.title}
-                    </label>
-                  </div>
-                </li>
-              );
-            }): 
-              <div className="alert alert-danger">No Service Found With this Name</div>
-            }
-          </ul>}
-          
+          {!isSearching && (
+            <ul className="l_flex">
+              {searchedServices?.res.length > 0 ? (
+                searchedServices?.res?.map((val) => {
+                  return (
+                    <li key={val.id}>
+                      <div
+                        className={`lbl_btn ${
+                          selectedServiceValue === val?.id ? "active" : ""
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="service_id"
+                          value={val?.id}
+                          id={`ser_id${val?.id}`}
+                          checked={selectedServiceValue === val?.id}
+                          onChange={() => setSelectedServiceValue(val?.id)}
+                          {...register("service_id", {
+                            required: "Please choose the service you wants",
+                          })}
+                        />
+                        <label
+                          htmlFor={`ser_id${val?.id}`}
+                          onClick={(e) =>
+                            handleServiceLabelClick(e, val?.id, val?.title)
+                          }
+                        >
+                          {val?.title}
+                        </label>
+                      </div>
+                    </li>
+                  );
+                })
+              ) : (
+                <div className="alert alert-danger">
+                  No Service Found With this Name
+                </div>
+              )}
+            </ul>
+          )}
+
           <br />
           <div className="validation-error" style={{ color: "red" }}>
             {errors.service_id?.message}
@@ -322,14 +322,13 @@ const [reloadMap, setReloadMap] = useState(false);
                 </div>
               </div>
             )} */}
-            {getingSubServices ? 
+            {getingSubServices ? (
               <div class="text-center">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
-              :
-              subServices ? (
+            ) : subServices ? (
               subServices?.map((sub_ser) => {
                 return (
                   <li key={sub_ser?.id}>
@@ -433,8 +432,11 @@ const [reloadMap, setReloadMap] = useState(false);
 
               <div className="form_blk">
                 <div className="map_indication">
-                <AddressAutocomplete onPlaceSelect={handlePlaceSelect} setAddress={setBusinessAddress} />
-                                  {/* <input
+                  <AddressAutocomplete
+                    onPlaceSelect={handlePlaceSelect}
+                    setAddress={setBusinessAddress}
+                  />
+                  {/* <input
                     type="text"
                     name="location"
                     className="input"
@@ -495,13 +497,15 @@ const [reloadMap, setReloadMap] = useState(false);
             </div>
             <div className="colR">
               <div className="map_sec">
-
-               
-                {reloadMap && watchAllFields?.latitude !== null &&
+                {reloadMap &&
+                watchAllFields?.latitude !== null &&
                 watchAllFields?.latitude !== undefined &&
                 watchAllFields?.longitude !== null &&
                 watchAllFields?.longitude !== undefined ? (
-                  <LeafletMapComponent locationCords={locationCords} setLocationCords={setLocationCords} />
+                  <LeafletMapComponent
+                    locationCords={locationCords}
+                    setLocationCords={setLocationCords}
+                  />
                 ) : (
                   ""
                 )}
@@ -535,13 +539,13 @@ const [reloadMap, setReloadMap] = useState(false);
           <div className="form_blk w_6">
             <h6>Estimated Price / Your Budet</h6>
             <input
-                        type="text"
-                        name="budget"
-                        className="input"
-                        {...register("budget", {
-                          required: "Required.",
-                        })}
-                      />
+              type="text"
+              name="budget"
+              className="input"
+              {...register("budget", {
+                required: "Required.",
+              })}
+            />
             {/* <select
               className="input"
               name="budget"
@@ -616,13 +620,11 @@ const [reloadMap, setReloadMap] = useState(false);
           ) : (
             <button type="submit" className="site_btn">
               Search
-              {isFormProcessing && 
-                          <i
-                          className={
-                            isFormProcessing ? "spinner" : "spinnerHidden"
-                          }
-                        ></i>
-                    }
+              {isFormProcessing && (
+                <i
+                  className={isFormProcessing ? "spinner" : "spinnerHidden"}
+                ></i>
+              )}
             </button>
           )}
         </div>

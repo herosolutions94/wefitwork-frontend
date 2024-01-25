@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 
 const LeafletMapComponent = ({setLocationCords,locationCords}) => {
-  console.log('loc', locationCords);
+  // console.log('loc', locationCords);
 
     const [position, setPosition] = useState([locationCords.lat, locationCords.long])
     useEffect(() => {
@@ -21,7 +21,7 @@ const LeafletMapComponent = ({setLocationCords,locationCords}) => {
         iconAnchor: [16, 32], // Point of the icon which will correspond to marker's location
         popupAnchor: [0, -32], // Point from which the popup should open relative to the iconAnchor
       });
-console.log(position)
+// console.log(position)
   return <>
    <MapContainer center={position} zoom={13} style={{ height: '300px', width: '100%' }}>
       <TileLayer

@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Pagination from "../components/pagination";
 import http from "../helpers/http";
-import { cmsFileUrl, doObjToFormData, getObjKeyCount } from "../helpers/helpers";
+import {
+  cmsFileUrl,
+  doObjToFormData,
+  getObjKeyCount,
+} from "../helpers/helpers";
 import { Toaster } from "react-hot-toast";
 import MetaGenerator from "../components/meta-generator";
 import Image from "next/image";
@@ -29,13 +33,13 @@ export default function Search({ result }) {
   const handleSearchByName = (e) => {
     e.preventDefault();
     const inputValue = e.target.value;
-    console.log(inputValue);
+    // console.log(inputValue);
     setIsSearching(true);
     try {
       http
         .post("search-profession", doObjToFormData({ search_name: inputValue }))
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           if (data?.data?.status == true) {
             setSearchResult({ professions: data.data.professions });
             setIsSearching(false);
@@ -129,7 +133,7 @@ export default function Search({ result }) {
                             <div className="rating_lbl">
                               <img src="/images/star.svg" alt="" />
                               <span>
-                                {val?.avg_rating} ({val?.reviews_counts}{" "}
+                                {val?.avg_rating} ({val?.reviews_counts}
                                 Reviews)
                               </span>
                             </div>
@@ -137,7 +141,11 @@ export default function Search({ result }) {
                         </div>
                         <div className="done_work">
                           <p>Projects Completed</p>
-                                    <h3>{val?.completed_projects > 0 ? val?.completed_projects : 0}</h3>
+                          <h3>
+                            {val?.completed_projects > 0
+                              ? val?.completed_projects
+                              : 0}
+                          </h3>
                         </div>
                         <div className="btn_blk">
                           <Link
@@ -163,14 +171,11 @@ export default function Search({ result }) {
               )}
             </div>
             <div className="text-center pagination_outer">
-            
               <Pagination
                 currentPage={currentPage}
                 totalPages={Math.ceil(professions.length / itemsPerPage)}
                 onPageChange={handlePageChange}
               />
-              
-            
             </div>
           </div>
         </section>

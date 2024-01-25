@@ -27,7 +27,7 @@ export default function ProfileSettings() {
   const isFormProcessing = useSelector(
     (state) => state.proProfile.isFormProcessing
   );
-  const portfolioImages = data?.portfolioImages ? data?.portfolioImages : '';
+  const portfolioImages = data?.portfolioImages ? data?.portfolioImages : "";
 
   const { page_title } = data;
 
@@ -67,10 +67,10 @@ export default function ProfileSettings() {
     dispatch(saveProfessionalAccountSettings(data));
   };
 
-  const[verifyPopup, setVerifyPopup] = useState(false);
+  const [verifyPopup, setVerifyPopup] = useState(false);
   const handleVerifyPhonePopup = () => {
-       setVerifyPopup(true)
-  }
+    setVerifyPopup(true);
+  };
 
   return (
     <>
@@ -90,6 +90,20 @@ export default function ProfileSettings() {
                   <h2>Profile</h2>
                 </div>
                 <div className="profile_blk custom_blk">
+                  {isLoading && (
+                    <>
+                      <div className="br"></div>
+                      <div className="text-center">
+                        <div
+                          className="spinner-border text-danger"
+                          role="status"
+                          style={{ width: "3rem", height: "3rem" }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                   {!isLoading && (
                     <form
                       method="POST"
@@ -192,13 +206,30 @@ export default function ProfileSettings() {
                                 readOnly
                                 {...register("phone")}
                               />
-                              {member?.mem_phone_verified !== "1" && member?.mem_phone_verified !== 1 ? (
-                                <button type="button" onClick={handleVerifyPhonePopup} className="verfiy_btn" >Verfiy</button>
-
-                              ):(
-                                <button type="button" onClick={(e) => toast.success("This phone nnumber is already verified")} className="verfiy_btn" style={{color: "#02932A"}}><b> ✓ </b>Verfied <i class="fa-solid fa-house"></i> </button>
-                              ) 
-                              }
+                              {member?.mem_phone_verified !== "1" &&
+                              member?.mem_phone_verified !== 1 ? (
+                                <button
+                                  type="button"
+                                  onClick={handleVerifyPhonePopup}
+                                  className="verfiy_btn"
+                                >
+                                  Verfiy
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={(e) =>
+                                    toast.success(
+                                      "This phone nnumber is already verified"
+                                    )
+                                  }
+                                  className="verfiy_btn"
+                                  style={{ color: "#02932A" }}
+                                >
+                                  <b> ✓ </b>Verfied
+                                  <i class="fa-solid fa-house"></i>
+                                </button>
+                              )}
                               <div
                                 className="validation-error"
                                 style={{ color: "red" }}
@@ -278,7 +309,7 @@ export default function ProfileSettings() {
                           </div>
                         </div>
                       </div>
-                     
+
                       <div className="br"></div>
                       <div className="btn_blk text-right cell_wide_full">
                         <button
@@ -286,7 +317,7 @@ export default function ProfileSettings() {
                           className="site_btn"
                           disabled={isFormProcessing}
                         >
-                          Save changes{" "}
+                          Save changes
                           {isFormProcessing && (
                             <i
                               className={
@@ -296,7 +327,7 @@ export default function ProfileSettings() {
                           )}
                         </button>
                       </div>
-                      
+
                       <input
                         type="file"
                         ref={fileDpRef}
@@ -311,9 +342,16 @@ export default function ProfileSettings() {
           </div>
         </section>
       </main>
-      <PopupSmall isOpen={verifyPopup} onClose={() => {setVerifyPopup(false); window.location.reload()}} >
-      {verifyPopup && <VerifyPhone phoneNumber={member?.mem_phone} phoneType="mem" />}
-        
+      <PopupSmall
+        isOpen={verifyPopup}
+        onClose={() => {
+          setVerifyPopup(false);
+          window.location.reload();
+        }}
+      >
+        {verifyPopup && (
+          <VerifyPhone phoneNumber={member?.mem_phone} phoneType="mem" />
+        )}
       </PopupSmall>
     </>
   );

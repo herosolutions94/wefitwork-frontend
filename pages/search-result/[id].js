@@ -41,7 +41,7 @@ export const getServerSideProps = async (context) => {
 
 export default function SearchResult({ result, authToken }) {
   const router = useRouter();
-  console.log("detsil", result);
+  // console.log("detsil", result);
   let {
     page_title,
     meta_desc,
@@ -60,7 +60,7 @@ export default function SearchResult({ result, authToken }) {
     avg_courtesy,
 
     pro_wishlisted,
-    memData
+    memData,
   } = result;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -97,7 +97,6 @@ export default function SearchResult({ result, authToken }) {
       star: avg_courtesy,
     },
   ];
- 
 
   const [proData, setProData] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
@@ -125,84 +124,84 @@ export default function SearchResult({ result, authToken }) {
   const [wishlisted, setWishlisted] = useState(pro_wishl);
   const [wishlisting, setWishlisting] = useState(false);
 
-
   const addRemoveToWishlist = (pro_mem_id) => {
     setWishlisting(true);
-    if(authToken == '' || authToken == null || authToken == undefined){
-      toast.error('You must be loged in to add professional to your wishlist');
-    }else{
+    if (authToken == "" || authToken == null || authToken == undefined) {
+      toast.error("You must be loged in to add professional to your wishlist");
+    } else {
       try {
         http
-          .post("user/add-remove-to-wishlist", doObjToFormData({ pro_mem_id: pro_mem_id, token: authToken }))
+          .post(
+            "user/add-remove-to-wishlist",
+            doObjToFormData({ pro_mem_id: pro_mem_id, token: authToken })
+          )
           .then((data) => {
             if (data?.data?.status == true) {
-              setWishlisting(false)
-              if(data?.data?.added == true){
-                toast.success('This Professional added to your Wishlist');
-                setWishlisted(true)
-              }else if(data?.data?.removed == true){
-                toast.success('Removed from your Wishlist');
-                setWishlisted(false)
+              setWishlisting(false);
+              if (data?.data?.added == true) {
+                toast.success("This Professional added to your Wishlist");
+                setWishlisted(true);
+              } else if (data?.data?.removed == true) {
+                toast.success("Removed from your Wishlist");
+                setWishlisted(false);
               }
-              
             } else {
-              setWishlisting(false)
+              setWishlisting(false);
 
-              toast.error('This Professional not added to your Wishlist');
+              toast.error("This Professional not added to your Wishlist");
 
-              setWishlisted(false)
+              setWishlisted(false);
             }
           });
       } catch (errors) {
-        setWishlisting(false)
+        setWishlisting(false);
 
         setWishlisted(false);
-        toast.error('This Professional not added to your Wishlist');
+        toast.error("This Professional not added to your Wishlist");
 
         console.log("Errors", errors);
       }
     }
-    
-  }
+  };
 
   //share
   const [isSharePopup, setIsSharePopup] = useState(false);
   const [proId, setProId] = useState(false);
 
-  const handleOpenSharePopup = ([pro_id]) =>{
+  const handleOpenSharePopup = ([pro_id]) => {
     setProId(pro_id);
     setIsSharePopup(true);
-  }
+  };
 
   const handleCloseSharePopup = () => {
     setProId(false);
     setIsSharePopup(false);
-  }
+  };
 
-  const [baseURL, setBaseURL] = useState('');
+  const [baseURL, setBaseURL] = useState("");
 
   useEffect(() => {
     // Access base URL when the component mounts
-    setBaseURL(`${window.location.protocol}//${window.location.host}${router.asPath}`);
+    setBaseURL(
+      `${window.location.protocol}//${window.location.host}${router.asPath}`
+    );
   }, [router.pathname]);
 
-
   const dispatch = useDispatch();
-    
+
   const isFormProcessing = useSelector((state) => state.chat.isFormProcessing);
 
-
   const handleStartChat = (receiver_id, mem_token = authToken) => {
-    if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
-      const form_data = {receiver_id : receiver_id};
+    if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
+      const form_data = { receiver_id: receiver_id };
       dispatch(startConversation(form_data));
-    }else{
-      toast.error("You are not logedin. Please Login to your account to start the chat with Professional");
+    } else {
+      toast.error(
+        "You are not logedin. Please Login to your account to start the chat with Professional"
+      );
       // setAuthPopup(true);
-       
     }
-  }
-
+  };
 
   return (
     <>
@@ -213,13 +212,29 @@ export default function SearchResult({ result, authToken }) {
             <div className="professiona_view_tile">
               <div className="col">
                 <div className="action_buttons">
-                {pro_mem_data?.mem_id !== memData?.mem_id && 
-                  <button type="button" className={wishlisted ? "like_btn active" : "like_btn"} disabled={wishlisting} onClick={() => addRemoveToWishlist(pro_mem_data?.mem_id)}>
-                  {!wishlisting ? <img src="/images/heart.svg" alt="save"  /> : <div class="text-center"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div></div>}
-                      
-                  </button>
-                }
-                  <button type="button" className="share_btn" onClick={() => handleOpenSharePopup(pro_mem_data?.mem_id)}>
+                  {pro_mem_data?.mem_id !== memData?.mem_id && (
+                    <button
+                      type="button"
+                      className={wishlisted ? "like_btn active" : "like_btn"}
+                      disabled={wishlisting}
+                      onClick={() => addRemoveToWishlist(pro_mem_data?.mem_id)}
+                    >
+                      {!wishlisting ? (
+                        <img src="/images/heart.svg" alt="save" />
+                      ) : (
+                        <div class="text-center">
+                          <div class="spinner-border text-danger" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                      )}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="share_btn"
+                    onClick={() => handleOpenSharePopup(pro_mem_data?.mem_id)}
+                  >
                     <img src="/images/ShareNetwork.svg" alt="save" />
                   </button>
                 </div>
@@ -252,7 +267,11 @@ export default function SearchResult({ result, authToken }) {
                       </div>
                       <div className="_done_work">
                         <p>Projects Completed</p>
-                        <h3>{pro_mem_data?.completed_projects > 0 ? pro_mem_data?.completed_projects : 0}</h3>
+                        <h3>
+                          {pro_mem_data?.completed_projects > 0
+                            ? pro_mem_data?.completed_projects
+                            : 0}
+                        </h3>
                       </div>
                     </div>
                   </div>
@@ -265,27 +284,34 @@ export default function SearchResult({ result, authToken }) {
                     </h3>
                   </div>
                   <div className="btn_blk">
-                  {pro_mem_data?.mem_id == memData?.mem_id ? '' : 
-                        <>
-                        <button type="button" className="site_btn color block" disabled={isFormProcessing} onClick={() => handleStartChat(pro_mem_data?.mem_id)}>
-                      Start Chat{isFormProcessing && (
-                      <i
-                        className={
-                          isFormProcessing ? "spinner" : "spinnerHidden"
-                        }
-                      ></i>
+                    {pro_mem_data?.mem_id == memData?.mem_id ? (
+                      ""
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="site_btn color block"
+                          disabled={isFormProcessing}
+                          onClick={() => handleStartChat(pro_mem_data?.mem_id)}
+                        >
+                          Start Chat
+                          {isFormProcessing && (
+                            <i
+                              className={
+                                isFormProcessing ? "spinner" : "spinnerHidden"
+                              }
+                            ></i>
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenPopupSend(pro_mem_data)}
+                          className="site_btn block"
+                        >
+                          Send SMS
+                        </button>
+                      </>
                     )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleOpenPopupSend(pro_mem_data)}
-                      className="site_btn block"
-                    >
-                      Send SMS
-                    </button>
-                        </>
-                  }
-                    
                   </div>
                 </div>
               </div>
@@ -456,9 +482,12 @@ export default function SearchResult({ result, authToken }) {
       </PopupSmall>
 
       <PopupSmall isOpen={isSharePopup} onClose={handleCloseSharePopup}>
-        <SocialShare handleClosePopupSend={handleCloseSharePopup} url={baseURL} title={`WefitWork Professional`} />
+        <SocialShare
+          handleClosePopupSend={handleCloseSharePopup}
+          url={baseURL}
+          title={`WefitWork Professional`}
+        />
       </PopupSmall>
-
     </>
   );
 }

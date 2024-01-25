@@ -290,7 +290,7 @@ export async function uploadMultiFiles(event, type) {
       let sizeMb = bytesToMegaBytes(fileSize);
       if (sizeMb < 40) {
           let image = await FileUpload(images_arr[i], type, fileName).then((data) => {
-              console.log("uploadMultiFiles", data)
+              // console.log("uploadMultiFiles", data)
               if (data.file != undefined && data?.status === 1) {
                   newImages.push({ file: data.file, file_name: data?.file_name_text });
               }

@@ -22,7 +22,7 @@ export default function LoggedHeader() {
     dispatch(fetchProfessioanlDashboardData());
   }, []);
 
-  console.log(data);
+  // console.log(data);
 
   const [userDrop, setUserDrop] = useState(false);
   const [envelopeDrop, setEnvelopeDrop] = useState(false);
@@ -47,6 +47,8 @@ export default function LoggedHeader() {
     <>
       <header className="logged_header">
         <div className="contain">
+        {!isLoading && 
+          <>
           <div className="logo">
             <Link href="/">
               <Image
@@ -212,6 +214,11 @@ export default function LoggedHeader() {
               </li>
             </ul>
           </div>
+          </>
+        }
+          
+
+          
           <div className="clearfix"></div>
         </div>
       </header>

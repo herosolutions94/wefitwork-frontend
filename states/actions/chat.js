@@ -23,7 +23,7 @@ export const startConversation = (formData) => (dispatch) => {
   http
     .post("user/start-chat", doObjToFormData(formData))
     .then(({ data }) => {
-        console.log(data)
+        // console.log(data)
       if (data.status) {
 
         toast.success('Redirecting... to Chat');
@@ -68,7 +68,7 @@ export const fetchConversationData = (formData) => (dispatch) => {
   http
     .post(`user/fetch-conversation-data`, doObjToFormData(formData))
     .then(({ data }) => {
-      console.log(data);
+      // console.log(data);
       dispatch({
         type: FETCH_CONVERSATIONS_SUCCESS,
         payload: data,

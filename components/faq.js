@@ -5,7 +5,7 @@ export default function Faq({data}) {
     const [openAccordion, setOpenAccordion] = useState(null);
     const accordionRefs = useRef([]);
     const handleAccordionClick = (index) => {
-        console.log(index);
+        // console.log(index);
         if (index === openAccordion) {
             gsap.to(
               accordionRefs.current[index].querySelector(".accordion__details"),
@@ -16,7 +16,7 @@ export default function Faq({data}) {
                 onComplete: () => setOpenAccordion(null),
               }
             );
-            console.log(openAccordion);
+            // console.log(openAccordion);
           } else {
             if (openAccordion !== null) {
               gsap.to(

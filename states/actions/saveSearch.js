@@ -33,7 +33,7 @@ export const saveSearch = (formData) => (dispatch) => {
         });
       } else {
         if(data.status){
-          console.log("work_scope",data);
+          // console.log("work_scope",data);
           toast.success("Successfully.", { duration: 6000 });
           setCookie('workscope', data.work_scope)
 

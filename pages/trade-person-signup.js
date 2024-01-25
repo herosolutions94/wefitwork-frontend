@@ -11,8 +11,8 @@ import { createProfessionalProfile } from "../states/actions/professional/proPro
 import { useDispatch, useSelector } from "react-redux";
 // import MapComponent from "../components/map-container";
 
-import dynamic from 'next/dynamic';
-const LeafletMapComponent = dynamic(() => import('../components/leaflet-map'), {
+import dynamic from "next/dynamic";
+const LeafletMapComponent = dynamic(() => import("../components/leaflet-map"), {
   ssr: false, // Disable server-side rendering
 });
 import { parse } from "cookie";
@@ -24,7 +24,10 @@ import {
 import PayStackPayment from "../components/pay-stack";
 import { authToken } from "../helpers/authToken";
 import AddressAutocomplete from "../components/map-autocomplete";
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-places-autocomplete";
 
 export const getServerSideProps = async (context) => {
   const { req } = context;
@@ -62,7 +65,7 @@ export default function TradePersonSignup({ result }) {
   );
   let { page_title, meta_desc, content, site_settings, services, memData } =
     result;
-  console.log("result", result);
+  // console.log("result", result);
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
@@ -141,7 +144,6 @@ export default function TradePersonSignup({ result }) {
   const handleLookingForLabelClick = (event, id) => {
     setLookingForValue(id);
   };
-  
 
   const {
     register,
@@ -171,10 +173,8 @@ export default function TradePersonSignup({ result }) {
   };
 
   const handleCreateProfile = (data, saveFormData = false) => {
-
     if (saveFormData === true) {
-dispatch(createProfessionalProfile(data));
-          
+      dispatch(createProfessionalProfile(data));
     }
   };
 
@@ -201,7 +201,7 @@ dispatch(createProfessionalProfile(data));
     }
   };
 
-  const [businessAddress, setBusinessAddress] = useState('');
+  const [businessAddress, setBusinessAddress] = useState("");
 
   const [locationCords, setLocationCords] = useState({ lat: null, long: null });
   const [getingLoction, setGetingLocation] = useState(false);
@@ -210,9 +210,9 @@ dispatch(createProfessionalProfile(data));
   const handlePlaceSelect = (place) => {
     setReloadMap(false);
     setGetingLocation(true);
-    setLocationCords({lat: place.latitude, long: place.longitude});
+    setLocationCords({ lat: place.latitude, long: place.longitude });
     // Use reverse geocoding to get the address from coordinates
-    setValue('business_address', businessAddress);
+    setValue("business_address", businessAddress);
 
     if (place.latitude && place.longitude) {
       toast.success("Location picked. Continue to next Step");
@@ -221,13 +221,10 @@ dispatch(createProfessionalProfile(data));
     }
 
     setGetingLocation(false);
-
-
-
   };
 
   const getCurrentLocation = () => {
-    setReloadMap(false)
+    setReloadMap(false);
 
     setGetingLocation(true);
     if (navigator.geolocation) {
@@ -236,28 +233,28 @@ dispatch(createProfessionalProfile(data));
         const longitude = position.coords.longitude;
 
         // Use reverse geocoding to get the address from coordinates
-      geocodeByAddress(`${latitude}, ${longitude}`)
-      .then(results => {
-        if (results && results.length > 0) {
-          const address = results[0].formatted_address;
-        console.log(address);
+        geocodeByAddress(`${latitude}, ${longitude}`)
+          .then((results) => {
+            if (results && results.length > 0) {
+              const address = results[0].formatted_address;
+              // console.log(address);
 
-          setBusinessAddress(address);
-          // Update the form value using react-hook-form's setValue
-          setValue('business_address', address);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching address:', error);
-      })
-      .finally(() => {
-        setGetingLocation(false);
-      });
+              setBusinessAddress(address);
+              // Update the form value using react-hook-form's setValue
+              setValue("business_address", address);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching address:", error);
+          })
+          .finally(() => {
+            setGetingLocation(false);
+          });
 
         setLocationCords({ lat: latitude, long: longitude });
-        console.log(locationCords);
+        // console.log(locationCords);
 
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
         if (latitude && longitude) {
           toast.success("Location picked. Continue to next Step");
@@ -267,7 +264,7 @@ dispatch(createProfessionalProfile(data));
       });
     } else {
       toast.error("Geolocation is not supported by this browser.");
-      console.log("Geolocation is not supported by this browser.");
+      // console.log("Geolocation is not supported by this browser.");
     }
     setGetingLocation(false);
   };
@@ -278,13 +275,10 @@ dispatch(createProfessionalProfile(data));
     // This will log the updated state whenever locationCords changes
     setValue("latitude", locationCords.lat);
     setValue("longitude", locationCords.long);
-    setValue("business_address",businessAddress)
+    setValue("business_address", businessAddress);
 
-    console.log(watch());
+    // console.log(watch());
   }, [locationCords]);
-
-
-  
 
   return (
     <>
@@ -312,7 +306,7 @@ dispatch(createProfessionalProfile(data));
                     </div>
                     <div className="price_head">
                       <h2>
-                        {format_amount(content?.pkg_price)}{" "}
+                        {format_amount(content?.pkg_price)}
                         <span>{content?.pkg_duration}</span>
                       </h2>
                     </div>
@@ -467,7 +461,10 @@ dispatch(createProfessionalProfile(data));
                         })}
                       /> */}
 
-                      <AddressAutocomplete onPlaceSelect={handlePlaceSelect} setAddress={setBusinessAddress}/>
+                      <AddressAutocomplete
+                        onPlaceSelect={handlePlaceSelect}
+                        setAddress={setBusinessAddress}
+                      />
 
                       <div
                         className="validation-error"
@@ -477,14 +474,14 @@ dispatch(createProfessionalProfile(data));
                       </div>
                     </div>
                     <div className="form_blk">
-                    <h6>Or Pick My Location</h6>
+                      <h6>Or Pick My Location</h6>
                       <div className="btn_blk">
                         <button
                           type="button"
                           onClick={getCurrentLocation}
                           className="site_btn"
                         >
-                          Pick My Location{" "}
+                          Pick My Location
                           <i
                             className={
                               getingLoction ? "spinner" : "spinnerHidden"
@@ -493,16 +490,19 @@ dispatch(createProfessionalProfile(data));
                         </button>
                       </div>
                       <div className="map_sec">
-                      {reloadMap && locationCords?.lat !== null &&
-                      locationCords?.lat !== undefined &&
-                      locationCords?.long !== null &&
-                      locationCords?.long !== undefined ? (
-                        <LeafletMapComponent locationCords={locationCords} setLocationCords={setLocationCords} />
-                      ) : (
-                        ""
-                      )}
+                        {reloadMap &&
+                        locationCords?.lat !== null &&
+                        locationCords?.lat !== undefined &&
+                        locationCords?.long !== null &&
+                        locationCords?.long !== undefined ? (
+                          <LeafletMapComponent
+                            locationCords={locationCords}
+                            setLocationCords={setLocationCords}
+                          />
+                        ) : (
+                          ""
+                        )}
                       </div>
-                      
                     </div>
 
                     <div className="form_blk">
@@ -588,7 +588,6 @@ dispatch(createProfessionalProfile(data));
                         {errors.no_of_employes?.message}
                       </div>
                     </div>
-                    
 
                     <div className="form_blk">
                       <input
@@ -720,7 +719,7 @@ dispatch(createProfessionalProfile(data));
                           <img src="/images/ri_visa-line.svg" alt="" />
                         </div> */}
                         <div className="form_blk">
-                        <h6>Payment Email</h6>
+                          <h6>Payment Email</h6>
                           <input
                             type="email"
                             name="payment_email"
@@ -731,9 +730,10 @@ dispatch(createProfessionalProfile(data));
                             {...register("payment_email", {
                               required: "Required",
                               pattern: {
-                        value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
-                        message: "Email format is not valid!",
-                      },
+                                value:
+                                  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
+                                message: "Email format is not valid!",
+                              },
                             })}
                           />
 
@@ -789,7 +789,7 @@ dispatch(createProfessionalProfile(data));
                         type="button"
                         disabled={getingSubServices}
                       >
-                        Next{" "}
+                        Next
                         {getingSubServices ? <i className="spinner"></i> : ""}
                       </button>
                     ) : (
@@ -800,15 +800,20 @@ dispatch(createProfessionalProfile(data));
                             handleCreateProfile={handleCreateProfile}
                             watcFields={watch()}
                             mem_email={memData?.mem_email}
-                            mem_customer_code={memData?.mem_paystack_customer_code}
-
+                            mem_customer_code={
+                              memData?.mem_paystack_customer_code
+                            }
                           />
                         ) : (
                           <button
                             className="site_btn"
                             type="submit"
                             disabled={isFormProcessing}
-                            onClick={() => toast.error("please type valid email address for paymnet")}
+                            onClick={() =>
+                              toast.error(
+                                "please type valid email address for paymnet"
+                              )
+                            }
                           >
                             Pay now
                             {isFormProcessing && (

@@ -14,6 +14,14 @@ import {
     FETCH_BUYER_WISHLIST,
 FETCH_BUYER_WISHLIST_SUCCESS,
 FETCH_BUYER_WISHLIST_FAILED,
+
+FETCH_BUYER_BOOKINGS_DATA,
+  FETCH_BUYER_BOOKINGS_DATA_SUCCESS,
+  FETCH_BUYER_BOOKINGS_DATA_FAILED,
+
+  FETCH_BUYER_NOTIFICATIONS,
+FETCH_BUYER_NOTIFICATIONS_SUCCESS,
+FETCH_BUYER_NOTIFICATIONS_FAILED,
   } from "../../actions/actionTypes";
   
   const initialState = {
@@ -123,6 +131,53 @@ FETCH_BUYER_WISHLIST_FAILED,
           
         };
       case FETCH_BUYER_WISHLIST_FAILED:
+        return {
+          ...state,
+          isLoading: false,
+          mem: {},
+          error: payload,
+          
+        };
+
+        case FETCH_BUYER_BOOKINGS_DATA:
+        return {
+          ...state,
+          isLoading: true,
+          mem: {},
+          sent_sms: {}
+        };
+      case FETCH_BUYER_BOOKINGS_DATA_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          content: payload,
+          mem: payload.member,
+          sent_sms: payload.sent_sms
+        };
+      case FETCH_BUYER_BOOKINGS_DATA_FAILED:
+        return {
+          ...state,
+          isLoading: false,
+          mem: {},
+          error: payload,
+          sent_sms: {}
+        };
+
+        case FETCH_BUYER_NOTIFICATIONS:
+        return {
+          ...state,
+          isLoading: true,
+          mem: {},
+        };
+      case FETCH_BUYER_NOTIFICATIONS_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          content: payload,
+          mem: payload.member,
+          
+        };
+      case FETCH_BUYER_NOTIFICATIONS_FAILED:
         return {
           ...state,
           isLoading: false,

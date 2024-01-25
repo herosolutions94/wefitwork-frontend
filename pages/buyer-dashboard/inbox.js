@@ -11,14 +11,13 @@ import { cmsFileUrl, uploadMultiFiles } from "@/components/helpers/helpers";
 import FileIconsByExtensyion from "@/components/components/fileIconsByExt";
 import { useForm } from "react-hook-form";
 
-
 export default function Inbox() {
-    const router = useRouter();
-    const {con} = router.query;
+  const router = useRouter();
+  const { con } = router.query;
 
-    const chat_id = con ? con : '';
-    
-    const dispatch = useDispatch();
+  const chat_id = con ? con : "";
+
+  const dispatch = useDispatch();
   const data = useSelector((state) => state.chat.content);
   const member = useSelector((state) => state.chat.mem);
   const isLoading = useSelector((state) => state.chat.isLoading);
@@ -28,25 +27,23 @@ export default function Inbox() {
   const chat_users = useSelector((state) => state.chat.chat_users);
   const chat_messages = useSelector((state) => state.chat.chat_messages);
 
-  const { site_settings, page_title} = data;
-//   console.log(data)
+  const { site_settings, page_title } = data;
+  //   console.log(data)
 
-
-    useEffect(() => {
-        dispatch(fetchConversationData({chat_id : chat_id ? chat_id : null}));
+  useEffect(() => {
+    dispatch(fetchConversationData({ chat_id: chat_id ? chat_id : null }));
   }, []);
 
   const handleChangeChat = (chat_id) => {
     router.replace(`/buyer-dashboard/inbox?con=${chat_id}`);
-    dispatch(fetchConversationData({chat_id : chat_id}));
-    
-  }
+    dispatch(fetchConversationData({ chat_id: chat_id }));
+  };
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
   };
 
   const filteredChatUsers = searchQuery
@@ -54,322 +51,453 @@ export default function Inbox() {
         user.receiver_name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : chat_users;
- 
-/// Attachments
 
-const [attachments, setAttachments] = useState({files : [], loading: false });
+  /// Attachments
 
-const fileRef = useRef(null);
-const handleClick = (e) => {
-  e.preventDefault();
-  fileRef.current.click();
-};
+  const [attachments, setAttachments] = useState({ files: [], loading: false });
 
-const handleAttachmentsUpload = async (e) => {
+  const fileRef = useRef(null);
+  const handleClick = (e) => {
+    e.preventDefault();
+    fileRef.current.click();
+  };
+
+  const handleAttachmentsUpload = async (e) => {
     setAttachments({ ...attachments, loading: true });
-    let uploadedImages = await uploadMultiFiles(e, 'attachments');
-    console.log("Atach before", attachments);
+    let uploadedImages = await uploadMultiFiles(e, "attachments");
+    // console.log("Atach before", attachments);
 
     {
-        attachments !== undefined && attachments !== null && attachments !== '' && attachments?.files?.length > 0 ?
-            setAttachments({ ...attachments, files: attachments?.files.concat(uploadedImages), loading: false })
-            :
-            setAttachments({ ...attachments, files: uploadedImages, loading: false });
+      attachments !== undefined &&
+      attachments !== null &&
+      attachments !== "" &&
+      attachments?.files?.length > 0
+        ? setAttachments({
+            ...attachments,
+            files: attachments?.files.concat(uploadedImages),
+            loading: false,
+          })
+        : setAttachments({
+            ...attachments,
+            files: uploadedImages,
+            loading: false,
+          });
     }
-    document.getElementById('chat_attachments').value = '';
-}
+    document.getElementById("chat_attachments").value = "";
+  };
 
-    
-    function handleRemoveImage(idx) {
-        setAttachments({
-            ...attachments, files: attachments?.files.filter((s, sidx) => idx !== sidx)
-        });
-    }
+  function handleRemoveImage(idx) {
+    setAttachments({
+      ...attachments,
+      files: attachments?.files.filter((s, sidx) => idx !== sidx),
+    });
+  }
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-      } = useForm();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
-      const onSubmit = data => {
-        let frmData = { conversationId: chat_id, senderId: member?.mem_id, message: data?.msg, file: attachments?.files !== undefined && attachments?.files !== null ? attachments?.files : [] };
-        console.log(frmData)
-       
-    }
-
+  const onSubmit = (data) => {
+    let frmData = {
+      conversationId: chat_id,
+      senderId: member?.mem_id,
+      message: data?.msg,
+      file:
+        attachments?.files !== undefined && attachments?.files !== null
+          ? attachments?.files
+          : [],
+    };
+    console.log(frmData);
+  };
 
   return (
     <>
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <Head>
-          <title>{page_title ? page_title : "fetching..."}</title>
-        </Head>
+        <title>{page_title ? page_title : "fetching..."}</title>
+      </Head>
       <main className="main_dashboard" inbox="">
-      {isLoading && (
-                  <>
-                    <div className="br"></div>
-                    <div className="text-center">
-                      <div
-                        className="spinner-border text-danger"
-                        role="status"
-                        style={{ width: "3rem", height: "3rem" }}
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    </div>
-                  </>
-                )}
-    {!isLoading && (
-       
-        <div className="contain-fluid">
+        {isLoading && (
+          <>
+            <div className="br"></div>
+            <div className="text-center">
+              <div
+                className="spinner-border text-danger"
+                role="status"
+                style={{ width: "3rem", height: "3rem" }}
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </>
+        )}
+        {!isLoading && (
+          <div className="contain-fluid">
             <div className="barBlk relative">
-                <div className="srch relative">
-                    <input type="text" className="input" placeholder="Search contact" onChange={handleSearchChange} />
-                    <button type="button"><img src="/images/bx_search.svg" alt="" /></button>
-                </div>
-                <ul className="frnds scrollbar">
+              <div className="srch relative">
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="Search contact"
+                  onChange={handleSearchChange}
+                />
+                <button type="button">
+                  <img src="/images/bx_search.svg" alt="" />
+                </button>
+              </div>
+              <ul className="frnds scrollbar">
                 {filteredChatUsers?.map((val, i) => {
-                    return(
-                        <li data-chat={`person${val?.id}`} className={val?.id == convo_data?.id ? "active" : ""} key={i} onClick={() => handleChangeChat(val?.encrypted_id)}>
-                        <div className="inner sms">
-                            <div className="ico">
-                            {val?.receiver_image ? 
-                                <Image 
-                                    src={cmsFileUrl(val?.receiver_image, "members")}
-                                    width={48}
-                                    height={48}
-                                    alt={val?.receiver_name}
-
-                                />
-                                : 
-                                <img
-                          src="/images/no-user.svg"
-                          alt={val?.receiver_name}
-                        />
-                            }
-                                </div>
-                            <div className="txt">
-                                <h5>{val?.receiver_name}</h5>
-                                <p>Welcome to Ticket Graze</p>
-                            </div>
-                            <div className="time_msg_ago">
-                                Just Now
-                            </div>
+                  return (
+                    <li
+                      data-chat={`person${val?.id}`}
+                      className={val?.id == convo_data?.id ? "active" : ""}
+                      key={i}
+                      onClick={() => handleChangeChat(val?.encrypted_id)}
+                    >
+                      <div className="inner sms">
+                        <div className="ico">
+                          {val?.receiver_image ? (
+                            <Image
+                              src={cmsFileUrl(val?.receiver_image, "members")}
+                              width={48}
+                              height={48}
+                              alt={val?.receiver_name}
+                            />
+                          ) : (
+                            <img
+                              src="/images/no-user.svg"
+                              alt={val?.receiver_name}
+                            />
+                          )}
                         </div>
+                        <div className="txt">
+                          <h5>{val?.receiver_name}</h5>
+                          <p>Welcome to Ticket Graze</p>
+                        </div>
+                        <div className="time_msg_ago">Just Now</div>
+                      </div>
                     </li>
-                    )
+                  );
                 })}
-                    
-                </ul>
+              </ul>
             </div>
             <div className="chatBlk relative">
-            {isChatLoading && 
+              {isChatLoading && (
                 <div className="no_chat">
-                <div className="text-center">
-                      <div
-                        className="spinner-border text-danger"
-                        role="status"
-                        style={{ width: "3rem", height: "3rem" }}
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                      <div className="br"></div>
-                      <h4 className="text-danger">Loading Chat</h4>
-                    </div>
-                </div>
-            }
-            {!isChatLoading && 
-                <>
-                {convo_data == null || convo_data == 'null' || convo_data == undefined 
-                ? 
-                <div className="no_chat">
-                    <h4 style={{color: '#747B83'}}>Select a chat or start a new conversation.</h4>
-                </div>
-                : 
-                <>
-                <div className="chatPerson">
-                    <div className="backBtn"><Link href="" className="fi-arrow-left"></Link></div>
-                    <div className="ico">{convo_data?.receiver_image ? 
-                                <Image 
-                                    src={cmsFileUrl(convo_data?.receiver_image, "members")}
-                                    width={30}
-                                    height={30}
-                                    alt={convo_data?.receiver_name}
-
-                                />
-                                : 
-                                <img
-                          src="/images/no-user.svg"
-                          alt={convo_data?.receiver_name}
-                        />
-                            }</div>
-                    <h6>{convo_data?.receiver_name}</h6>
-                    
-                </div>
-                {chat_users?.map((chat, i) => {
-                    return(
-                        <div className={`chat scrollbar ${chat?.id == convo_data?.id ? "active" : ""}`} data-chat={convo_data?.id}>
-
-                    <div className="buble you">
-                        <div className="ico"><img src="/images/testi4.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>{i}You are absolutely right. I will take time to practice and to learn to relax and express myself really well. Wish me luck, Catherine!</p></div>
-                            <div className="time">11:59 am</div>
-                        </div>
-                    </div>
-                    <div className="buble me">
-                        <div className="ico"><img src="/images/testi3.png" alt="" /></div>
-                        <div className="txt">
-                            <div className="cntnt"><p>it's me.</p></div>
-                            <div className="time">11:59 am</div>
-                        </div>
-                    </div>
-                    <div className="buble me">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>Pictures will keep your audience from being bored. In order for you to succeed, you need to keep them interested and involved.</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                    <div className="buble you">
-                        <div className="ico"><img src="/images/testi1.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                                <p>I have shared some photos, Please have a look.</p>
-                                <div className="flex_col_chat">
-                                    <div className="col">
-                                        <img src="/images/portfolio3.png" />
-                                    </div>
-                                    <div className="col">
-                                        <img src="/images/portfolio4.png" />
-                                    </div>
-                                    <div className="col">
-                                        <img src="/images/portfolio1.png" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="time">11:59 am</div>
-                        </div>
-                    </div>
-                    <div className="buble me">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>Good idea! By the way, do you have any facts to back you up? For example, change of climate, yearly disasters…</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                    <div className="buble you">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>I should talk about more precisely the sequence of my presentation?</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                    <div className="buble me">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>I have done a lot of research on the subject, and I know I can answer any questions I will receive from the audience.</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                    <div className="buble you">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>I have to give a presentation on global warming on Friday, and I am so nervous.</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                    <div className="buble you">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>????</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                    <div className="buble me">
-                        <div className="ico"><img src="/images/testi3.png" alt=""/></div>
-                        <div className="txt">
-                            <div className="cntnt">
-                            <p>I know you. You can do it. Good luck, Jennifer!</p></div>
-                            <div className="time">10:00 Pm</div>
-                        </div>
-                    </div>
-                </div>
-                    )
-                })}
-                
-                <div className="write">
-
-                {
-                attachments?.loading ?
-                    <div className="loading_attachment">
-                        <div className="progress progress-striped active">
-                            <div role="progressbar " style={{ width: "100%" }} className="progress-bar progress-bar-info"><span></span></div>
-                        </div>
-                    </div>
-                    :
-                    ""
-            }
-            {
-                attachments?.files?.length > 0 ?
-                    <ul className="attachment_files">
-                        {
-                            attachments?.files?.map((attachment, index) => {
-                                return (
-                                    <li key={index} data={attachment?.file_name}> 
-                                        <span className="cx_btn" onClick={() => handleRemoveImage(index)}></span>
-                                        <FileIconsByExtensyion file={attachment?.file} display_name={attachment?.file_name}/>
-                                        
-                                    </li>
-                                )
-                            })
-                        }
-                    </ul>
-                    :
-                    ""
-            }
-
-                    <form className="relative" action="" method="POST" onSubmit={handleSubmit(onSubmit)}>
+                  <div className="text-center">
                     <div
-                              className="validation-error"
-                              style={{ color: "red" }}
-                            >
-                              {errors.msg?.message}
-                            </div>
-                        <div className="btm">
-                            <button type="button" className="site_btn arrowBtn blank" title="Upload Files" onClick={handleClick}><img src="/images/clip.svg" alt=""/></button>
-                            <textarea className="input" placeholder="Type a message" id="msg" {...register("msg", { required: "Required" })}></textarea>
-                            <button type="submit" className="site_btn icoBtn" disabled={attachments?.loading}><img src="/images/send.svg" alt=""/>{attachments?.loading ? <i className="spinner"></i> : ""}</button>
-
-
-                            <input type="file" name="" id="chat_attachments" className="uploadFile" data-upload="gallery_image" ref={fileRef} multiple onChange={(e) => handleAttachmentsUpload(e) } />
-
-                        </div>
-                    </form>
+                      className="spinner-border text-danger"
+                      role="status"
+                      style={{ width: "3rem", height: "3rem" }}
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className="br"></div>
+                    <h4 className="text-danger">Loading Chat</h4>
+                  </div>
                 </div>
+              )}
+              {!isChatLoading && (
+                <>
+                  {convo_data == null ||
+                  convo_data == "null" ||
+                  convo_data == undefined ? (
+                    <div className="no_chat">
+                      <h4 style={{ color: "#747B83" }}>
+                        Select a chat or start a new conversation.
+                      </h4>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="chatPerson">
+                        <div className="backBtn">
+                          <Link href="" className="fi-arrow-left"></Link>
+                        </div>
+                        <div className="ico">
+                          {convo_data?.receiver_image ? (
+                            <Image
+                              src={cmsFileUrl(
+                                convo_data?.receiver_image,
+                                "members"
+                              )}
+                              width={30}
+                              height={30}
+                              alt={convo_data?.receiver_name}
+                            />
+                          ) : (
+                            <img
+                              src="/images/no-user.svg"
+                              alt={convo_data?.receiver_name}
+                            />
+                          )}
+                        </div>
+                        <h6>{convo_data?.receiver_name}</h6>
+                      </div>
+                      {chat_users?.map((chat, i) => {
+                        return (
+                          <div
+                            className={`chat scrollbar ${
+                              chat?.id == convo_data?.id ? "active" : ""
+                            }`}
+                            data-chat={convo_data?.id}
+                          >
+                            <div className="buble you">
+                              <div className="ico">
+                                <img src="/images/testi4.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    {i}You are absolutely right. I will take
+                                    time to practice and to learn to relax and
+                                    express myself really well. Wish me luck,
+                                    Catherine!
+                                  </p>
+                                </div>
+                                <div className="time">11:59 am</div>
+                              </div>
+                            </div>
+                            <div className="buble me">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>it's me.</p>
+                                </div>
+                                <div className="time">11:59 am</div>
+                              </div>
+                            </div>
+                            <div className="buble me">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    Pictures will keep your audience from being
+                                    bored. In order for you to succeed, you need
+                                    to keep them interested and involved.
+                                  </p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                            <div className="buble you">
+                              <div className="ico">
+                                <img src="/images/testi1.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    I have shared some photos, Please have a
+                                    look.
+                                  </p>
+                                  <div className="flex_col_chat">
+                                    <div className="col">
+                                      <img src="/images/portfolio3.png" />
+                                    </div>
+                                    <div className="col">
+                                      <img src="/images/portfolio4.png" />
+                                    </div>
+                                    <div className="col">
+                                      <img src="/images/portfolio1.png" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="time">11:59 am</div>
+                              </div>
+                            </div>
+                            <div className="buble me">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    Good idea! By the way, do you have any facts
+                                    to back you up? For example, change of
+                                    climate, yearly disasters…
+                                  </p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                            <div className="buble you">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    I should talk about more precisely the
+                                    sequence of my presentation?
+                                  </p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                            <div className="buble me">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    I have done a lot of research on the
+                                    subject, and I know I can answer any
+                                    questions I will receive from the audience.
+                                  </p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                            <div className="buble you">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    I have to give a presentation on global
+                                    warming on Friday, and I am so nervous.
+                                  </p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                            <div className="buble you">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>????</p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                            <div className="buble me">
+                              <div className="ico">
+                                <img src="/images/testi3.png" alt="" />
+                              </div>
+                              <div className="txt">
+                                <div className="cntnt">
+                                  <p>
+                                    I know you. You can do it. Good luck,
+                                    Jennifer!
+                                  </p>
+                                </div>
+                                <div className="time">10:00 Pm</div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <div className="write">
+                        {attachments?.loading ? (
+                          <div className="loading_attachment">
+                            <div className="progress progress-striped active">
+                              <div
+                                role="progressbar "
+                                style={{ width: "100%" }}
+                                className="progress-bar progress-bar-info"
+                              >
+                                <span></span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {attachments?.files?.length > 0 ? (
+                          <ul className="attachment_files">
+                            {attachments?.files?.map((attachment, index) => {
+                              return (
+                                <li key={index} data={attachment?.file_name}>
+                                  <span
+                                    className="cx_btn"
+                                    onClick={() => handleRemoveImage(index)}
+                                  ></span>
+                                  <FileIconsByExtensyion
+                                    file={attachment?.file}
+                                    display_name={attachment?.file_name}
+                                  />
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        ) : (
+                          ""
+                        )}
+
+                        <form
+                          className="relative"
+                          action=""
+                          method="POST"
+                          onSubmit={handleSubmit(onSubmit)}
+                        >
+                          <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.msg?.message}
+                          </div>
+                          <div className="btm">
+                            <button
+                              type="button"
+                              className="site_btn arrowBtn blank"
+                              title="Upload Files"
+                              onClick={handleClick}
+                            >
+                              <img src="/images/clip.svg" alt="" />
+                            </button>
+                            <textarea
+                              className="input"
+                              placeholder="Type a message"
+                              id="msg"
+                              {...register("msg", { required: "Required" })}
+                            ></textarea>
+                            <button
+                              type="submit"
+                              className="site_btn icoBtn"
+                              disabled={attachments?.loading}
+                            >
+                              <img src="/images/send.svg" alt="" />
+                              {attachments?.loading ? (
+                                <i className="spinner"></i>
+                              ) : (
+                                ""
+                              )}
+                            </button>
+
+                            <input
+                              type="file"
+                              name=""
+                              id="chat_attachments"
+                              className="uploadFile"
+                              data-upload="gallery_image"
+                              ref={fileRef}
+                              multiple
+                              onChange={(e) => handleAttachmentsUpload(e)}
+                            />
+                          </div>
+                        </form>
+                      </div>
+                    </>
+                  )}
                 </>
-            }
-           
-                </>
-                
-            }
-                
+              )}
             </div>
-        </div>
-    )}
-        
-    </main>
+          </div>
+        )}
+      </main>
     </>
   );
 }
-Inbox.getLayout = function(page) {
-    return <LayoutBuyerDashboard>{page}</LayoutBuyerDashboard>;
+Inbox.getLayout = function (page) {
+  return <LayoutBuyerDashboard>{page}</LayoutBuyerDashboard>;
 };

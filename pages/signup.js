@@ -14,8 +14,7 @@ import { parse } from "cookie";
 import { useRouter } from "next/router";
 
 export const getServerSideProps = async (context) => {
-
-    const { req } = context;
+  const { req } = context;
   const cookieHeader = req.headers.cookie || "";
   // Parse the cookie header to extract the specific cookie value
   const cookieValue = parse(cookieHeader);
@@ -51,7 +50,7 @@ export default function Signup({ result }) {
 
   let { page_title, meta_desc, content, site_settings } = result;
 
-  const {from} = router.query;
+  const { from } = router.query;
   // console.log('from', from);
 
   const {
@@ -62,17 +61,17 @@ export default function Signup({ result }) {
 
   const handleCreateAccount = (data, e) => {
     e.preventDefault();
-    if(from == 'become-professional'){
-      data = {...data, mem_type : 'professional'}
-    }else{
-      data = {...data, mem_type : 'member'}
+    if (from == "become-professional") {
+      data = { ...data, mem_type: "professional" };
+    } else {
+      data = { ...data, mem_type: "member" };
     }
     dispatch(createAccount(data));
   };
 
   return (
     <>
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main className="logon_main">
         <section className="logon_sec">
@@ -114,12 +113,14 @@ export default function Signup({ result }) {
                 </Link>
               </div>
               <div className="btn_blk">
-                {!from && <Link
-                  href={content?.right_top_button_link}
-                  className="site_btn"
-                >
-                  <Text string={content?.right_top_button_text} />
-                </Link>}
+                {!from && (
+                  <Link
+                    href={content?.right_top_button_link}
+                    className="site_btn"
+                  >
+                    <Text string={content?.right_top_button_text} />
+                  </Link>
+                )}
               </div>
             </div>
             <div className="right_inner">
@@ -219,38 +220,36 @@ export default function Signup({ result }) {
                       id="agree"
                       {...register("agree", { required: "Required" })}
                     />
-                    
 
                     <label htmlFor="agree">
-                      <Text string={content?.check_box_text} />{" "}
-                      <Link href="/terms-conditions">terms of use</Link> and our{" "}
+                      <Text string={content?.check_box_text} />
+                      <Link href="/terms-conditions">terms of use</Link> and our
                       <Link href="/privacy-policy">privacy notice</Link>.
                     </label>
                   </div>
-                  
                 </div>
                 <div className="validation-error" style={{ color: "red" }}>
-                      {errors.agree?.message}
-                    </div>
+                  {errors.agree?.message}
+                </div>
                 <div className="btn_blk">
                   <button
                     className="site_btn block"
                     type="submit"
                     disabled={isFormProcessing}
                   >
-                    <Text string={content?.button_text} />{" "}
+                    <Text string={content?.button_text} />
                     {isFormProcessing && (
                       <i
                         className={
                           isFormProcessing ? "spinner" : "spinnerHidden"
                         }
                       ></i>
-                    )}{" "}
+                    )}
                   </button>
                 </div>
                 <div className="question">
                   <p>
-                    <Text string={content?.l_link_tagline} />{" "}
+                    <Text string={content?.l_link_tagline} />
                     <Link href={content?.register_link}>
                       <Text string={content?.register_link_text} />
                     </Link>

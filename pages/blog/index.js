@@ -6,7 +6,13 @@ import http from "@/components/helpers/http";
 import Text from "@/components/components/text";
 import MetaGenerator from "@/components/components/meta-generator";
 import { Toaster } from "react-hot-toast";
-import { blogDate, cmsFileUrl, formatDate, doObjToFormData, isEmpty } from "@/components/helpers/helpers";
+import {
+  blogDate,
+  cmsFileUrl,
+  formatDate,
+  doObjToFormData,
+  isEmpty,
+} from "@/components/helpers/helpers";
 
 export const getServerSideProps = async () => {
   const result = await http
@@ -26,34 +32,29 @@ export default function Blog({ result }) {
     setCat(!cat);
   };
 
-  const [allBlogs, setAllBlogs] =  useState(blogs)
+  const [allBlogs, setAllBlogs] = useState(blogs);
 
-  const [fetchingBlogs, setFetchingBlogs ] =  useState(false);
+  const [fetchingBlogs, setFetchingBlogs] = useState(false);
 
   const handelFetchBlogsByCat = (cat_id) => {
-    
     setFetchingBlogs(true);
     try {
-        http
-          .post("blogsByCat", doObjToFormData({ cat_id: cat_id }))
-          .then((data) => {
-            if (data?.data?.status == true) {
-              setFetchingBlogs(false);
-              setAllBlogs(data?.data?.blogs);
-            } else {
-              setFetchingBlogs(false);
-              setAllBlogs(false);
-            }
-          });
-        
-      } catch (errors) {
-        setFetchingBlogs(false);
-        console.log("Errors", errors);
-      }
-  }
-
-
-
+      http
+        .post("blogsByCat", doObjToFormData({ cat_id: cat_id }))
+        .then((data) => {
+          if (data?.data?.status == true) {
+            setFetchingBlogs(false);
+            setAllBlogs(data?.data?.blogs);
+          } else {
+            setFetchingBlogs(false);
+            setAllBlogs(false);
+          }
+        });
+    } catch (errors) {
+      setFetchingBlogs(false);
+      console.log("Errors", errors);
+    }
+  };
 
   //pagination
   const itemsPerPage = 2; // Set the number of blogs per page
@@ -63,13 +64,9 @@ export default function Blog({ result }) {
   const indexOfFirstBlog = indexOfLastBlog - itemsPerPage;
   const currentBlogs = allBlogs?.slice(indexOfFirstBlog, indexOfLastBlog);
 
-
-  
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-  
 
   return (
     <>
@@ -84,13 +81,20 @@ export default function Blog({ result }) {
                     <Text string={content?.cat_heading} />
                   </h4>
                   <ul className={cat ? "cat_ul active" : "cat_ul"}>
-                  <li>
-                    <Link href="#" onClick={() => window.location.reload()} >All BLogs</Link>
-                </li>
+                    <li>
+                      <Link href="#" onClick={() => window.location.reload()}>
+                        All BLogs
+                      </Link>
+                    </li>
                     {cats?.map((val) => {
                       return (
                         <li key={val?.id}>
-                          <Link href="#" onClick={() => handelFetchBlogsByCat(val?.id)}>{val?.title}</Link>
+                          <Link
+                            href="#"
+                            onClick={() => handelFetchBlogsByCat(val?.id)}
+                          >
+                            {val?.title}
+                          </Link>
                         </li>
                       );
                     })}
@@ -129,64 +133,67 @@ export default function Blog({ result }) {
                 </div>
               </div>
               <div className="colR">
-              {!fetchingBlogs ? 
-              <>
-              {!isEmpty(currentBlogs) ? 
-              
-              currentBlogs?.map((val) => {
-                  return (
-                    <div className="col" key={val?.id}>
-                      <Link href={`/blog/${val?.slug}`} className="post_image">
-                        <img
-                          src={cmsFileUrl(val?.image, "blogs")}
-                          alt={val?.title}
-                        />
-                      </Link>
-                      <div className="post_cntnt">
-                        <div className="other">
-                          <span>{val?.category_id}</span>
-                          <span>{blogDate(val?.created_date)}</span>
-                        </div>
-                        <h3>
-                          <Link href={`/blog/${val?.slug}`}>
-                            <Text string={val?.title} />
-                          </Link>
-                        </h3>
-                        <p>
-                          <Text string={val?.short_description} />
-                        </p>
-                        <Link href={`/blog/${val?.slug}`} className="read_more">
-                          <Text string={content?.btn_txt} />
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                }) : 
-                    <div className="alert alert-danger">No Blogs Found</div>
-                }
-              </>
-              : 
-              <div className="text-center">
+                {!fetchingBlogs ? (
+                  <>
+                    {!isEmpty(currentBlogs) ? (
+                      currentBlogs?.map((val) => {
+                        return (
+                          <div className="col" key={val?.id}>
+                            <Link
+                              href={`/blog/${val?.slug}`}
+                              className="post_image"
+                            >
+                              <img
+                                src={cmsFileUrl(val?.image, "blogs")}
+                                alt={val?.title}
+                              />
+                            </Link>
+                            <div className="post_cntnt">
+                              <div className="other">
+                                <span>{val?.category_id}</span>
+                                <span>{blogDate(val?.created_date)}</span>
+                              </div>
+                              <h3>
+                                <Link href={`/blog/${val?.slug}`}>
+                                  <Text string={val?.title} />
+                                </Link>
+                              </h3>
+                              <p>
+                                <Text string={val?.short_description} />
+                              </p>
+                              <Link
+                                href={`/blog/${val?.slug}`}
+                                className="read_more"
+                              >
+                                <Text string={content?.btn_txt} />
+                              </Link>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="alert alert-danger">No Blogs Found</div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center">
                     <div className="spinner-border" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </div>
                     &nbsp;<span>Loading....</span>
                   </div>
-
-              } 
-                
+                )}
 
                 <div className="pagination_outer">
-                {!isEmpty(currentBlogs) && allBlogs.length > itemsPerPage ?
+                  {!isEmpty(currentBlogs) && allBlogs.length > itemsPerPage ? (
                     <Pagination
-                    currentPage={currentPage}
-  totalPages={Math.ceil(allBlogs.length / itemsPerPage)}
-  onPageChange={handlePageChange}
-                  />
-                  : 
-                  ''
-                }
-                  
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(allBlogs.length / itemsPerPage)}
+                      onPageChange={handlePageChange}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

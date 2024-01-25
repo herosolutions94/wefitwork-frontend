@@ -140,13 +140,13 @@ export default function Home({ result }) {
   const handleSearchByName = (e) => {
     e.preventDefault();
     const inputValue = e.target.value;
-    console.log(inputValue);
+    // console.log(inputValue);
     setIsSearching(true);
     try {
       http
         .post("search-profession", doObjToFormData({ search_name: inputValue }))
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           if (data?.data?.status == true) {
             setSearchResult({ professions: data.data.professions });
             setIsSearching(false);
@@ -184,7 +184,11 @@ export default function Home({ result }) {
                     type="text"
                     className="input"
                     name="search_name"
-                    placeholder={searchMode == 'popup' ? "Search by Professional Categories (eg, Electrician)" : "Entre Professional name to search"}
+                    placeholder={
+                      searchMode == "popup"
+                        ? "Search by Professional Categories (eg, Electrician)"
+                        : "Entre Professional name to search"
+                    }
                     onClick={handleOpenPopup}
                     onChange={handleSearchByName}
                     autoComplete="off"
@@ -209,26 +213,31 @@ export default function Home({ result }) {
                           {searchResult?.professions?.map((val, i) => {
                             return (
                               <Link
-                                href={`/search-result/${encrypt_decrypt("encrypt",val?.mem_id)}`}
+                                href={`/search-result/${encrypt_decrypt(
+                                  "encrypt",
+                                  val?.mem_id
+                                )}`}
                                 className="list-group-item list-group-item-action d-flex align-items-center"
                               >
-                              <div className="image">
-                              {val?.mem_image  ? (
-                                  
-                                  <img
-                                    src={cmsFileUrl(val?.mem_image, "members")}
-                                    style={{ width: "50px" }}
-                                    className="p-3"
-                                    alt={val?.mem_fname}
-                                  />
-                                ) : (
-                                  <img
-                                    src="/images/no-user.svg"
-                                    style={{ width: "50px" }}
-                                    className="p-3"
-                                    alt={val?.mem_fname}
-                                  />
-                                )}
+                                <div className="image">
+                                  {val?.mem_image ? (
+                                    <img
+                                      src={cmsFileUrl(
+                                        val?.mem_image,
+                                        "members"
+                                      )}
+                                      style={{ width: "50px" }}
+                                      className="p-3"
+                                      alt={val?.mem_fname}
+                                    />
+                                  ) : (
+                                    <img
+                                      src="/images/no-user.svg"
+                                      style={{ width: "50px" }}
+                                      className="p-3"
+                                      alt={val?.mem_fname}
+                                    />
+                                  )}
                                 </div>
 
                                 <Text string={val?.mem_fname} />
@@ -265,8 +274,6 @@ export default function Home({ result }) {
                     Or search by professional categories
                   </Link>
                 )}
-
-                
 
                 <div className="most_searched_cat">
                   <p>
@@ -335,96 +342,104 @@ export default function Home({ result }) {
               </h2>
             </div>
             <div className="show_ds_sc">
-            <OwlCarousel className="owl-carousel owl-theme" {...categories}>
-              {featured_services?.map((val) => {
-                return (
-                  <div
-                    className="item"
-                    style={{ cursor: "pointer" }}
-                    key={val.id}
-                    onClick={() => handleOpenSubPopup(val?.id, val?.title)}
-                  >
-                    <div className="inner">
-                      <div className="icon_img">
-                        <Image
-                          src={cmsFileUrl(val?.icon, "services")}
-                          width={60}
-                          height={60}
-                          alt={val?.title}
-                        />
+              <OwlCarousel className="owl-carousel owl-theme" {...categories}>
+                {featured_services?.map((val) => {
+                  return (
+                    <div
+                      className="item"
+                      style={{ cursor: "pointer" }}
+                      key={val.id}
+                      onClick={() => handleOpenSubPopup(val?.id, val?.title)}
+                    >
+                      <div className="inner">
+                        <div className="icon_img">
+                          <Image
+                            src={cmsFileUrl(val?.icon, "services")}
+                            width={60}
+                            height={60}
+                            alt={val?.title}
+                          />
+                        </div>
+                        <h5>
+                          <Text string={val.title} />
+                        </h5>
                       </div>
-                      <h5>
-                        <Text string={val.title} />
-                      </h5>
                     </div>
-                  </div>
-                );
-              })}
-            </OwlCarousel>
+                  );
+                })}
+              </OwlCarousel>
             </div>
             <div className="hide_ds_sc">
-            <OwlCarousel id="mob-v" className="owl-carousel owl-theme" {...categories}>
-        {featured_services?.map((val, index) => {
-          // Render two items per iteration
-          if (index % 2 === 0) {
-            return (
-              <div className="item-pair" key={index}>
-                {/* First item in the pair */}
-                <div
-                  className="item"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleOpenSubPopup(val?.id, val?.title)}
-                >
-                  <div className="inner">
-                    <div className="icon_img">
-                      <Image
-                        src={cmsFileUrl(val?.icon, "services")}
-                        width={60}
-                        height={60}
-                        alt={val?.title}
-                      />
-                    </div>
-                    <h5>
-                      <Text string={val.title} />
-                    </h5>
-                  </div>
-                </div>
-                {/* Second item in the pair */}
-                {featured_services[index + 1] && (
-                  <div
-                    className="item"
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      handleOpenSubPopup(
-                        featured_services[index + 1]?.id,
-                        featured_services[index + 1]?.title
-                      )
-                    }
-                  >
-                    <div className="inner">
-                      <div className="icon_img">
-                        <Image
-                          src={cmsFileUrl(
-                            featured_services[index + 1]?.icon,
-                            "services"
-                          )}
-                          width={60}
-                          height={60}
-                          alt={featured_services[index + 1]?.title}
-                        />
+              <OwlCarousel
+                id="mob-v"
+                className="owl-carousel owl-theme"
+                {...categories}
+              >
+                {featured_services?.map((val, index) => {
+                  // Render two items per iteration
+                  if (index % 2 === 0) {
+                    return (
+                      <div className="item-pair" key={index}>
+                        {/* First item in the pair */}
+                        <div
+                          className="item"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            handleOpenSubPopup(val?.id, val?.title)
+                          }
+                        >
+                          <div className="inner">
+                            <div className="icon_img">
+                              <Image
+                                src={cmsFileUrl(val?.icon, "services")}
+                                width={60}
+                                height={60}
+                                alt={val?.title}
+                              />
+                            </div>
+                            <h5>
+                              <Text string={val.title} />
+                            </h5>
+                          </div>
+                        </div>
+                        {/* Second item in the pair */}
+                        {featured_services[index + 1] && (
+                          <div
+                            className="item"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              handleOpenSubPopup(
+                                featured_services[index + 1]?.id,
+                                featured_services[index + 1]?.title
+                              )
+                            }
+                          >
+                            <div className="inner">
+                              <div className="icon_img">
+                                <Image
+                                  src={cmsFileUrl(
+                                    featured_services[index + 1]?.icon,
+                                    "services"
+                                  )}
+                                  width={60}
+                                  height={60}
+                                  alt={featured_services[index + 1]?.title}
+                                />
+                              </div>
+                              <h5>
+                                <Text
+                                  string={featured_services[index + 1]?.title}
+                                />
+                              </h5>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <h5>
-                        <Text string={featured_services[index + 1]?.title} />
-                      </h5>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          }
-          return null; // Skip rendering for odd indices
-        })}
-      </OwlCarousel>
+                    );
+                  }
+                  return null; // Skip rendering for odd indices
+                })}
+              </OwlCarousel>
             </div>
           </div>
         </section>

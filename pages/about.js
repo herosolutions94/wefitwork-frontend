@@ -3,7 +3,7 @@ import Link from "next/link";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import dynamic from "next/dynamic";
-const OwlCarousel = dynamic(import("react-owl-carousel"), {ssr: false});
+const OwlCarousel = dynamic(import("react-owl-carousel"), { ssr: false });
 import Testimonials from "../components/testimonials";
 import http from "../helpers/http";
 import Text from "../components/text";
@@ -20,151 +20,178 @@ export const getServerSideProps = async () => {
   return { props: { result } };
 };
 
-export default function About({result}) {
-
-  let { page_title, meta_desc, content, testimonials, our_team} = result;
+export default function About({ result }) {
+  let { page_title, meta_desc, content, testimonials, our_team } = result;
 
   return (
     <>
-    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
+      <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
 
       <main>
         <section className="grid_first">
           <div className="contain">
-             <div className="flex">
-                <div className="colL">
-                    <div className="sec_heading">
-                        <h1><Text string={content?.sec1_heading} /></h1>
-                    </div>
-                    <Text string={content?.sec1_detail} />
-                    <div className="mini_br"></div>
-                    <div className="btn_blk">
-                        <Link href={content?.sec1_button1_link} className="site_btn color min_wid">{content?.sec1_button1_text}</Link>
-                        <Link href={content?.sec1_button2_link} className="site_btn min_wid">{content?.sec1_button2_text}</Link>
-                    </div>
+            <div className="flex">
+              <div className="colL">
+                <div className="sec_heading">
+                  <h1>
+                    <Text string={content?.sec1_heading} />
+                  </h1>
                 </div>
-                <div className="colR">
-                    <div className="image">
-                    <Image 
-                      src={cmsFileUrl(content?.image1)}
-                      width={555}
-                      height={444}
-                      alt={'about-pic'}
-                    />
-                        
-                    </div>
+                <Text string={content?.sec1_detail} />
+                <div className="mini_br"></div>
+                <div className="btn_blk">
+                  <Link
+                    href={content?.sec1_button1_link}
+                    className="site_btn color min_wid"
+                  >
+                    {content?.sec1_button1_text}
+                  </Link>
+                  <Link
+                    href={content?.sec1_button2_link}
+                    className="site_btn min_wid"
+                  >
+                    {content?.sec1_button2_text}
+                  </Link>
                 </div>
-             </div>
+              </div>
+              <div className="colR">
+                <div className="image">
+                  <Image
+                    src={cmsFileUrl(content?.image1)}
+                    width={555}
+                    height={444}
+                    alt={"about-pic"}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </section>
         <section className="values_sec">
-            <div className="contain">
-                <div className="sec_heading text-center">
-                    <h2><Text string={content?.sec2_heading} /></h2>
-                    <Text string={content?.sec2_detail} />
-                </div>
-                <div className="flex">
-                    <div className="col">
-                        <div className="inner">
-                            <div className="img_icon">
-                              <Image 
-                                src={cmsFileUrl(content?.image2)}
-                                width={50}
-                                height={50}
-                                alt={'icon'}
-                              />
-                                
-                            </div>
-                            <div className="cntnt">
-                                <h5><Text string={content?.sec2_img_card_heading2} /></h5>
-                                <p><Text string={content?.sec2_img_card_tagline2} /></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="inner">
-                        <div className="img_icon">
-                              <Image 
-                                src={cmsFileUrl(content?.image3)}
-                                width={50}
-                                height={50}
-                                alt={'icon'}
-                              />
-                                
-                            </div>
-                            <div className="cntnt">
-                                <h5><Text string={content?.sec2_img_card_heading3} /></h5>
-                                <p><Text string={content?.sec2_img_card_tagline3} /></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="inner">
-                        <div className="img_icon">
-                              <Image 
-                                src={cmsFileUrl(content?.image4)}
-                                width={50}
-                                height={50}
-                                alt={'icon'}
-                              />
-                                
-                            </div>
-                            <div className="cntnt">
-                                <h5><Text string={content?.sec2_img_card_heading4} /></h5>
-                                <p><Text string={content?.sec2_img_card_tagline4} /></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div className="contain">
+            <div className="sec_heading text-center">
+              <h2>
+                <Text string={content?.sec2_heading} />
+              </h2>
+              <Text string={content?.sec2_detail} />
             </div>
+            <div className="flex">
+              <div className="col">
+                <div className="inner">
+                  <div className="img_icon">
+                    <Image
+                      src={cmsFileUrl(content?.image2)}
+                      width={50}
+                      height={50}
+                      alt={"icon"}
+                    />
+                  </div>
+                  <div className="cntnt">
+                    <h5>
+                      <Text string={content?.sec2_img_card_heading2} />
+                    </h5>
+                    <p>
+                      <Text string={content?.sec2_img_card_tagline2} />
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="inner">
+                  <div className="img_icon">
+                    <Image
+                      src={cmsFileUrl(content?.image3)}
+                      width={50}
+                      height={50}
+                      alt={"icon"}
+                    />
+                  </div>
+                  <div className="cntnt">
+                    <h5>
+                      <Text string={content?.sec2_img_card_heading3} />
+                    </h5>
+                    <p>
+                      <Text string={content?.sec2_img_card_tagline3} />
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="inner">
+                  <div className="img_icon">
+                    <Image
+                      src={cmsFileUrl(content?.image4)}
+                      width={50}
+                      height={50}
+                      alt={"icon"}
+                    />
+                  </div>
+                  <div className="cntnt">
+                    <h5>
+                      <Text string={content?.sec2_img_card_heading4} />
+                    </h5>
+                    <p>
+                      <Text string={content?.sec2_img_card_tagline4} />
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
         <section className="grid_first white_sec fancy_ul">
           <div className="contain">
-             <div className="flex">
-                <div className="colL">
-                    <div className="image">
-                        <Image 
-                          src={cmsFileUrl(content?.image5)}
-                          width={555}
-                          height={444}
-                          alt="Why choose us"
-                        />
-                    </div>
+            <div className="flex">
+              <div className="colL">
+                <div className="image">
+                  <Image
+                    src={cmsFileUrl(content?.image5)}
+                    width={555}
+                    height={444}
+                    alt="Why choose us"
+                  />
                 </div>
-                <div className="colR">
-                    <div className="sec_heading">
-                        <h2><Text string={content?.sec3_heading} /></h2>
-                    </div>
-                    <Text string={content?.sec3_detail} />
-                    <div className="mini_br"></div>
-                    <div className="btn_blk">
-                        <Link href={content?.sec3_button1_link} className="site_btn min_wid">{content?.sec3_button1_text}</Link>
-                    </div>
+              </div>
+              <div className="colR">
+                <div className="sec_heading">
+                  <h2>
+                    <Text string={content?.sec3_heading} />
+                  </h2>
                 </div>
-             </div>
+                <Text string={content?.sec3_detail} />
+                <div className="mini_br"></div>
+                <div className="btn_blk">
+                  <Link
+                    href={content?.sec3_button1_link}
+                    className="site_btn min_wid"
+                  >
+                    {content?.sec3_button1_text}
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
-        
+
         <section className="team_sec">
           <div className="contain">
             <div className="sec_heading text-center">
               <h2>Our Team</h2>
             </div>
             <div className="flex">
-            {our_team?.map((val, i) => {
-              return (
-                <div className="col" key={i}>
-                <div className="image">
-                  <img src={cmsFileUrl(val?.image, "team")} alt="" />
-                </div>
-                <div className="cntnt">
-                  <h4>{val?.name}</h4>
-                  <p>{val?.designation}</p>
-                </div>
-              </div>
-               )
-            })}
-              
+              {our_team?.map((val, i) => {
+                return (
+                  <div className="col" key={i}>
+                    <div className="image">
+                      <img src={cmsFileUrl(val?.image, "team")} alt="" />
+                    </div>
+                    <div className="cntnt">
+                      <h4>{val?.name}</h4>
+                      <p>{val?.designation}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -172,23 +199,37 @@ export default function About({result}) {
           <div className="contain">
             <div className="cntnt">
               <div className="sec_heading text-center">
-                <h2><Text string={content?.sec4_heading} /></h2>
+                <h2>
+                  <Text string={content?.sec4_heading} />
+                </h2>
                 <Text string={content?.sec4_detail} />
               </div>
               <div className="btn_blk text-center">
-                <Link href={content?.sec4_button1_link} className="site_btn color min_wid">{content?.sec4_button1_text}</Link>
+                <Link
+                  href={content?.sec4_button1_link}
+                  className="site_btn color min_wid"
+                >
+                  {content?.sec4_button1_text}
+                </Link>
                 <span>OR</span>
-                <Link href={content?.sec4_button2_link} className="site_btn white min_wid">{content?.sec4_button2_text}</Link>
+                <Link
+                  href={content?.sec4_button2_link}
+                  className="site_btn white min_wid"
+                >
+                  {content?.sec4_button2_text}
+                </Link>
               </div>
             </div>
           </div>
         </section>
         <section className="testimonial_sec">
           <div className="contain">
-              <div className="sec_heading text-center">
-                <h2><Text string={content?.sec5_heading} /></h2>
-              </div>
-              <Testimonials data={testimonials}/>
+            <div className="sec_heading text-center">
+              <h2>
+                <Text string={content?.sec5_heading} />
+              </h2>
+            </div>
+            <Testimonials data={testimonials} />
           </div>
         </section>
       </main>

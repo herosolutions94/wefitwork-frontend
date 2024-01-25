@@ -14,7 +14,7 @@ import {
   format_amount,
   format_amount_comma,
   isArrayEmpty,
-  subscriptionStatus
+  subscriptionStatus,
 } from "@/components/helpers/helpers";
 
 export default function Subscription() {
@@ -29,7 +29,7 @@ export default function Subscription() {
 
   useEffect(() => dispatch(fetchMemSubscriptions()), []);
 
-  console.log(data);
+  // console.log(data);
   const {
     site_settings,
     page_title,
@@ -72,171 +72,209 @@ export default function Subscription() {
 
                 {!isLoading && (
                   <>
-                  <div className="profile_blk custom_blk">
-                    <div className="subscription_block_dash">
-                      <p>
-                        Contact at <Link href={`tel:${site_settings?.site_phone}`}>
-                          <Text string={site_settings?.site_phone} />
-                        </Link> or <Link
-                          href={`mailto:${site_settings?.site_general_eamil}`}
-                        >
-                          <Text string={site_settings?.site_general_email} />
-                        </Link>
-                      </p>
-                      <div className="sec_heading">
-                        <h4>Active Subscriptions</h4>
-                      </div>
-                      {mem_active_subscription === null ||
-                      mem_active_subscription === "" ||
-                      mem_active_subscription === undefined ? (
-                        <>
-                          <div className="alert alert-danger">
-                            You Don't have any active subscription. PLease
-                            Subscribe to Plan. Thank you!
-                          </div>
-
-                          <div className="btn_blk">
-                            <a
-                              href="?"
-                              className="site_btn color"
-                            >
-                            Subscribe
-                            </a>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="out_flex_subs">
-                            <div className="flex_subs">
-                              <div>User</div>
-                              <div>Start Date</div>
-
-                              <div>Plan Amount</div>
+                    <div className="profile_blk custom_blk">
+                      <div className="subscription_block_dash">
+                        <p>
+                          Contact at
+                          <Link href={`tel:${site_settings?.site_phone}`}>
+                            <Text string={site_settings?.site_phone} />
+                          </Link>
+                          or
+                          <Link
+                            href={`mailto:${site_settings?.site_general_eamil}`}
+                          >
+                            <Text string={site_settings?.site_general_email} />
+                          </Link>
+                        </p>
+                        <div className="sec_heading">
+                          <h4>Active Subscriptions</h4>
+                        </div>
+                        {mem_active_subscription === null ||
+                        mem_active_subscription === "" ||
+                        mem_active_subscription === undefined ? (
+                          <>
+                            <div className="alert alert-danger">
+                              You Don't have any active subscription. PLease
+                              Subscribe to Plan. Thank you!
                             </div>
-                            <div className="flex_subs">
-                              <div>
-                                <Text string={member?.mem_fname} />
-                              </div>
-                              <div>
-                                <Text
-                                  string={formatDateTime(
-                                    mem_active_subscription?.start_date
-                                  )}
-                                />
-                              </div>
-                              <div>
-                                {format_amount_comma(
-                                  parseFloat(mem_active_subscription?.amount)
-                                )}
-                                <Text
-                                  string={capitalizeFirstLetter(
-                                    mem_active_subscription?.plan_interval
-                                  )}
-                                />
-                              </div>
+
+                            <div className="btn_blk">
+                              <a href="?" className="site_btn color">
+                                Subscribe
+                              </a>
                             </div>
-                          </div>
-                          <div className="membership_card">
-                            <div className="inner_membership">
-                              <div className="mini_pro">
-                                <img src="/images/pro_membership.svg" alt="" />
-                                <span>
+                          </>
+                        ) : (
+                          <>
+                            <div className="out_flex_subs">
+                              <div className="flex_subs">
+                                <div>User</div>
+                                <div>Start Date</div>
+
+                                <div>Plan Amount</div>
+                              </div>
+                              <div className="flex_subs">
+                                <div>
+                                  <Text string={member?.mem_fname} />
+                                </div>
+                                <div>
                                   <Text
-                                    string={
-                                      mem_active_subscription?.paystack_plan_name
-                                    }
+                                    string={formatDateTime(
+                                      mem_active_subscription?.start_date
+                                    )}
                                   />
-                                </span>
-                              </div>
-                              <div className="price_head">
-                                <h2>
-                                  {format_amount(
-                                    mem_active_subscription?.amount
+                                </div>
+                                <div>
+                                  {format_amount_comma(
+                                    parseFloat(mem_active_subscription?.amount)
                                   )}
+                                  <Text
+                                    string={capitalizeFirstLetter(
+                                      mem_active_subscription?.plan_interval
+                                    )}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="membership_card">
+                              <div className="inner_membership">
+                                <div className="mini_pro">
+                                  <img
+                                    src="/images/pro_membership.svg"
+                                    alt=""
+                                  />
                                   <span>
                                     <Text
-                                      string={capitalizeFirstLetter(
-                                        mem_active_subscription?.plan_interval
-                                      )}
+                                      string={
+                                        mem_active_subscription?.paystack_plan_name
+                                      }
                                     />
                                   </span>
-                                </h2>
+                                </div>
+                                <div className="price_head">
+                                  <h2>
+                                    {format_amount(
+                                      mem_active_subscription?.amount
+                                    )}
+                                    <span>
+                                      <Text
+                                        string={capitalizeFirstLetter(
+                                          mem_active_subscription?.plan_interval
+                                        )}
+                                      />
+                                    </span>
+                                  </h2>
+                                </div>
+                                <p>
+                                  Renewal on <br />
+                                  {formatDateTime(
+                                    mem_active_subscription?.end_date
+                                  )}
+                                </p>
+                                <div className="btn_blk">
+                                  <button
+                                    type="submit"
+                                    className="site_btn block white"
+                                  >
+                                    Cancel Subscription
+                                  </button>
+                                </div>
                               </div>
-                              <p>
-                                Renewal on <br />
-                                {formatDateTime(
-                                  mem_active_subscription?.end_date
-                                )}
-                              </p>
-                              <div className="btn_blk">
-                                <button
-                                  type="submit"
-                                  className="site_btn block white"
-                                >
-                                  Cancel Subscription
-                                </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="br"></div>
+                    <div className="sec_heading">
+                      <h3>Previous Subscriptions</h3>
+                    </div>
+                    {mem_subscriptions === "" ||
+                    mem_subscriptions === null ||
+                    mem_subscriptions === undefined ||
+                    isArrayEmpty(mem_subscriptions) ? (
+                      <div className="contract_list text-center">
+                        <div className="alert alert-danger text-center">
+                          You have no previous subscription!.
+                        </div>
+                      </div>
+                    ) : (
+                      mem_subscriptions?.map((subs, i) => {
+                        return (
+                          <div className="contract_list" key={i}>
+                            <div className="col">
+                              <div className="user_info">
+                                <div className="cntnt">
+                                  <h5>
+                                    <Text string={subs?.paystack_plan_name} />
+                                  </h5>
+                                  <p>
+                                    <Text string={subs?.paystack_plan_code} />
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="col col_l">
+                              <div className="inner">
+                                <p>
+                                  <small>Subscription Code</small>
+                                </p>
+                                <p>
+                                  <strong>
+                                    <Text
+                                      string={subs?.paystack_subscription_code}
+                                    />
+                                  </strong>
+                                </p>
+                              </div>
+                            </div>
+                            <div className="col">
+                              <div className="inner">
+                                <p>
+                                  <small>Start Date</small>
+                                </p>
+                                <p>
+                                  <strong>
+                                    <Text
+                                      string={formatDate(subs?.start_date)}
+                                    />
+                                  </strong>
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="col">
+                              <div className="inner">
+                                <p>
+                                  <small>End Date</small>
+                                </p>
+                                <p>
+                                  <strong>
+                                    <Text string={formatDate(subs?.end_date)} />
+                                  </strong>
+                                </p>
+                              </div>
+                            </div>
+                            <div className="col">
+                              <div className="inner">
+                                <p>
+                                  <small>Status</small>
+                                </p>
+                                <p>
+                                  <strong>
+                                    {subscriptionStatus(
+                                      subs?.subscription_status
+                                    )}
+                                  </strong>
+                                </p>
                               </div>
                             </div>
                           </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                <div className="br"></div>
-                <div className="sec_heading">
-                        <h3>Previous Subscriptions</h3>
-                      </div>
-                      {mem_subscriptions === '' || mem_subscriptions === null || mem_subscriptions === undefined || isArrayEmpty(mem_subscriptions) ? 
-                      <div className="contract_list text-center">
-                      <div className="alert alert-danger text-center">You have no previous subscription!.</div>
-                      </div>
-                      :
-                      mem_subscriptions?.map((subs, i) => {
-                        return(
-                            <div className="contract_list" key={i}>
-                                <div className="col">
-                                    <div className="user_info">
-                                    
-                                    <div className="cntnt">
-                                        <h5><Text string={subs?.paystack_plan_name} /></h5>
-                                        <p><Text string={subs?.paystack_plan_code} /></p>
-                                    </div>
-                                    </div>
-                                </div>
-
-                                <div className="col col_l">
-                                    <div className="inner">
-                                    <p><small>Subscription Code</small></p>
-                                    <p><strong><Text string={subs?.paystack_subscription_code} /></strong></p>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <div className="inner">
-                                    <p><small>Start Date</small></p>
-                                    <p><strong><Text string={formatDate(subs?.start_date)} /></strong></p>
-                                    </div>
-                                </div>
-
-                                <div className="col">
-                                    <div className="inner">
-                                    <p><small>End Date</small></p>
-                                    <p><strong><Text string={formatDate(subs?.end_date)} /></strong></p>
-                                    </div>
-                                </div> 
-                                <div className="col">
-                                    <div className="inner">
-                                    <p><small>Status</small></p>
-                                    <p><strong>{subscriptionStatus(subs?.subscription_status)}</strong></p>
-                                    </div>
-                                </div>
-                                
-                                
-                            </div>
-                        )
+                        );
                       })
-                      
-                      }
+                    )}
                   </>
                 )}
               </div>

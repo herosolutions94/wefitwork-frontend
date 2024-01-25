@@ -2,7 +2,12 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import Pagination from "../../components/pagination";
 import DistanceSlider from "@/components/components/DistanceSlider";
-import { isEmpty, cmsFileUrl, doObjToFormData, getObjKeyCount } from "@/components/helpers/helpers";
+import {
+  isEmpty,
+  cmsFileUrl,
+  doObjToFormData,
+  getObjKeyCount,
+} from "@/components/helpers/helpers";
 import http from "@/components/helpers/http";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 import Image from "next/image";
@@ -32,7 +37,6 @@ export const getServerSideProps = async (context) => {
   const cookies = parse(context?.req?.headers?.cookie || "");
   const memauthToken = cookies?.authToken || "";
 
-
   const result = await http
     .post(
       "search-profession",
@@ -52,7 +56,6 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function SearchResult({ result }) {
-  
   const router = useRouter();
   const route_query = router?.query;
   const service_id = route_query?.service_id;
@@ -61,16 +64,22 @@ export default function SearchResult({ result }) {
   const longitude = route_query?.longitude;
   const loc_radius = route_query?.radius;
 
+  let {
+    professions,
+    services,
+    selected_service,
+    selected_sub_service,
+    page_title,
+    meta_desc,
+    memData,
+  } = result;
 
-  let { professions, services, selected_service, selected_sub_service, page_title, meta_desc,memData } =
-    result;
+  // console.log(result)
 
-    // console.log(result)
-
-    const token = authToken();
+  const token = authToken();
 
   const countProfessions = professions ? getObjKeyCount(professions) : 0;
-  const service_tilte = selected_service ? selected_service?.title : '';
+  const service_tilte = selected_service ? selected_service?.title : "";
 
   const [viewMode, setViewMode] = useState("grid");
   const [openCat, setOpenCat] = useState(false);
@@ -113,10 +122,9 @@ export default function SearchResult({ result }) {
   };
 
   useEffect(() => {
-    console.log("selectedPlace", selectedPlace);
-    setValue("latitude", selectedPlace?.latitude)
-    setValue("longitude", selectedPlace?.longitude)
-
+    // console.log("selectedPlace", selectedPlace);
+    setValue("latitude", selectedPlace?.latitude);
+    setValue("longitude", selectedPlace?.longitude);
   }, [selectedPlace]);
 
   const {
@@ -127,45 +135,60 @@ export default function SearchResult({ result }) {
   } = useForm();
 
   const handleSearch = (search_data) => {
-    console.log("search_data", search_data);
-    router.replace(`/search-result?${search_data?.service_id > 0 ? 'service_id='+search_data?.service_id+'&' : ''}${search_data?.sub_service_id > 0 ? 'sub_service_id='+search_data?.sub_service_id+'&' : ''}${search_data?.latitude !== null ? 'latitude='+search_data?.latitude+'&' : ''}${search_data?.longitude !== null ? 'longitude='+search_data?.longitude+'&' : ''}${search_data?.radius > 0 ? 'radius='+search_data?.radius : ''}`)
-  }
+    // console.log("search_data", search_data);
+    router.replace(
+      `/search-result?${
+        search_data?.service_id > 0
+          ? "service_id=" + search_data?.service_id + "&"
+          : ""
+      }${
+        search_data?.sub_service_id > 0
+          ? "sub_service_id=" + search_data?.sub_service_id + "&"
+          : ""
+      }${
+        search_data?.latitude !== null
+          ? "latitude=" + search_data?.latitude + "&"
+          : ""
+      }${
+        search_data?.longitude !== null
+          ? "longitude=" + search_data?.longitude + "&"
+          : ""
+      }${search_data?.radius > 0 ? "radius=" + search_data?.radius : ""}`
+    );
+  };
 
   const [radius, setRadius] = useState(10);
   const handleRadiusCahnge = (newRadius) => {
     setRadius(newRadius);
-  }
+  };
 
   useEffect(() => {
-    setValue("radius", radius)
+    setValue("radius", radius);
   }, [radius]);
 
   const [isPopupOpenSend, setIsPopupOpenSend] = useState(false);
   const [proData, setProData] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
 
+  const handleOpenPopupSend = (pro_mem_data, mem_token = token) => {
+    if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
+      setProData(pro_mem_data);
+      setIsPopupOpenSend(true);
+    } else {
+      toast.error(
+        "You sare not logedin. Please Login to your account to send SMS"
+      );
+      setAuthPopup(true);
+      setProData(pro_mem_data);
+    }
+  };
+  const handleClosePopupSend = () => {
+    setProData(false);
+    setIsPopupOpenSend(false);
+    setAuthPopup(false);
+  };
 
-    
-    const handleOpenPopupSend = (pro_mem_data, mem_token = token) => {
-      if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
-        setProData(pro_mem_data);
-        setIsPopupOpenSend(true);
-      }else{
-        toast.error("You sare not logedin. Please Login to your account to send SMS");
-        setAuthPopup(true);
-        setProData(pro_mem_data);
-        
-      }
-        
-    };
-    const handleClosePopupSend = () => {
-        setProData(false);
-        setIsPopupOpenSend(false);   
-        setAuthPopup(false);    
-    };
-
-
-    //pagination
+  //pagination
   const itemsPerPage = 8; // Set the number of professions per page
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -179,27 +202,27 @@ export default function SearchResult({ result }) {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-    
+
   const dispatch = useDispatch();
-    
+
   const isFormProcessing = useSelector((state) => state.chat.isFormProcessing);
 
-
   const handleStartChat = (receiver_id, mem_token = token) => {
-    if(mem_token !== undefined && mem_token !== null && mem_token!== '' ){
-      const form_data = {receiver_id : receiver_id};
+    if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
+      const form_data = { receiver_id: receiver_id };
       dispatch(startConversation(form_data));
-    }else{
-      toast.error("You are not logedin. Please Login to your account to start the chat with Professional");
+    } else {
+      toast.error(
+        "You are not logedin. Please Login to your account to start the chat with Professional"
+      );
       // setAuthPopup(true);
-       
     }
-  }
+  };
 
   return (
     <>
-    <Toaster position="top-center" />
-    <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
+      <Toaster position="top-center" />
+      <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="search_result">
           <div className="contain">
@@ -273,7 +296,6 @@ export default function SearchResult({ result }) {
                         <img src="/images/PencilSimple.svg" alt="" />
                       </button>
                     </div>
-                    
                   </div>
                   <div className="form_blk">
                     <div className="relative_field">
@@ -296,12 +318,16 @@ export default function SearchResult({ result }) {
                         {...register("longitude")}
                       />
                     </div>
-                    
                   </div>
                   <div className="mini_br"></div>
                   <h5>Distance</h5>
                   <DistanceSlider handleRadiusCahnge={handleRadiusCahnge} />
-                  <input type="hidden" name="radius" value={radius} {...register("radius")}/>
+                  <input
+                    type="hidden"
+                    name="radius"
+                    value={radius}
+                    {...register("radius")}
+                  />
                   <div className="mini_br"></div>
                   <div className="mini_br"></div>
                   <h5>Ratings</h5>
@@ -422,16 +448,20 @@ export default function SearchResult({ result }) {
                   <div className="br"></div>
                   <div className="btn_blk text-center">
                     <button type="submit" className="site_btn">
-                      {" "}
-                      Search{" "}
+                      
+                      Search
                     </button>
                   </div>
                 </form>
               </div>
               <div className="colR">
                 <div className="result_head">
-                  <p>{countProfessions} {service_tilte !== '' && service_tilte} {countProfessions === 1 ? 'Professional' : 'Professionals' } found.</p>
-                  
+                  <p>
+                    {countProfessions} {service_tilte !== "" && service_tilte}
+                    {countProfessions === 1 ? "Professional" : "Professionals"}
+                    found.
+                  </p>
+
                   <div className="lst_grid">
                     <button
                       onClick={() => toggleView("list")}
@@ -474,7 +504,6 @@ export default function SearchResult({ result }) {
                                     alt={val?.mem_fname}
                                   />
                                 )}
-                                
                               </div>
                               <div className="cntnt">
                                 <h4>
@@ -487,7 +516,13 @@ export default function SearchResult({ result }) {
                                     {val?.mem_fname}
                                   </Link>
                                 </h4>
-                                <p><Text string={`${val?.service_title} (${val?.sub_services?.join(', ')})`} /></p>
+                                <p>
+                                  <Text
+                                    string={`${
+                                      val?.service_title
+                                    } (${val?.sub_services?.join(", ")})`}
+                                  />
+                                </p>
                                 {val?.distance && (
                                   <p>
                                     <strong>
@@ -497,42 +532,63 @@ export default function SearchResult({ result }) {
                                 )}
 
                                 <div className="rating_lbl">
-                                                    <img src="/images/star.svg" alt=""/>
-                                                    <span>{val?.avg_rating} ({val?.reviews_counts} Reviews)</span>
-                                                </div>
+                                  <img src="/images/star.svg" alt="" />
+                                  <span>
+                                    {val?.avg_rating} ({val?.reviews_counts}
+                                    Reviews)
+                                  </span>
+                                </div>
                               </div>
                             </div>
                             <div className="done_work">
                               <p>Projects Completed</p>
-                              <h3>{val?.completed_projects > 0 ? val?.completed_projects : 0}</h3>
+                              <h3>
+                                {val?.completed_projects > 0
+                                  ? val?.completed_projects
+                                  : 0}
+                              </h3>
                             </div>
                             <div className="btn_blk">
-                            {val?.mem_id == memData?.mem_id ? 
-                            <>
-                            <Link href={`/search-result/${encrypt_decrypt("encrypt",val?.mem_id)}`} className="site_btn white block">
+                              {val?.mem_id == memData?.mem_id ? (
+                                <>
+                                  <Link
+                                    href={`/search-result/${encrypt_decrypt(
+                                      "encrypt",
+                                      val?.mem_id
+                                    )}`}
+                                    className="site_btn white block"
+                                  >
                                     View Your Profile
                                   </Link>
-                                  
-                            </>
-                              
-                                  : 
-                                  <>
-                                  <button type="button" className="site_btn color block" onClick={() => handleStartChat(val?.mem_id)} disabled={isFormProcessing}>
-                                Start Chat{isFormProcessing && (
-                      <i
-                        className={
-                          isFormProcessing ? "spinner" : "spinnerHidden"
-                        }
-                      ></i>
-                    )}
-                              </button>
-                              <button type="button" onClick={() => handleOpenPopupSend(val)} className="site_btn block">
-                                Send SMS
-                              </button>
-                                  </>
-
-                            }
-                              
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="site_btn color block"
+                                    onClick={() => handleStartChat(val?.mem_id)}
+                                    disabled={isFormProcessing}
+                                  >
+                                    Start Chat
+                                    {isFormProcessing && (
+                                      <i
+                                        className={
+                                          isFormProcessing
+                                            ? "spinner"
+                                            : "spinnerHidden"
+                                        }
+                                      ></i>
+                                    )}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenPopupSend(val)}
+                                    className="site_btn block"
+                                  >
+                                    Send SMS
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -545,26 +601,35 @@ export default function SearchResult({ result }) {
                   )}
                 </div>
                 <div className="text-center pagination_outer">
-                <Pagination
-                currentPage={currentPage}
-                totalPages={Math.ceil(professions.length / itemsPerPage)}
-                onPageChange={handlePageChange}
-              />
-                                </div>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(professions.length / itemsPerPage)}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      {authPopup &&
+      {authPopup && (
         <PopupSmall isOpen={authPopup} onClose={handleClosePopupSend}>
-          <LoginPopup handleOpenPopupSend={handleOpenPopupSend} proData={proData} setAuthPopup={setAuthPopup} />
+          <LoginPopup
+            handleOpenPopupSend={handleOpenPopupSend}
+            proData={proData}
+            setAuthPopup={setAuthPopup}
+          />
         </PopupSmall>
-      }
+      )}
 
       <PopupSmall isOpen={isPopupOpenSend} onClose={handleClosePopupSend}>
-      {proData && <SendMessage data={proData} handleClosePopupSend={handleClosePopupSend} />}
+        {proData && (
+          <SendMessage
+            data={proData}
+            handleClosePopupSend={handleClosePopupSend}
+          />
+        )}
       </PopupSmall>
     </>
   );

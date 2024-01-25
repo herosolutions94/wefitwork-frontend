@@ -38,8 +38,8 @@ export default function Contact({ result }) {
     // e.target.reset();
 
     setTimeout(() => {
-		reset()
-	}, 2000);
+      reset();
+    }, 2000);
   };
 
   return (
@@ -139,7 +139,10 @@ export default function Contact({ result }) {
                     <h3>
                       <Text string={content?.form_heading} />
                     </h3>
-                    <form onSubmit={handleSubmit(handleContactFormSubmit)} method="POST">
+                    <form
+                      onSubmit={handleSubmit(handleContactFormSubmit)}
+                      method="POST"
+                    >
                       <div className="form_blk">
                         <input
                           id="frm-name"
@@ -217,28 +220,31 @@ export default function Contact({ result }) {
                           className="input"
                           placeholder="Enter Your Message Here"
                           {...register("msg", {
-                          required: "Message is required.",
-                        })}
+                            required: "Message is required.",
+                          })}
                         ></textarea>
 
-<div
+                        <div
                           className="validation-error"
                           style={{ color: "red" }}
                         >
                           {errors.msg?.message}
                         </div>
-
                       </div>
                       <div className="btn_blk">
-                        <button type="submit" className="site_btn min_wid" disabled={isFormProcessing}>
+                        <button
+                          type="submit"
+                          className="site_btn min_wid"
+                          disabled={isFormProcessing}
+                        >
                           <Text string={content?.form_btn} />
-                    {isFormProcessing && 
-                          <i
-                          className={
-                            isFormProcessing ? "spinner" : "spinnerHidden"
-                          }
-                        ></i>
-                    }
+                          {isFormProcessing && (
+                            <i
+                              className={
+                                isFormProcessing ? "spinner" : "spinnerHidden"
+                              }
+                            ></i>
+                          )}
                         </button>
                       </div>
                     </form>

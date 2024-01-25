@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { fetchBuyerDashboardData } from "../states/actions/buyer/account";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-import { cmsFileUrl } from "../helpers/helpers";
+import { cmsFileUrl, timeAgo } from "../helpers/helpers";
 import { deleteCookie } from "cookies-next";
 import { SIGNIN_PAGE } from "../constants/link";
 
@@ -15,7 +15,7 @@ export default function LoggedBuyerHeader() {
   const member = useSelector((state) => state.account.mem);
   const isLoading = useSelector((state) => state.account.isLoading);
 
-  const { site_settings, page_title } = data;
+  const { site_settings, page_title,notifications, notifications_count } = data;
 
   useEffect(() => {
     dispatch(fetchBuyerDashboardData());
@@ -57,7 +57,9 @@ export default function LoggedBuyerHeader() {
     <>
       <header className="logged_header">
         <div className="contain">
-          <div className="logo">
+        {!isLoading &&
+         <>
+         <div className="logo">
             <Link href="/">
               <Image
                 src={cmsFileUrl(site_settings?.site_logo)}
@@ -67,7 +69,6 @@ export default function LoggedBuyerHeader() {
               />
             </Link>
           </div>
-
           <div className="logged_side">
             <ul>
               <li className="logged_drop icon_drop">
@@ -80,43 +81,40 @@ export default function LoggedBuyerHeader() {
                   <ul className="drop_lst">
                     <li>
                       <div className="notify_header">
-                        <h5>You have 5 notifications</h5>
+                        <h5>You have {notifications !== null ? notifications_count : 0} new notifications</h5>
                       </div>
                     </li>
-                    <li>
-                      <Link
-                        href=""
-                        className="inner"
-                        onClick={ToggleNotifyDrop}
-                      >
+
+                    {notifications !== null  ? 
+                      notifications?.map((notify, i) => {
+                        return (
+                          <li key={i}>
+                      <Link href="" className="inner" onClick={ToggleNotifyDrop}>
                         <div className="user_sm_icon color_icon_notify">
                           <img src="/images/envelope_color.svg" alt="" />
                         </div>
                         <div className="notify_cntnt">
-                          <p>
-                            <strong>2 new Messages</strong>
-                          </p>
-                          <div className="time_ago">2 mins ago</div>
+                          <p><strong>{notify?.txt}</strong></p>
+                          <div className="time_ago">{timeAgo(notify?.created_at)}</div>
                         </div>
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        href=""
-                        className="inner"
-                        onClick={ToggleNotifyDrop}
-                      >
+                        )
+                      })
+                      : 
+                      <li>
+                      <Link href="" className="inner" onClick={ToggleNotifyDrop}>
                         <div className="user_sm_icon color_icon_notify">
-                          <img src="/images/ChatCircleText.svg" alt="" />
+                          <img src="/images/envelope_color.svg" alt="" />
                         </div>
                         <div className="notify_cntnt">
-                          <p>
-                            <strong>3 new Comments</strong>
-                          </p>
-                          <div className="time_ago">2 mins ago</div>
+                          <p className="alert alert-danger" ><strong>No New Notifications</strong></p>
+                          {/* <div className="time_ago">2 mins ago</div> */}
                         </div>
                       </Link>
                     </li>
+                    }
+
                     <li>
                       <div className="notify_footer">
                         <Link
@@ -325,6 +323,11 @@ export default function LoggedBuyerHeader() {
               )}
             </ul>
           </div>
+         </>
+        }
+          
+
+          
           <div className="clearfix"></div>
         </div>
       </header>

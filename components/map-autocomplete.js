@@ -6,17 +6,17 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
 
   const handlePlaceSelect = () => {
 
-    console.log("ref",autocompleteRef.current.getPlace());
+    // console.log("ref",autocompleteRef.current.getPlace());
 
     const place = autocompleteRef.current.getPlace();
-    console.log('ad,' , place.formatted_address);
+    // console.log('ad,' , place.formatted_address);
     const { lat, lng } = place.geometry.location;
       const location = {
         latitude: lat(),
         longitude: lng(),
       };
 
-      console.log("loc", location);
+      // console.log("loc", location);
     // console.log(place.geometry.location.lat);
     onPlaceSelect(location);
     setAddress(place.formatted_address)
@@ -29,7 +29,7 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
     >
       <Autocomplete
         onLoad={(autocomplete) => {
-          console.log(autocomplete);
+          // console.log(autocomplete);
           autocompleteRef.current = autocomplete;
         }}
         onPlaceChanged={handlePlaceSelect}

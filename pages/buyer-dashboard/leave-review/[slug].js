@@ -3,7 +3,10 @@ import Link from "next/link";
 import LayoutBuyerDashboard from "@/components/components/layoutBuyerDashbord";
 import ReactStars from "react-stars";
 import { useForm } from "react-hook-form";
-import { fetchReviewPageData, saveReview } from "@/components/states/actions/buyer/reviews";
+import {
+  fetchReviewPageData,
+  saveReview,
+} from "@/components/states/actions/buyer/reviews";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
@@ -20,8 +23,9 @@ export default function LeaveReview() {
   const data = useSelector((state) => state.reviews.content);
   const member = useSelector((state) => state.reviews.mem);
   const isLoading = useSelector((state) => state.reviews.isLoading);
-  const isFormProcessing = useSelector((state) => state.reviews.isFormProcessing);
-
+  const isFormProcessing = useSelector(
+    (state) => state.reviews.isFormProcessing
+  );
 
   useEffect(() => {
     dispatch(fetchReviewPageData(pro_mem_id));
@@ -150,7 +154,7 @@ export default function LeaveReview() {
 
   const handleSubmitReview = (data) => {
     data.pro_mem_id = pro_mem_data?.mem_id;
-    if (uploadedImages !== null ) data.proof_images = uploadedImages;
+    if (uploadedImages !== null) data.proof_images = uploadedImages;
     dispatch(saveReview(data));
   };
 
@@ -168,27 +172,43 @@ export default function LeaveReview() {
               <div className="sec_heading">
                 <h2>Rate and Review</h2>
               </div>
-              {!isLoading && <div className="rating_person">
-                <div className="icon_img">
-                  {pro_mem_data?.mem_image ? (
-                    <Image
-                      src={cmsFileUrl(pro_mem_data?.mem_image, "members")}
-                      width={70}
-                      height={70}
-                      alt={pro_mem_data?.mem_fname}
-                    />
-                  ) : (
-                    <img
-                      src="/images/no-user.svg"
-                      alt={pro_mem_data?.mem_fname}
-                    />
-                  )}
+              {isLoading && (
+                <>
+                  <div className="br"></div>
+                  <div className="text-center">
+                    <div
+                      className="spinner-border text-danger"
+                      role="status"
+                      style={{ width: "3rem", height: "3rem" }}
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </>
+              )}
+              {!isLoading && (
+                <div className="rating_person">
+                  <div className="icon_img">
+                    {pro_mem_data?.mem_image ? (
+                      <Image
+                        src={cmsFileUrl(pro_mem_data?.mem_image, "members")}
+                        width={70}
+                        height={70}
+                        alt={pro_mem_data?.mem_fname}
+                      />
+                    ) : (
+                      <img
+                        src="/images/no-user.svg"
+                        alt={pro_mem_data?.mem_fname}
+                      />
+                    )}
+                  </div>
+                  <div className="cntnt">
+                    <h5>{pro_mem_data?.mem_fname}</h5>
+                    <p>{`${pro_mem_data?.service_title} ( ${pro_mem_data?.sub_services} )`}</p>
+                  </div>
                 </div>
-                <div className="cntnt">
-                  <h5>{pro_mem_data?.mem_fname}</h5>
-                  <p>{`${pro_mem_data?.service_title} ( ${pro_mem_data?.sub_services} )`}</p>
-                </div>
-              </div>}
+              )}
               <div className="br"></div>
               <form method="POST" onSubmit={handleSubmit(handleSubmitReview)}>
                 <div className="sec_heading">
@@ -488,37 +508,38 @@ export default function LeaveReview() {
                 <div className="br"></div>
                 <div className="profile_grid_edit scrollbar">
                   <div className="flex">
-                  {previewUploadedImages?.map((preview, index) => {
-                                return (
-                                  <div className="img_col" key={index}>
-                                    <div className="inner_img">
-                                      <img
-                                        src={preview}
-                                        alt={`Uploaded ${index + 1}`}
-                                      />
-                                      <button
-                                        className="x_btn"
-                                        type="button"
-                                        onClick={() => removeImage(index)}
-                                      ></button>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                    
+                    {previewUploadedImages?.map((preview, index) => {
+                      return (
+                        <div className="img_col" key={index}>
+                          <div className="inner_img">
+                            <img src={preview} alt={`Uploaded ${index + 1}`} />
+                            <button
+                              className="x_btn"
+                              type="button"
+                              onClick={() => removeImage(index)}
+                            ></button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="br"></div>
                 <div className="br"></div>
                 <div className="btn_blk text-center">
-                  <button type="submit" className="site_btn" disabled={isFormProcessing}>
-                    Submit {isFormProcessing && (
-                          <i
-                            className={
-                              isFormProcessing ? "spinner" : "spinnerHidden"
-                            }
-                          ></i>
-                        )}
+                  <button
+                    type="submit"
+                    className="site_btn"
+                    disabled={isFormProcessing}
+                  >
+                    Submit
+                    {isFormProcessing && (
+                      <i
+                        className={
+                          isFormProcessing ? "spinner" : "spinnerHidden"
+                        }
+                      ></i>
+                    )}
                   </button>
                 </div>
               </form>

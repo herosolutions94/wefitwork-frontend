@@ -130,7 +130,7 @@ export default function ForgotPassword({ result }) {
                     type="submit"
                     disabled={isFormProcessing}
                   >
-                    <Text string={content?.submit_text} />{" "}
+                    <Text string={content?.submit_text} />
                     {isFormProcessing && (
                       <i
                         className={
@@ -142,7 +142,7 @@ export default function ForgotPassword({ result }) {
                 </div>
                 <div className="question">
                   <p>
-                    <Text string={content?.left_tagline} />{" "}
+                    <Text string={content?.left_tagline} />
                     <Link href={content?.link_url}>
                       <Text string={content?.left_tagline_link_text} />
                     </Link>

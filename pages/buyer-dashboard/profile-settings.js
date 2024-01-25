@@ -77,175 +77,187 @@ export default function ProfileSettings() {
                   <h2>Profile</h2>
                 </div>
                 <div className="profile_blk custom_blk">
-                {!isLoading && (
-                  <form
-                    method="POST"
-                    onSubmit={handleSubmit(handleSaveBuyerSettings)}
-                  >
-                    <p>
-                      <strong>Profile Dp</strong>
-                    </p>
-                    <div className="dp_flex">
-                      <div className="dp_icon">
-                        {previewImage != null ? (
-                          <img src={previewImage} alt="User DP" />
-                        ) : member?.mem_image == null ||
-                          member?.mem_image == "" ? (
-                          <img src="/images/user_icon.svg" alt="DP" />
-                        ) : (
-                          <Image
-                            src={cmsFileUrl(member?.mem_image, "members")}
-                            width={60}
-                            height={60}
-                            alt={member?.mem_fname}
-                          />
-                        )}
-                      </div>
-                      <div className="btn_blk">
-                        <button
-                          className="site_btn color"
-                          type="button"
-                          onClick={handleDpClick}
+                  {isLoading && (
+                    <>
+                      <div className="br"></div>
+                      <div className="text-center">
+                        <div
+                          className="spinner-border text-danger"
+                          role="status"
+                          style={{ width: "3rem", height: "3rem" }}
                         >
-                          Upload
-                        </button>
-                        {/* <button className="site_btn blank blue_blank" type="button">Remove</button> */}
-                      </div>
-                    </div>
-                    <div className="br"></div>
-                    <div className="from_row row">
-                      <div className="col-sm-6">
-                        <div className="blk_form">
-                          <h6>
-                            Display Name <span>(Visible to others)</span>
-                          </h6>
-                          <div className="form_blk">
-                            <input
-                              type="text"
-                              name="display_name"
-                              defaultValue={member?.mem_display_name}
-                              className="input"
-                              placeholder="Entre Dispaly Name Here"
-                              {...register("display_name", {
-                                required: "Display Name is required.",
-                              })}
-                            />
-
-                            <div
-                              className="validation-error"
-                              style={{ color: "red" }}
-                            >
-                              {errors.display_name?.message}
-                            </div>
-                          </div>
+                          <span className="visually-hidden">Loading...</span>
                         </div>
                       </div>
-                      <div className="col-sm-6">
-                        <div className="blk_form">
-                          <h6>
-                            Name <span> (Your given name)</span>
-                          </h6>
-                          <div className="form_blk">
-                            <input
-                              type="text"
-                              name="fname"
-                              defaultValue={member?.mem_fname}
-                              className="input"
-                              placeholder="Entre Full Name Here"
-                              {...register("fname", {
-                                required: "Name is required.",
-                              })}
-                            />
-
-                            <div
-                              className="validation-error"
-                              style={{ color: "red" }}
-                            >
-                              {errors.fname?.message}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="blk_form">
-                          <h6>Phone Number</h6>
-                          <div className="form_blk">
-                            <InputMask
-                              id="phone"
-                              mask="+9 999-999-9999"
-                              name="phone"
-                              autoComplete="phone"
-                              placeholder="Phone Number"
-                              value={member?.mem_phone}
-                              className="input"
-                              {...register("phone", {
-                                required: "Phone Number is Required",
-                              })}
-                            />
-                            <div
-                              className="validation-error"
-                              style={{ color: "red" }}
-                            >
-                              {errors.phone?.message}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="col-sm-12">
-                        <div className="blk_form">
-                          <h6>Address</h6>
-                          <div className="form_blk">
-                            <input
-                              type="text"
-                              name="address"
-                              defaultValue={member?.mem_address}
-                              className="input"
-                              placeholder="Entre Address Here"
-                              {...register("address", {
-                                required: "Address is required.",
-                              })}
-                            />
-
-                            <div
-                              className="validation-error"
-                              style={{ color: "red" }}
-                            >
-                              {errors.address?.message}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="br"></div>
-                    <div className="btn_blk text-right cell_wide_full">
-                      <button
-                        type="submit"
-                        className="site_btn"
-                        disabled={isFormProcessing}
-                      >
-                        Save changes{" "}
-                        {isFormProcessing && (
-                          <i
-                            className={
-                              isFormProcessing ? "spinner" : "spinnerHidden"
-                            }
-                          ></i>
-                        )}
-                      </button>
-                    </div>
-
-                    <input
-                      type="file"
-                      ref={fileDpRef}
-                      style={{ display: "none" }}
-                      onChange={handleDpSelected}
-                    />
-                  </form>
-
+                    </>
                   )}
+                  {!isLoading && (
+                    <form
+                      method="POST"
+                      onSubmit={handleSubmit(handleSaveBuyerSettings)}
+                    >
+                      <p>
+                        <strong>Profile Dp</strong>
+                      </p>
+                      <div className="dp_flex">
+                        <div className="dp_icon">
+                          {previewImage != null ? (
+                            <img src={previewImage} alt="User DP" />
+                          ) : member?.mem_image == null ||
+                            member?.mem_image == "" ? (
+                            <img src="/images/user_icon.svg" alt="DP" />
+                          ) : (
+                            <Image
+                              src={cmsFileUrl(member?.mem_image, "members")}
+                              width={60}
+                              height={60}
+                              alt={member?.mem_fname}
+                            />
+                          )}
+                        </div>
+                        <div className="btn_blk">
+                          <button
+                            className="site_btn color"
+                            type="button"
+                            onClick={handleDpClick}
+                          >
+                            Upload
+                          </button>
+                          {/* <button className="site_btn blank blue_blank" type="button">Remove</button> */}
+                        </div>
+                      </div>
+                      <div className="br"></div>
+                      <div className="from_row row">
+                        <div className="col-sm-6">
+                          <div className="blk_form">
+                            <h6>
+                              Display Name <span>(Visible to others)</span>
+                            </h6>
+                            <div className="form_blk">
+                              <input
+                                type="text"
+                                name="display_name"
+                                defaultValue={member?.mem_display_name}
+                                className="input"
+                                placeholder="Entre Dispaly Name Here"
+                                {...register("display_name", {
+                                  required: "Display Name is required.",
+                                })}
+                              />
 
+                              <div
+                                className="validation-error"
+                                style={{ color: "red" }}
+                              >
+                                {errors.display_name?.message}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="blk_form">
+                            <h6>
+                              Name <span> (Your given name)</span>
+                            </h6>
+                            <div className="form_blk">
+                              <input
+                                type="text"
+                                name="fname"
+                                defaultValue={member?.mem_fname}
+                                className="input"
+                                placeholder="Entre Full Name Here"
+                                {...register("fname", {
+                                  required: "Name is required.",
+                                })}
+                              />
+
+                              <div
+                                className="validation-error"
+                                style={{ color: "red" }}
+                              >
+                                {errors.fname?.message}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="blk_form">
+                            <h6>Phone Number</h6>
+                            <div className="form_blk">
+                              <InputMask
+                                id="phone"
+                                mask="+9 999-999-9999"
+                                name="phone"
+                                autoComplete="phone"
+                                placeholder="Phone Number"
+                                value={member?.mem_phone}
+                                className="input"
+                                {...register("phone", {
+                                  required: "Phone Number is Required",
+                                })}
+                              />
+                              <div
+                                className="validation-error"
+                                style={{ color: "red" }}
+                              >
+                                {errors.phone?.message}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="col-sm-12">
+                          <div className="blk_form">
+                            <h6>Address</h6>
+                            <div className="form_blk">
+                              <input
+                                type="text"
+                                name="address"
+                                defaultValue={member?.mem_address}
+                                className="input"
+                                placeholder="Entre Address Here"
+                                {...register("address", {
+                                  required: "Address is required.",
+                                })}
+                              />
+
+                              <div
+                                className="validation-error"
+                                style={{ color: "red" }}
+                              >
+                                {errors.address?.message}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="br"></div>
+                      <div className="btn_blk text-right cell_wide_full">
+                        <button
+                          type="submit"
+                          className="site_btn"
+                          disabled={isFormProcessing}
+                        >
+                          Save changes
+                          {isFormProcessing && (
+                            <i
+                              className={
+                                isFormProcessing ? "spinner" : "spinnerHidden"
+                              }
+                            ></i>
+                          )}
+                        </button>
+                      </div>
+
+                      <input
+                        type="file"
+                        ref={fileDpRef}
+                        style={{ display: "none" }}
+                        onChange={handleDpSelected}
+                      />
+                    </form>
+                  )}
                 </div>
               </div>
             </div>
