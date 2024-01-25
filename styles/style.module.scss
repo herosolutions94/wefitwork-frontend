@@ -9,7 +9,10 @@
         padding-top: 3rem;
     }
     @include mobile_sm{
-        background-position: 129px 6px;
+        background-position:129px 12px;
+    }
+    @include mobile_xs{
+        background-position:102px 76px;
     }
     .flex{
         .colL{
@@ -25,12 +28,15 @@
                 color: $light;
                 margin-bottom: 3rem;
                 @include mobile_sm{
-                    max-width: 66%;
+                    max-width: 75%;
                     line-height: 1.5;
                 }
                 @include mobile_sm{
                     margin-bottom: 3rem;
                     font-size: 2rem;
+                }
+                @include mobile_xs{
+                    max-width: 91%;
                 }
             }
             p{
@@ -103,6 +109,10 @@
                                 height: 4rem;
                                 overflow: hidden;
                                 margin: 0 auto 1rem;
+                                @include mobile_xs{
+                                    width: 3rem;
+                                    height: 3rem;
+                                }
                                 img{
                                     @include object(contain);
                                 }
@@ -110,6 +120,9 @@
                             h5{
                                 margin-bottom: 0;
                                 color: $light;
+                                @include mobile_xs{
+                                    font-size: 1.3rem;
+                                }
                             }
                         }
                     }
