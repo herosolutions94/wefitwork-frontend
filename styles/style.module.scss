@@ -92,6 +92,9 @@
                 .flex_cat{
                     @include flex($flow:wrap);
                     margin: -.5rem;
+                    @include mobile_sm{
+                        display: none;
+                    }
                     .col{
                         width: 25%;
                         padding: .5rem;
