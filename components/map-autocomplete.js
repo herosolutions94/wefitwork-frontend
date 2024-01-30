@@ -4,6 +4,7 @@ import { LoadScript, Autocomplete } from '@react-google-maps/api';
 const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
   const autocompleteRef = useRef(null);
 
+
   const handlePlaceSelect = () => {
 
     // console.log("ref",autocompleteRef.current.getPlace());
@@ -33,6 +34,9 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
           autocompleteRef.current = autocomplete;
         }}
         onPlaceChanged={handlePlaceSelect}
+        options={{
+          componentRestrictions: { country: 'ng'},
+        }}
       >
         <input type="text" placeholder="Enter address" className='input'  />
       </Autocomplete>

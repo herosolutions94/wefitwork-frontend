@@ -7,6 +7,7 @@ import {
   cmsFileUrl,
   doObjToFormData,
   getObjKeyCount,
+  formatDigits,
 } from "@/components/helpers/helpers";
 import http from "@/components/helpers/http";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
@@ -457,8 +458,8 @@ export default function SearchResult({ result }) {
               <div className="colR">
                 <div className="result_head">
                   <p>
-                    {countProfessions} {service_tilte !== "" && service_tilte}
-                    {countProfessions === 1 ? "Professional" : "Professionals"}
+                    {formatDigits(countProfessions) + ' '} {service_tilte !== "" && service_tilte}
+                    {countProfessions === 1 ? " Professional " : " Professionals "}
                     found.
                   </p>
 
@@ -484,7 +485,7 @@ export default function SearchResult({ result }) {
                       : "flex flex_view"
                   }
                 >
-                  {professions ? (
+                  {!isEmpty(currentProfessions) ? (
                     currentProfessions?.map((val) => {
                       return (
                         <div className="col" key={val?.mem_id}>
@@ -601,11 +602,13 @@ export default function SearchResult({ result }) {
                   )}
                 </div>
                 <div className="text-center pagination_outer">
+                {!isEmpty(currentProfessions) && professions.length > itemsPerPage ? (
                   <Pagination
                     currentPage={currentPage}
                     totalPages={Math.ceil(professions.length / itemsPerPage)}
                     onPageChange={handlePageChange}
                   />
+                ) : ""}
                 </div>
               </div>
             </div>

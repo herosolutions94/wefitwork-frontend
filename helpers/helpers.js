@@ -303,5 +303,12 @@ export async function uploadMultiFiles(event, type) {
   }
   return newImages;
 
+  
 
+
+}
+
+export function formatDigits(number) {
+  // Pad single-digit numbers with a leading zero
+  return number > 0 && number < 10  ? `0${number}` : number.toString();
 }
