@@ -2,7 +2,7 @@
     background-color: $color;
     padding-bottom: 0;
     @include ipad_sm{
-        background-image:url(/images/mob_img.png);
+        background-image:url(/images/banner1.png);
         background-size: contain;
         background-position: 321px 26px;
         background-repeat: no-repeat;
@@ -11,9 +11,9 @@
     @include mobile_sm{
         background-position:129px 12px;
     }
-    @include mobile_xs{
-        background-position:102px 76px;
-    }
+    // @include mobile_xs{
+    //     background-position:102px 76px;
+    // }
     .flex{
         .colL{
             width: 55%;
@@ -56,6 +56,9 @@
                     border-color: rgba($primary-color, 0.08);
                     box-shadow:0px 10px 24px 0px rgb(7 26 43 / 2%);
                     padding-left: 2rem;
+                    &.focus_block{
+                        caret-color: transparent;
+                    }
                 }
                 button{
                     @include pos($l:null,$t:0,$r:2rem);
@@ -225,6 +228,7 @@
                 top: -5.5rem;
                 @include ipad_sm{
                     top: 40%;
+                    bottom: unset;
                 }
                 .owl-prev{
                     left: unset;

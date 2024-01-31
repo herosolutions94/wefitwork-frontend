@@ -176,7 +176,11 @@ export default function Home({ result }) {
                 <form>
                   <input
                     type="text"
-                    className="input"
+                    className={
+                      searchMode == "popup"
+                        ? "input focus_block"
+                        : "input"
+                    }
                     name="search_name"
                     placeholder={
                       searchMode == "popup"
@@ -269,7 +273,7 @@ export default function Home({ result }) {
                   </Link>
                 )}
 
-                <div className="most_searched_cat">
+                {/* <div className="most_searched_cat">
                   <p>
                     <strong>
                       <Text string={content?.banner_tagline} />
@@ -285,7 +289,6 @@ export default function Home({ result }) {
                             style={{ cursor: "pointer" }}
                             onClick={() => handleOpenPopup(searched?.id, searched?.title)}
                           >
-                            {/* <Link href={`search-result?service_id=${searched?.id}`}> */}
                             <div className="inner">
                               <div className="img_icon">
                                 <Image
@@ -299,13 +302,12 @@ export default function Home({ result }) {
                                 <Text string={searched?.title} />
                               </h5>
                             </div>
-                            {/* </Link> */}
                           </div>
                         </>
                       );
                     })}
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="colR">
                 <OwlCarousel className="owl-carousel owl-theme" {...option}>
@@ -377,7 +379,7 @@ export default function Home({ result }) {
                           className="item"
                           style={{ cursor: "pointer" }}
                           onClick={() =>
-                            handleOpenSubPopup(val?.id, val?.title)
+                            handleOpenPopup(val?.id, val?.title)
                           }
                         >
                           <div className="inner">
@@ -400,7 +402,7 @@ export default function Home({ result }) {
                             className="item"
                             style={{ cursor: "pointer" }}
                             onClick={() =>
-                              handleOpenSubPopup(
+                              handleOpenPopup(
                                 featured_services[index + 1]?.id,
                                 featured_services[index + 1]?.title
                               )
