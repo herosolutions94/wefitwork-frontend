@@ -26,6 +26,7 @@ import MetaGenerator from "@/components/components/meta-generator";
 import { startConversation } from "@/components/states/actions/chat";
 import { useDispatch, useSelector } from "react-redux";
 import { parse } from "cookie";
+import { rating_boxes, completed_projects, pro_specializations } from "@/components/constants/filters";
 
 export const getServerSideProps = async (context) => {
   const query = context?.query;
@@ -34,6 +35,11 @@ export const getServerSideProps = async (context) => {
   const latitude = query?.latitude;
   const longitude = query?.longitude;
   const radius = query?.radius;
+  const rating = query?.rating;
+  const completed = query?.completed;
+  const specialization = query?.specialization;
+
+
 
   const cookies = parse(context?.req?.headers?.cookie || "");
   const memauthToken = cookies?.authToken || "";
@@ -47,6 +53,9 @@ export const getServerSideProps = async (context) => {
         longitude: longitude,
         sub_service_id: sub_service_id,
         radius: radius,
+        rating: rating,
+        completed: completed,
+        specialization: specialization,
         token: memauthToken,
       })
     )
@@ -64,6 +73,10 @@ export default function SearchResult({ result }) {
   const latitude = route_query?.latitude;
   const longitude = route_query?.longitude;
   const loc_radius = route_query?.radius;
+  const rating_val = route_query?.rating;
+  const completed_val= route_query?.completed;
+  const specialization_val = route_query?.specialization;
+
 
   let {
     professions,
@@ -75,6 +88,11 @@ export default function SearchResult({ result }) {
     memData,
   } = result;
 
+  useEffect(() => {
+    if(service_id && service_id > 0){
+      handleGetSubService(service_id, '')
+    }
+  }, [service_id]);
   // console.log(result)
 
   const token = authToken();
@@ -136,7 +154,8 @@ export default function SearchResult({ result }) {
   } = useForm();
 
   const handleSearch = (search_data) => {
-    // console.log("search_data", search_data);
+    console.log("search_data", search_data);
+    
     router.replace(
       `/search-result?${
         search_data?.service_id > 0
@@ -154,7 +173,7 @@ export default function SearchResult({ result }) {
         search_data?.longitude !== null
           ? "longitude=" + search_data?.longitude + "&"
           : ""
-      }${search_data?.radius > 0 ? "radius=" + search_data?.radius : ""}`
+      }${search_data?.radius > 0 ? "radius=" + search_data?.radius + "&" : ""}${search_data.rating > 0 ? "rating="+search_data.rating + "&" : ""}${search_data?.completed == '' || search_data?.completed == null || search_data?.completed =='null' ? "" : "completed="+search_data?.completed + "&"}${search_data?.specialization == '' || search_data?.specialization == null || search_data?.specialization =='null'  ? "" : "specialization="+search_data?.specialization}`
     );
   };
 
@@ -219,6 +238,8 @@ export default function SearchResult({ result }) {
       // setAuthPopup(true);
     }
   };
+
+  
 
   return (
     <>
@@ -333,117 +354,69 @@ export default function SearchResult({ result }) {
                   <div className="mini_br"></div>
                   <h5>Ratings</h5>
                   <div className="rating_blk_filter">
-                    <div className="lbl_btn">
+                  {rating_boxes?.map((rate, i) => {
+                    return (
+                      <div className="lbl_btn" key={i}>
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="rating"
-                        defaultValue={"5"}
-                        id="5_rating"
+                        defaultValue={rate.value}
+                        id={rate.id}
+                    {...register("rating")}
+
+                        
                       />
-                      <label htmlFor="5_rating">
-                        <img src="/images/5_star.svg" alt="5 stars" />
-                        <span>5.0</span>
+                      <label htmlFor={rate.id}>
+                        <img src={rate.image} alt="stars" />
+                        <span>{rate?.title}</span>
                       </label>
                     </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="checkbox"
-                        name="rating"
-                        defaultValue={"4"}
-                        id="4_rating"
-                      />
-                      <label htmlFor="4_rating">
-                        <img src="/images/4_star.svg" alt="4 stars" />
-                        <span>4.0</span>
-                      </label>
-                    </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="checkbox"
-                        name="rating"
-                        defaultValue={"3"}
-                        id="3_rating"
-                      />
-                      <label htmlFor="3_rating">
-                        <img src="/images/3_star.svg" alt="3 stars" />
-                        <span>3.0</span>
-                      </label>
-                    </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="checkbox"
-                        name="rating"
-                        defaultValue={"2"}
-                        id="2_rating"
-                      />
-                      <label htmlFor="2_rating">
-                        <img src="/images/2_star.svg" alt="2 stars" />
-                        <span>2.0</span>
-                      </label>
-                    </div>
+                    )
+                    
+                  })}
+                    
+                    
                   </div>
                   <div className="mini_br"></div>
                   <h5>Projects Completed</h5>
                   <div className="project_completed_filter">
-                    <div className="lbl_btn">
+                  {completed_projects?.map((pro, i) => {
+                    return (
+                      <div className="lbl_btn" key={i}>
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="project_done"
-                        defaultValue={"1-10"}
-                        id="1_10"
+                        defaultValue={pro?.value}
+                        id={pro?.id}
+                        {...register("completed")}
                       />
-                      <label htmlFor="1_10">1 - 10</label>
+                      <label htmlFor={pro?.id}>{pro?.title}</label>
                     </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="checkbox"
-                        name="project_done"
-                        defaultValue={"10-30"}
-                        id="10-30"
-                      />
-                      <label htmlFor="10-30">10 - 30</label>
-                    </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="checkbox"
-                        name="project_done"
-                        defaultValue={"30-50"}
-                        id="30-50"
-                      />
-                      <label htmlFor="30-50">30 - 50</label>
-                    </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="checkbox"
-                        name="project_done"
-                        defaultValue={"50-100"}
-                        id="50-100"
-                      />
-                      <label htmlFor="50-100">50 - 100+</label>
-                    </div>
+                    )
+                  })}
+                    
+                    
                   </div>
                   <div className="mini_br"></div>
                   <div className="mini_br"></div>
                   <h5>Specializations</h5>
                   <div className="specialization_filter">
-                    <div className="lbl_btn">
+                  {pro_specializations?.map((spec, i) => {
+                    return (
+                      <div className="lbl_btn" key={i}>
                       <input
                         type="radio"
                         name="specialization"
-                        defaultValue={"Residential"}
-                        id="Residential"
+                        defaultValue={spec?.value}
+                        id={spec?.id}
+                        {...register("specialization")}
                       />
-                      <label htmlFor="Residential">Residential</label>
+                      <label htmlFor={spec?.id}>{spec?.title}</label>
                     </div>
-                    <div className="lbl_btn">
-                      <input
-                        type="radio"
-                        name="specialization"
-                        defaultValue={"Commercial"}
-                        id="Commercial"
-                      />
-                      <label htmlFor="Commercial">Commercial</label>
-                    </div>
+                    )
+                  })}
+                    
+                    
                   </div>
 
                   <div className="br"></div>

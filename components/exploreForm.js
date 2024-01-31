@@ -13,7 +13,7 @@ const LeafletMapComponent = dynamic(() => import("../components/leaflet-map"), {
   ssr: false, // Disable server-side rendering
 });
 
-const ExploreFrom = ({ onClose, services }) => {
+const ExploreFrom = ({ onClose, services, serId, selectedTitle }) => {
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
     (state) => state.saveSearch.isFormProcessing
@@ -91,6 +91,14 @@ const ExploreFrom = ({ onClose, services }) => {
       console.log("Errors", errors);
     }
   };
+
+  useEffect(() => {
+    if(serId > 0){
+      handleServiceLabelClick('',  serId, selectedTitle)
+      setValue('service_id', serId)
+      handleNext()
+    }
+  }, [serId])
 
   const [selectedSubServiceValue, setSelectedSubServiceValue] = useState(null);
 

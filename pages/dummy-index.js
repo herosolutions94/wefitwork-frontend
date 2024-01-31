@@ -32,7 +32,6 @@ export const getServerSideProps = async () => {
 
 export default function Home({ result }) {
   const router = useRouter();
-  const [popupKey, setPopupKey] = useState(true);
   // console.log(result);
   let {
     page_title,
@@ -48,30 +47,19 @@ export default function Home({ result }) {
 
   const [searchMode, setSearchMode] = useState("popup");
 
-  const [serId, setSerId] = useState(false);
-  const [serviceTitle, setServiceTitle] = useState(false);
-
   const handleChangeSearchMode = (mode) => {
     setSearchMode(mode);
   };
 
-
-
-  const handleOpenPopup = (service_id = 0, title = '') => {
+  const handleOpenPopup = () => {
     if (searchMode == "popup") {
       setIsPopupOpen(true);
-      setSerId(service_id);
-      setServiceTitle(title);
-      setPopupKey(!popupKey);
     }
   };
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setSerId(false);
-      setServiceTitle(false);
   };
-
   const tabs = [
     {
       label: "For Professionals",
@@ -125,7 +113,25 @@ export default function Home({ result }) {
     router.push(`search-result?service_id=${service_id}`);
   };
 
-  
+  const [isSubPopupOpen, setIsSubPopupOpen] = useState(false);
+  const [serId, setSerId] = useState(false);
+  const [serviceTitle, setServiceTitle] = useState(false);
+  const [getingSubServices, setGetingSubServices] = useState(false);
+
+  const handleOpenSubPopup = (service_id, title) => {
+    setGetingSubServices(true);
+    setSerId(service_id);
+    setServiceTitle(title);
+    setIsSubPopupOpen(true);
+  };
+
+  const handleCloseSubPopup = () => {
+    setGetingSubServices(false);
+    setSerId(false);
+    setServiceTitle(false);
+    setIsSubPopupOpen(false);
+  };
+
   const [isSearching, setIsSearching] = useState(false);
   const [stopSearch, setStopSearch] = useState(false);
 
@@ -283,7 +289,9 @@ export default function Home({ result }) {
                             className="col"
                             key={i}
                             style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenPopup(searched?.id, searched?.title)}
+                            onClick={() =>
+                              handleOpenSubPopup(searched?.id, searched?.title)
+                            }
                           >
                             {/* <Link href={`search-result?service_id=${searched?.id}`}> */}
                             <div className="inner">
@@ -341,7 +349,7 @@ export default function Home({ result }) {
                       className="item"
                       style={{ cursor: "pointer" }}
                       key={val.id}
-                      onClick={() => handleOpenPopup(val?.id, val?.title)}
+                      onClick={() => handleOpenSubPopup(val?.id, val?.title)}
                     >
                       <div className="inner">
                         <div className="icon_img">
@@ -604,11 +612,21 @@ export default function Home({ result }) {
           </div>
         </section>
       </main>
-      <Popup key={popupKey} isOpen={isPopupOpen} onClose={handleClosePopup}>
-        <ExploreFrom onClose={handleClosePopup} services={services} serId={serId} selectedTitle={serviceTitle} />
+      <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
+        <ExploreFrom onClose={handleClosePopup} services={services} />
       </Popup>
 
-      
+      {serId > 0 && (
+        <Popup isOpen={isSubPopupOpen} onClose={handleCloseSubPopup}>
+          <SubSerForm
+            onClose={handleCloseSubPopup}
+            service_id={serId}
+            serviceTitle={serviceTitle}
+            getingSubServices={getingSubServices}
+            setGetingSubServices={setGetingSubServices}
+          />
+        </Popup>
+      )}
     </>
   );
 }
