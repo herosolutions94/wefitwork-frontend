@@ -181,6 +181,7 @@ export default function Home({ result }) {
                         ? "input focus_block"
                         : "input"
                     }
+                    
                     name="search_name"
                     placeholder={
                       searchMode == "popup"
@@ -190,6 +191,7 @@ export default function Home({ result }) {
                     onClick={handleOpenPopup}
                     onChange={handleSearchByName}
                     autoComplete="off"
+                    readOnly={searchMode === "popup"}
                   />
                   <button type="button" onClick={handleOpenPopup}>
                     <img src="/images/search.svg" alt="" />

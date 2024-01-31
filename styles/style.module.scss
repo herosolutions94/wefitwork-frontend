@@ -59,7 +59,11 @@
                     &.focus_block{
                         caret-color: transparent;
                     }
+                    &[readonly]{
+                        background: #fff!important;
+                    }
                 }
+                
                 button{
                     @include pos($l:null,$t:0,$r:2rem);
                     border: none;
