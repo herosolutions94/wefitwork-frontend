@@ -189,23 +189,29 @@ export default function SearchResult({ result }) {
   const [isPopupOpenSend, setIsPopupOpenSend] = useState(false);
   const [proData, setProData] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
+  const [isChat, setIsChat] = useState(false);
+
 
   const handleOpenPopupSend = (pro_mem_data, mem_token = token) => {
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
       setProData(pro_mem_data);
       setIsPopupOpenSend(true);
+    setIsChat(false);
+
     } else {
       toast.error(
         "You sare not logedin. Please Login to your account to send SMS"
       );
       setAuthPopup(true);
       setProData(pro_mem_data);
+      setIsChat(false);
     }
   };
   const handleClosePopupSend = () => {
     setProData(false);
     setIsPopupOpenSend(false);
     setAuthPopup(false);
+    setIsChat(false);
   };
 
   //pagination
@@ -227,15 +233,22 @@ export default function SearchResult({ result }) {
 
   const isFormProcessing = useSelector((state) => state.chat.isFormProcessing);
 
+  const startChat = (data) => {
+    dispatch(startConversation(data));
+  }
+
   const handleStartChat = (receiver_id, mem_token = token) => {
+    const form_data = { receiver_id: receiver_id };
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
-      const form_data = { receiver_id: receiver_id };
-      dispatch(startConversation(form_data));
+      
+      startChat(form_data);
     } else {
       toast.error(
         "You are not logedin. Please Login to your account to start the chat with Professional"
       );
-      // setAuthPopup(true);
+    setProData(form_data);
+      setIsChat(true);
+      setAuthPopup(true);
     }
   };
 
@@ -595,6 +608,8 @@ export default function SearchResult({ result }) {
             handleOpenPopupSend={handleOpenPopupSend}
             proData={proData}
             setAuthPopup={setAuthPopup}
+            isChatLogin={isChat}
+            startChat={startChat}
           />
         </PopupSmall>
       )}

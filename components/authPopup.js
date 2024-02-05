@@ -11,6 +11,8 @@ export default function LoginPopup({
   handleOpenPopupSend,
   proData,
   setAuthPopup,
+  isChatLogin,
+  startChat
 }) {
   const {
     register,
@@ -38,7 +40,12 @@ export default function LoginPopup({
             localStorage.removeItem("redirect_url");
             setIsFormProcessing(false);
           }, 2000);
-          handleOpenPopupSend(proData, data.data.authToken);
+          if(!isChatLogin){
+            handleOpenPopupSend(proData, data.data.authToken);
+
+          }else{
+            startChat(proData);
+          }
           setAuthPopup(false);
         } else {
           if (data.data.validationErrors) {

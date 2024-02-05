@@ -27,6 +27,7 @@ export default function SendMessage({data, handleClosePopupSend}) {
             setTimeout(() => {
               setIsFormProcessing(false);
               handleClosePopupSend()
+              router.reload();
               
             }, 2000);
            

@@ -165,7 +165,7 @@ export default function Home({ result }) {
       <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
-        <section className="banner_main" style = {{backgroundImage:`url(${cmsFileUrl(content?.image7)})`}}>
+        <section className="banner_main" style = {{backgroundImage:`url(${cmsFileUrl(content?.image7)})`, backgroundRepeat: 'no-repeat'}}>
           <div className="contain">
             <div className="flex">
               <div className="colL">

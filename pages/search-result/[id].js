@@ -23,6 +23,7 @@ import SocialShare from "@/components/components/socialShare";
 import { useRouter } from "next/router";
 import { startConversation } from "@/components/states/actions/chat";
 import { useDispatch, useSelector } from "react-redux";
+import LoginPopup from "@/components/components/authPopup";
 
 export const getServerSideProps = async (context) => {
   const cookies = parse(context?.req?.headers?.cookie || "");
@@ -100,23 +101,27 @@ export default function SearchResult({ result, authToken }) {
 
   const [proData, setProData] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
+  const [isChat, setIsChat] = useState(false);
 
   const handleOpenPopupSend = (pro_mem_data, mem_token = authToken) => {
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
       setProData(pro_mem_data);
       setIsPopupOpenSend(true);
+      setIsChat(false);
     } else {
       toast.error(
         "You sre not logedin. Please Login to your account to send SMS"
       );
       setAuthPopup(true);
       setProData(pro_mem_data);
+      setIsChat(false);
     }
   };
   const handleClosePopupSend = () => {
     setProData(false);
     setIsPopupOpenSend(false);
     setAuthPopup(false);
+    setIsChat(false);
   };
 
   let pro_wishl = pro_wishlisted ? true : false;
@@ -191,15 +196,22 @@ export default function SearchResult({ result, authToken }) {
 
   const isFormProcessing = useSelector((state) => state.chat.isFormProcessing);
 
+  const startChat = (data) => {
+    dispatch(startConversation(data));
+  }
+
   const handleStartChat = (receiver_id, mem_token = authToken) => {
+    const form_data = { receiver_id: receiver_id };
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
-      const form_data = { receiver_id: receiver_id };
-      dispatch(startConversation(form_data));
+      
+      startChat(form_data);
     } else {
       toast.error(
         "You are not logedin. Please Login to your account to start the chat with Professional"
       );
-      // setAuthPopup(true);
+      setProData(form_data);
+      setIsChat(true);
+      setAuthPopup(true);
     }
   };
 
@@ -468,6 +480,8 @@ export default function SearchResult({ result, authToken }) {
             handleOpenPopupSend={handleOpenPopupSend}
             proData={proData}
             setAuthPopup={setAuthPopup}
+            isChatLogin={isChat}
+            startChat={startChat}
           />
         </PopupSmall>
       )}
