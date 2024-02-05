@@ -165,7 +165,7 @@ export default function Home({ result }) {
       <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
-        <section className="banner_main" style = {{backgroundImage:`url(${cmsFileUrl(content?.image7)})`, backgroundRepeat: 'no-repeat'}}>
+        <section className="banner_main">
           <div className="contain">
             <div className="flex">
               <div className="colL">
@@ -328,6 +328,9 @@ export default function Home({ result }) {
                 </OwlCarousel>
               </div>
             </div>
+          </div>
+          <div className="mb_bg">
+            <img src={cmsFileUrl(content?.image7)} alt="" />
           </div>
         </section>
         <section className="categories_sec">

@@ -1,19 +1,37 @@
 .banner_main{
     background-color: $color;
     padding-bottom: 0;
-    @include ipad_sm{
-        background-image:url(/images/banner1.png);
-        background-size: contain;
-        background-position: 321px 26px;
-        background-repeat: no-repeat;
-        padding-top: 3rem;
+    position: relative;
+    overflow: hidden;
+    .mb_bg{
+        @include pos($l:null,$r:-8rem);
+        padding-bottom: 45%;
+        width: 70%;
+        display: none;
+        @include ipad_sm{
+            display: block;
+        }
+        img{
+            @include object(contain,bottom);
+            @include pos;
+        }
     }
-    @include mobile_sm{
-        background-position:200px 12px;
-    }
+    // @include ipad_sm{
+    //     background-image:url(/images/banner1.png);
+    //     background-size: contain;
+    //     background-position: 321px 26px;
+    //     background-repeat: no-repeat;
+    //     padding-top: 3rem;
+    // }
+    // @include mobile_sm{
+    //     background-position:200px 12px;
+    // }
     // @include mobile_xs{
     //     background-position:102px 76px;
     // }
+    .contain{
+        z-index: 1;
+    }
     .flex{
         .colL{
             width: 55%;
