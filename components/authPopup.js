@@ -27,6 +27,7 @@ export default function LoginPopup({
     setIsFormProcessing(true);
     try {
       http.post("auth/signin", doObjToFormData(formData)).then((data) => {
+        // console.log(data);
         if (data.data.status) {
           toast.success(SUCCESSFUL_SIGNIN_MESSAGE, { duration: 6000 });
           setCookie("authToken", data.data.authToken);
@@ -49,10 +50,16 @@ export default function LoginPopup({
           setAuthPopup(false);
         } else {
           if (data.data.validationErrors) {
-            toast.error(<Text string={data.validationErrors} parse={true} />, {
+            toast.error(<Text string={data.data.validationErrors} parse={true} />, {
+              duration: 6000,
+            });
+          }else{
+            toast.error(<Text string={"Technical Fault"} parse={true} />, {
               duration: 6000,
             });
           }
+          setIsFormProcessing(false);
+
         }
       });
     } catch (errors) {
