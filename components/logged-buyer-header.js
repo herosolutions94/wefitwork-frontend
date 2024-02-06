@@ -288,6 +288,15 @@ export default function LoggedBuyerHeader() {
                       </Link>
                     </li>
                     <li>
+                      <Link
+                        href="/buyer-dashboard/maintenance-cover"
+                        onClick={ToggleUserDrop}
+                      >
+                        <img src="/images/user-gear.svg" alt="" />
+                        <span>Maintenance Cover</span>
+                      </Link>
+                    </li>
+                    <li>
                       <Link href="#" onClick={logout}>
                         <img src="/images/logout.svg" alt="" />
                         <span>Logout</span>

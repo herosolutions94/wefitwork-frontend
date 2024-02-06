@@ -10,36 +10,42 @@ import { useRouter } from "next/router";
 import { getCookie, setCookie } from "cookies-next";
 import { authToken } from "../helpers/authToken";
 import toast, { Toaster } from "react-hot-toast";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel/dist/assets/owl.theme.default.css";
+import dynamic from "next/dynamic";
+const OwlCarousel = dynamic(import("react-owl-carousel"), { ssr: false });
 
-// export const getServerSideProps = async () => {
-//   const result = await http
-//     .get("become-pro")
-//     .then((response) => response.data)
-//     .catch((error) => error.response.data.message);
-
-//   return { props: { result } };
-// };
-
-export default function MaintenanceCover({ result }) {
-//   const router = useRouter();
-//   let { page_title, meta_desc, content, how_works, site_settings } = result;
-
-//   const token = authToken() ? authToken() : false;
-
-//   const handleRedirectProfession = (e) => {
-//     const mem_type = getCookie("mem_type");
-//     e.preventDefault();
-//     if (!token) {
-//       setCookie("mem_type", "professional");
-//       router.push(`/signup?from=become-professional`);
-//     } else if (token && mem_type === "member") {
-//       router.push(`/trade-person-signup`);
-//     } else if (token && mem_type === "professional") {
-//       router.push(`/professional-dashboard/services`);
-//     } else {
-//       toast.error("Something Went Wrong");
-//     }
-//   };
+export default function MaintenanceCover() {
+  const pkgs = {
+    margin: 20,
+    autoplay: true,
+    loop: true,
+    dots: false,
+    nav: true,
+    navText: [
+      '<img src="images/arrow-left.svg" />',
+      '<img src="images/arrow-right.svg" />',
+    ],
+    smartSpeed: 1000,
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      580: {
+        items: 2,
+      },
+      991: {
+        items: 2,
+      },
+      1200: {
+        items: 3,
+      },
+      1600: {
+        items: 3,
+      },
+    },
+  };
 const testimonials = [
   {
     id: 1,
@@ -115,20 +121,23 @@ const testimonials = [
         </section>
         <section className="maintenance_pkg">
           <div className="contain">
-              <div className="sec_heading text-center">
-                <h2>Service Packages</h2>
+              <div className="sec_heading">
+                <h2>Comprehensive Maintenance Cover Packages</h2>
               </div>
-              <div className="flex">
+              <OwlCarousel {...pkgs} className="owl-carousel owl-theme slide_pkg">
                 <div className="col">
                   <div className="inner">
-                    <h3>Essential Home Care</h3>
-                    <h1>$5,00</h1>
+                    <h3>Electrician Services</h3>
+                    <h1>$5,00 <sub>per month</sub></h1>
                     <div className="bdy_in">
                       <p>Keep your home in top shape with routine checks and repairs for</p>
                       <ul>
-                        <li>Plumbing</li><li>electrical</li><li>HVAC systems</li>
+                        <li>Electrical Installation and Wiring</li>
+                        <li>Electrical Repairs</li>
+                        <li>Safety Inspections</li>
+                        <li>Panel Upgrades</li>
+                        <li>Lighting Solutions</li>
                       </ul>
-                      <p className="mini_p">Our Essential Home Care package ensures that your home stays comfortable and functional.</p>
                     </div>
                     <div className="btn_blk">
                       <Link href="" className="site_btn">Get Started</Link>
@@ -137,15 +146,17 @@ const testimonials = [
                 </div>
                 <div className="col">
                   <div className="inner">
-                    <h3>Total Home Protection</h3>
-                    <h1>$6,50</h1>
+                    <h3>Plumber Services</h3>
+                    <h1>$6,00 <sub>per month</sub></h1>
                     <div className="bdy_in">
                     <p>Experience worry-free living with our Total Home Protection package.</p>
                     <ul>
-                      <li>This comprehensive plan covers all aspects of home maintenance</li>
-                      <li>It also including emergency services, giving you complete peace of mind</li>
+                      <li>Leak Repairs</li>
+                      <li>Drain Cleaning</li>
+                      <li>Pipe Installation and Repair</li>
+                      <li>Water Heater Services</li>
+                      <li>Fixture Installation</li>
                     </ul>
-                    <p>Our Total Home Protection package ensures that your home stays comfortable and functional.</p>
                     </div>
                     <div className="btn_blk">
                       <Link href="" className="site_btn">Get Started</Link>
@@ -154,14 +165,81 @@ const testimonials = [
                 </div>
                 <div className="col">
                   <div className="inner">
-                    <h2>Custom Maintenance Request</h2>
+                    <h3>Plumber Services</h3>
+                    <h1>$4,00 <sub>per month</sub></h1>
+                    <div className="bdy_in">
                     <p>Experience worry-free living with our Total Home Protection package.</p>
+                    <ul>
+                      <li>Custom Woodworking</li>
+                      <li>Carpentry Repairs</li>
+                      <li>Trim and Molding Installation</li>
+                      <li>Deck and Patio Construction</li>
+                      <li>Cabinet Installation and Repair</li>
+                    </ul>
+                    </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn color">Make Custom Request</Link>
+                      <Link href="" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
-              </div>
+                <div className="col">
+                  <div className="inner">
+                    <h3>Painter Services</h3>
+                    <h1>$4,00 <sub>per month</sub></h1>
+                    <div className="bdy_in">
+                    <p>Experience worry-free living with our Total Home Protection package.</p>
+                    <ul>
+                      <li>Interior Painting</li>
+                      <li>Exterior Painting</li>
+                      <li>Surface Preparation</li>
+                      <li>Cabinet and Furniture Painting</li>
+                      <li>Special Finishes</li>
+                    </ul>
+                    </div>
+                    <div className="btn_blk">
+                      <Link href="" className="site_btn">Get Started</Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="inner">
+                    <h3>Electrician Services</h3>
+                    <h1>$5,00 <sub>per month</sub></h1>
+                    <div className="bdy_in">
+                      <p>Keep your home in top shape with routine checks and repairs for</p>
+                      <ul>
+                        <li>Electrical Installation and Wiring</li>
+                        <li>Electrical Repairs</li>
+                        <li>Safety Inspections</li>
+                        <li>Panel Upgrades</li>
+                        <li>Lighting Solutions</li>
+                      </ul>
+                    </div>
+                    <div className="btn_blk">
+                      <Link href="" className="site_btn">Get Started</Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="inner">
+                    <h3>Plumber Services</h3>
+                    <h1>$6,00 <sub>per month</sub></h1>
+                    <div className="bdy_in">
+                    <p>Experience worry-free living with our Total Home Protection package.</p>
+                    <ul>
+                      <li>Leak Repairs</li>
+                      <li>Drain Cleaning</li>
+                      <li>Pipe Installation and Repair</li>
+                      <li>Water Heater Services</li>
+                      <li>Fixture Installation</li>
+                    </ul>
+                    </div>
+                    <div className="btn_blk">
+                      <Link href="" className="site_btn">Get Started</Link>
+                    </div>
+                  </div>
+                </div>
+              </OwlCarousel>
           </div>
         </section>
         <section className="professional_how_it_works">
