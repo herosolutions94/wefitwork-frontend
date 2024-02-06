@@ -152,7 +152,7 @@ export default function Header({siteSettings}) {
                   </div>
               </li>
               
-              <li><Link href="/" onClick={ToggleAction} className="site_btn color">Maintenance cover</Link></li>
+              <li><Link href="/maintenance-cover" onClick={ToggleAction} className="site_btn color">Maintenance cover</Link></li>
             </ul>
           </nav>
           

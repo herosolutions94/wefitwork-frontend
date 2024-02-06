@@ -546,7 +546,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle }) => {
           <div className="br"></div>
           <h3>More Information</h3>
           <div className="form_blk w_6">
-            <h6>Estimated Price / Your Budet</h6>
+            <h6>Estimated Budget (₦)</h6>
             <input
               type="text"
               name="budget"

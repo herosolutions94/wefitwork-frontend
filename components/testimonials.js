@@ -42,7 +42,7 @@ export default function Testimonials({data}) {
                 <div className="item" key={val.id}>
                     <div className="inner">
                         <div className="testi_icon">
-                            <img src={cmsFileUrl(val.image, 'testimonials')} alt={val.name}/>
+                            <img src={val.image} alt={val.name}/>
                         </div>
                         <p>{val.detail}</p>
                         <div className="testi_footer">
