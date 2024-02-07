@@ -310,6 +310,17 @@ export default function Home({ result }) {
                     })}
                   </div>
                 </div> */}
+
+                <div className="br"></div>
+                <Link href="/maintenance-cover" className="blk_shield">
+                  <div className="icon_img">
+                    <img src="/images/shield.png" alt="" />
+                  </div>
+                  <div className="cn_tnt">
+                    <h4>Get our maintenance cover</h4>
+                    <p>Your Home Deserves the Best Care: Introducing Our Comprehensive Maintenance Solutions!</p>
+                  </div>
+                </Link>
               </div>
               <div className="colR">
                 <OwlCarousel className="owl-carousel owl-theme" {...option}>
@@ -335,7 +346,7 @@ export default function Home({ result }) {
         </section>
         <section className="categories_sec">
           <div className="contain">
-            <div className="sec_heading">
+            <div className="sec_heading text-center">
               <h2>
                 <Text string={content?.sec2_heading} />
               </h2>

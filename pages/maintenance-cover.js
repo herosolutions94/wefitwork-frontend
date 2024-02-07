@@ -140,7 +140,7 @@ const testimonials = [
                       </ul>
                     </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn">Get Started</Link>
+                      <Link href="/detail-maintenance-cover" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ const testimonials = [
                     </ul>
                     </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn">Get Started</Link>
+                      <Link href="/detail-maintenance-cover" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
@@ -178,7 +178,7 @@ const testimonials = [
                     </ul>
                     </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn">Get Started</Link>
+                      <Link href="/detail-maintenance-cover" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
@@ -197,7 +197,7 @@ const testimonials = [
                     </ul>
                     </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn">Get Started</Link>
+                      <Link href="/detail-maintenance-cover" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ const testimonials = [
                       </ul>
                     </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn">Get Started</Link>
+                      <Link href="/detail-maintenance-cover" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
@@ -235,7 +235,7 @@ const testimonials = [
                     </ul>
                     </div>
                     <div className="btn_blk">
-                      <Link href="" className="site_btn">Get Started</Link>
+                      <Link href="/detail-maintenance-cover" className="site_btn">Get Started</Link>
                     </div>
                   </div>
                 </div>
