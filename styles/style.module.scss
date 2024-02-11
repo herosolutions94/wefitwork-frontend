@@ -4282,3 +4282,129 @@
         }
     }
 }
+
+// =================checkout_blk========
+.checkout_bdy{
+    .sec_heading{
+        margin-bottom: 4rem;
+    }
+    .flex{
+        @include ipad_sm{
+            flex-direction: column-reverse;
+        }
+        .colR{
+            width: 30%;
+            padding-left: 1rem;
+            @include ipad_sm{
+                width: 50%;
+                padding-left: 0;
+                margin-bottom: 2rem;
+            }
+            @include mobile_md{
+                width: 100%;
+            }
+            .inner{
+                @include block;
+                position: relative;
+                text-align: center;
+                padding: 5rem;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                @include mobile_sm{
+                    padding: 3rem;
+                }
+                h1{
+                    font-size: 5.5rem;
+                }
+                p{
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .colL{
+            width: 70%;
+            padding-right:3rem;
+            @include ipad_sm{
+                width: 100%;
+                padding-right: 0;
+            }
+        }
+    }
+}
+.checkout_blk{
+    @include block;
+    box-shadow: none;
+    border: 1px solid #ddd;
+    form{
+        fieldset{
+            display: none;
+            &.active{
+                display: block;
+            }
+            h4{
+                &.heading{
+                    margin-bottom: 2rem;
+                }
+            }
+            h6{
+                font-family: 'Medium';
+            }
+        }
+        .main_method{
+            .blk_method{
+                @include radius(10px);
+                border: 1px solid #ddd;
+                &:not(:last-child){
+                    margin-bottom: 2rem;
+                }
+                .lbl_btn{
+                    padding: 2rem;
+                    cursor: pointer;
+                    input[type=radio]{
+                        margin-top: 0;
+                        align-self: center;
+                    }
+                    label{
+                        column-gap: .5rem;
+                        @include flex;
+                        .img_icon{
+                            width: 2rem;
+                            height: 2rem;
+                            overflow: hidden;
+                            align-self: center;
+                            img{
+                                @include object(contain);
+                            }
+                        }
+                        span{
+                            flex: 1;
+                            align-self: center;
+                            font-size: 1.5rem;
+                            font-family: 'SemiBold';
+                        }
+                    }
+                }
+                .show_sec{
+                    padding: 2rem;
+                    padding-top: 0rem;
+                    display: none;
+                    &.active{
+                        display: block;
+                        &.form_row{
+                            display: flex;
+                        }
+                    }
+                    .image_paypal{
+                        width: 160px;
+                        margin: 0 auto 2rem;
+                        height: 6rem;
+                        overflow: hidden;
+                        img{
+                            @include object(contain);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

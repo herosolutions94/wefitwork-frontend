@@ -708,6 +708,15 @@ width: calc(100% + 2rem);
 > [class^="col-"] {
     padding: 1.3rem 0 0 2rem;
 }
+> [class*="col-xs-6"]{
+  width: 50%;
+  @include mobile_sm {
+    width: 100%;
+  }
+}
+> [class*="col-xs-12"]{
+  width: 100%;
+}
 }
 
 [class*="col-xs"],

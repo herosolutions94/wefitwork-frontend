@@ -92,7 +92,7 @@ export default function DetailMaintenanceCover() {
                         </div>
                         <div className="mini_br"></div>
                         <div className="btn_blk">
-                          <Link href="" className="site_btn block">Buy Now</Link>
+                          <Link href="/checkout" className="site_btn block">Buy Now</Link>
                         </div>
                     </div>
               </div>
@@ -147,7 +147,7 @@ export default function DetailMaintenanceCover() {
                 </div>
                 <div className="mini_br"></div>
                 <div className="btn_blk">
-                  <Link href="" className="site_btn">Buy Now</Link>
+                  <Link href="/checkout" className="site_btn">Buy Now</Link>
                 </div>
               </div>
             </div>
