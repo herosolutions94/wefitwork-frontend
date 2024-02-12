@@ -37,7 +37,7 @@ export default function Checkout() {
       <main>
         <section className="checkout_bdy">
           <div className="contain">
-            <div className="sec_heading text-center">
+            <div className="sec_heading">
                 <h1>Maintenance Cover Checkout</h1>
             </div>
             <div className="flex">
@@ -155,11 +155,13 @@ export default function Checkout() {
                                             <h5>Changes to this Privacy Policy</h5>
 
                                             <p>We may update this Privacy Policy. The revised version will be posted on this page, and the changes will be effective when posted.</p>
-                                            <div className="lbl_btn">
+                                            
+                                        </div>
+                                        <div className="br"></div>
+                                        <div className="lbl_btn">
                                                 <input type="checkbox" name="same" id="agree"/>
                                                 <label for="agree">By creating an account you confirm that you agree to our website <a href="/terms-conditions"> terms of use</a> and our <a href="/privacy-policy">privacy notice</a>.</label>
                                             </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="br"></div>
