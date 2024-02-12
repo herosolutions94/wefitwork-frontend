@@ -155,7 +155,9 @@ export default function Header({siteSettings}) {
               <li><Link href="/maintenance-cover" onClick={ToggleAction} className="site_btn color">Maintenance cover</Link></li>
             </ul>
           </nav>
-          
+          <div className="cell_btn_show">
+          <Link href="/maintenance-cover" onClick={ToggleAction} className="site_btn color">Maintenance cover</Link>
+          </div>
           {/* =============logged user====== */}
           {/* <div className="logged_side">
             <ul>

@@ -294,7 +294,7 @@
     }
 }
 .step_one{
-    padding: 0;
+    padding-top: 0;
     .flex{
         margin: -2rem;
         .col{
@@ -4306,27 +4306,95 @@
             .inner{
                 @include block;
                 position: relative;
-                text-align: center;
-                padding: 5rem;
-                box-shadow: none;
-                border: 1px solid #ddd;
-                @include mobile_sm{
-                    padding: 3rem;
+                h3{
+                    font-size: 1.8rem;
+                    color: $color2;
+                    font-family: 'Medium';
                 }
                 h1{
-                    font-size: 5.5rem;
+                    font-size: 3.5rem;
+                    margin-top: 1rem;
+                    border-bottom: 1px solid #ddddddbb;
+                    padding-bottom: 1rem;
+                    sub{
+                        font-family: 'Medium';
+                        font-size: 1.3rem;
+                    }
                 }
-                p{
-                    margin-bottom: 0;
+
+                ul{
+                    @include list;
+                    margin-bottom: 1.5rem;
+                    li{
+                        &:not(:last-child){
+                            margin-bottom: 1rem;
+                        }
+                        padding-left: 2.5rem;
+                        position: relative;
+                        &:before{
+                            @include pos($r:null,$t:.3rem);
+                            content: '';
+                            background:url(/images/CheckCircle.svg);
+                            @include bg(contain);
+                            width: 2rem;
+                            height: 2rem;
+                        }
+                    }
+                }
+                .img_icon{
+                    width:5rem;
+                    height:5rem;
+                    overflow: hidden;
+                    margin-bottom: 1rem;
+                    img{
+                        @include object(contain);
+                    }
                 }
             }
         }
         .colL{
             width: 70%;
-            padding-right:3rem;
+            padding-right:2rem;
             @include ipad_sm{
                 width: 100%;
                 padding-right: 0;
+            }
+            .steps_bullets{
+                @include flex;
+                max-width: 70%;
+                justify-content: space-between;
+                position: relative;
+                margin: 0 auto 5rem;
+                @include mobile{
+                    max-width: 100%;
+                }
+                &:after{
+                    @include pos($t:null , $b:-2rem);
+                    content: '';
+                    height: .1rem;
+                    background-color: #ddd;
+                }
+                span{
+                    font-size: 1.5rem;
+                    font-family: 'SemiBold';
+                    position: relative;
+                    z-index: 1;
+                    &:after{
+                        @include pos($t:null , $b:-2.2rem);
+                        content: '';
+                        height: .6rem;
+                        width: .6rem;
+                        margin: 0 auto;
+                        background-color: #ddd;
+                        @include radius(50px);
+                    }
+                    &.active{
+                        color: $color;
+                        &:after{
+                            background-color: $color;
+                        }
+                    }
+                }
             }
         }
     }
@@ -4405,6 +4473,67 @@
                     }
                 }
             }
+        }
+    }
+    .block_terms{
+        height: 50rem;
+        padding: 2rem;
+        @include radius(10px);
+        overflow-y: auto;
+        background-color: #f7f7f7;
+        .lbl_btn{
+            margin-top: 2rem;
+        }
+    }
+}
+
+
+
+// ==============================become_professional_banner===========
+.maintenance_home_cover{
+    background: url(/images/become_professional.png);
+    @include bg;
+    &:before{
+        @include pos;
+        content: '';
+        background: linear-gradient(90deg, #004AAD 0.61%, rgba(0, 74, 173, 0.76) 48.12%, rgba(148, 179, 221, 0.32) 99.74%, rgba(252, 253, 254, 0.01) 99.75%);
+    }
+    .inner{
+        max-width: 58rem;
+        margin: 0 auto;
+        text-align: center;
+         @include ipad_sm{
+             width: 100%;
+             padding-right: 0;
+         }
+         h1{
+             color: $light;
+         }
+         p{
+             color: $light;
+         }
+         .site_btn{
+            margin-top: 2rem;
+             &:hover{
+                 background-color: $color2;
+                 border-color: $color2;
+             }
+             @include mobile_sm{
+                 width: 100%;
+             }
+         }
+     }
+}
+
+.cell_btn_show{
+    display: none;
+    @include ipad_sm{
+        height: 6.1rem;
+        @include pos($l:null , $r:4rem);
+        @include flex(center,center);
+        .site_btn{
+            padding: 0.3rem 1.5rem;
+            font-size: 1.5rem;
         }
     }
 }

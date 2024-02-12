@@ -498,6 +498,21 @@ export default function Home({ result }) {
             </div>
           </div>
         </section>
+        <section
+          className="maintenance_home_cover"
+        >
+          <div className="contain">
+            <div className="inner">
+                <div className="sec_heading">
+                  <h1>Comprehensive Maintenance Solutions Just a Click Away!</h1>
+                </div>
+                <p>Your Home Deserves the Best Care: Introducing Our Comprehensive Maintenance Solutions!</p>
+                <div className="btn_blk text-center">
+                  <Link href="/maintenance-cover" className="site_btn color">Read More</Link>
+                </div>
+              </div>
+          </div>
+        </section>
         <section className="how_it_works">
           <div className="contain">
             <div className="sec_heading text-center">
