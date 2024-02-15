@@ -164,6 +164,7 @@ export default function Home({ result }) {
     <>
       <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
+      
       <main>
         <section className="banner_main">
           <div className="contain">
