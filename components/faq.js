@@ -47,14 +47,14 @@ export default function Faq({data}) {
     return (
       <>
         <div className="faq_blk">
-            {data.faq_list?.map((val, i) => {
+            {data?.map((val, i) => {
                 return(
                     <div className={`outer_faq  ${openAccordion === i ? "open" : ""}`} key={i} ref={(el) => (accordionRefs.current[i] = el)} >
                         <div className="accordion__header" onClick={() => handleAccordionClick(i)}>
-                            <h4>{val.title}</h4>
+                            <h4>{val?.question}</h4>
                         </div>
                         <div className="accordion__details">
-                            <div dangerouslySetInnerHTML={{__html: val.content}} />
+                            <div dangerouslySetInnerHTML={{__html: val?.answer}} />
                         </div>
                     </div>
                 )

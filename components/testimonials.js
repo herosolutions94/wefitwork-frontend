@@ -39,15 +39,15 @@ export default function Testimonials({data}) {
       <OwlCarousel className="owl-carousel owl-theme" {...testiSlider}>
         {data.map((val)=>{
             return(
-                <div className="item" key={val.id}>
+                <div className="item" key={val?.id}>
                     <div className="inner">
                         <div className="testi_icon">
-                            <img src={val.image} alt={val.name}/>
+                            <img src={cmsFileUrl(val.image, 'testimonials')} alt={val?.name}/>
                         </div>
-                        <p>{val.detail}</p>
+                        <p>{val?.detail}</p>
                         <div className="testi_footer">
-                            <h5>{val.name}</h5>
-                            <h6>{val.designation}</h6>
+                            <h5>{val?.name}</h5>
+                            <h6>{val?.designation}</h6>
                         </div>
                     </div>
                 </div>

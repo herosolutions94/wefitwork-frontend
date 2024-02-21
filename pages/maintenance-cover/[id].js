@@ -1,18 +1,51 @@
 import React from "react";
 import Link from "next/link";
-import http from "../helpers/http";
-import Text from "../components/text";
-import MetaGenerator from "../components/meta-generator";
-import Testimonials from "../components/testimonials";
-import { cmsFileUrl } from "../helpers/helpers";
+import http from "@/components/helpers/http";
+import Text from "@/components/components/text";
+import MetaGenerator from "@/components/components/meta-generator";
+import Testimonials from "@/components/components/testimonials";
+import { cmsFileUrl, doObjToFormData, format_amount_comma } from "@/components/helpers/helpers";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getCookie, setCookie } from "cookies-next";
-import { authToken } from "../helpers/authToken";
+import { authToken } from "@/components/helpers/authToken";
 import toast, { Toaster } from "react-hot-toast";
-import Faq from "../components/faq";
+import Faq from "@/components/components/faq";
+import {parse} from "cookie";
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 
-export default function DetailMaintenanceCover() {
+export const getServerSideProps = async (context) => {
+  const { id } = context.query;
+  const m_id = encrypt_decrypt('decrypt', id)
+
+  const { req } = context;
+  const cookieHeader = req.headers.cookie || "";
+  // Parse the cookie header to extract the specific cookie value
+  const cookieValue = parse(cookieHeader);
+  const authToken = cookieValue["authToken"] !== undefined && cookieValue["authToken"] !== null && cookieValue["authToken"] !== "" ? cookieValue["authToken"] : null;
+
+  const result = await http
+    .post(`maintenance-cover-detail/${m_id}`, doObjToFormData({token: authToken}))
+    .then((response) => response.data)
+    .catch((error) => error.response.data.message);
+
+  return { props: { result } };
+};
+
+export default function DetailMaintenanceCover({result}) {
+
+  // console.log(result);
+  let {
+    page_title,
+    meta_desc,
+    mc_content,
+    maintenance_cover,
+    excluded,
+    included,
+    faqs,
+    memData,
+  } = result;
+
   const data = {
   faq_list : [
     {
@@ -65,7 +98,7 @@ export default function DetailMaintenanceCover() {
   return (
     <>
       <Toaster position="top-center" />
-      <MetaGenerator />
+      <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
 
       <main>
         <section
@@ -75,24 +108,24 @@ export default function DetailMaintenanceCover() {
             <div className="flex">
               <div className="colL">
                 <div className="sec_heading">
-                  <h1>Electrical Installation and Wiring</h1>
+                  <h1><Text string={maintenance_cover?.title} /></h1>
                 </div>
-                <p>Your Home Deserves the Best Care: Introducing Our Comprehensive Maintenance Solutions!</p>
+                <p><Text string={maintenance_cover?.short_desc} /></p>
               </div>
               <div className="colR">
                 <div className="inner">
-                        <h1>$5,00</h1>
-                        <p>a month in your first year</p>
+                        <h1>{format_amount_comma(parseFloat(maintenance_cover?.price))}</h1>
+                        <p>{maintenance_cover?.interval == 'monthly' && 'Per Month'}{maintenance_cover?.interval == 'yearly' && 'Per Year'}</p>
                         <div className="mini_br"></div>
                         <div className="bdy_in">
-                            <h4>Annual price :	$40</h4>
-                            <h4>Your excess :	$50</h4>
+                            {/* <h4>Annual price :	$40</h4>
+                            <h4>Your excess :	$50</h4> */}
                             <div className="mini_br"></div>
-                            <p>Your price will increase at renewal, but you’ll always receive a reminder. If you choose to continue into your second year, the expected price for customers who haven’t made a claim is $560 a month* ($560 for the year).</p>
+                           <Text string={maintenance_cover?.detail} />
                         </div>
                         <div className="mini_br"></div>
                         <div className="btn_blk">
-                          <Link href="/checkout" className="site_btn block">Buy Now</Link>
+                          <Link href={`/checkout/${encrypt_decrypt('encrypt', maintenance_cover?.id)}`} className="site_btn block">Buy Now</Link>
                         </div>
                     </div>
               </div>
@@ -102,19 +135,20 @@ export default function DetailMaintenanceCover() {
         <section className="difference_maintenance_sec">
             <div className="contain">
                 <div className="sec_heading text-center">
-                    <h2>Electrician Services Overview</h2>
-                    <p>Specialized service often provided by experts in smart home technology</p>
+                    <h2><Text string={mc_content?.sec2_heading} /></h2>
+                    <p><Text string={mc_content?.sec2_tagline} /></p>
                 </div>
                 <div className="custom_owned flex">
                     <div className="col">
                         <div className="inner">
                             <h4>Included</h4>
                             <ul>
-                                <li>Electrical Installation and Wiring</li>
-                                <li>Electrical Repairs</li>
-                                <li>Safety Inspections</li>
-                                <li>Panel Upgrades</li>
-                                <li>Lighting Solutions</li>
+                            {included?.map((inc) => {
+                              return (
+                                <li key={inc?.id}><Text string={inc?.title} /></li>
+                              )
+                            })}
+                                
                             </ul>
                         </div>
                     </div>
@@ -122,11 +156,13 @@ export default function DetailMaintenanceCover() {
                         <div className="inner">
                             <h4>Excluded</h4>
                             <ul>
-                                <li>Appliance Repair: (This may be a separate service, handled by appliance technicians.)</li>
-                                <li>Home Automation Installation: (Specialized service often provided by experts in smart home technology.)</li>
-                                <li>Generator Installation: (Requires specialized knowledge in generators and backup power systems.)</li>
-                                <li>Security System Installation: (Typically handled by security system professionals.)</li>
-                                <li>HVAC System Electrical Work: (Part of a broader service offered by HVAC technicians.)</li>
+                            {excluded?.map((exc) => {
+                              return (
+                                <li key={exc?.id}><Text string={exc?.title} /></li>
+                              )
+                            })}
+                                
+                               
                             </ul>
                         </div>
                     </div>
@@ -136,18 +172,18 @@ export default function DetailMaintenanceCover() {
         <section className="mini_banner">
           <div className="contain">
             <div className="top_heading sec_heading text-center">
-              <h2>Remove the stress and cost of unexpected electrics problems...</h2>
-              <p>Contact us for all your electrical needs. Our experts are ready to assist you!</p>
+              <h2><Text string={mc_content?.sec3_heading} /></h2>
+              <p><Text string={mc_content?.sec3_tagline} /></p>
             </div>
             <div className="inner_banner">
               <div className="cntnt">
                 <div className="sec_heading">
-                  <h2>Ready to get started?</h2>
-                  <p>Contact us for all your electrical needs. Our experts are ready to assist you!</p>
+                  <h2><Text string={mc_content?.sec3_heading2} /></h2>
+                  <p><Text string={mc_content?.sec3_tagline2} /></p>
                 </div>
                 <div className="mini_br"></div>
                 <div className="btn_blk">
-                  <Link href="/checkout" className="site_btn">Buy Now</Link>
+                  <Link href={`/checkout/${encrypt_decrypt('encrypt', maintenance_cover?.id)}`} className="site_btn"><Text string={mc_content?.sec3_button1_text} /></Link>
                 </div>
               </div>
             </div>
@@ -156,10 +192,10 @@ export default function DetailMaintenanceCover() {
         <section className="_faq_sec">
           <div className="contain">
               <div className="sec_heading">
-                <h2>Frequently Asked Questions (FAQs) about Electrician Services</h2>
-                <p>Explore the following frequently asked questions to gain a better understanding of the services provided by electricians. Whether you're looking for information about installations, repairs, or safety inspections, these FAQs cover key aspects to help you make informed decisions for your electrical needs.</p>
+                <h2><Text string={mc_content?.sec4_heading} /></h2>
+                <Text string={mc_content?.sec4_detail} />
               </div>
-              <Faq data={data} />
+              <Faq data={faqs} />
           </div>
         </section>
         <section className="question_new_sec">
