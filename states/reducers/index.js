@@ -14,6 +14,7 @@ import subscriptions from "./professional/subscriptions";
 import bookings from "./buyer/bookings";
 import reviews from "./buyer/reviews";
 import chat from "./chat";
+import maintenanceCover from "./buyer/maintenanceCover";
 
 export default combineReducers({
  siteSettings,
@@ -31,6 +32,7 @@ export default combineReducers({
  bookings,
  reviews,
  chat,
+ maintenanceCover
  
  
  

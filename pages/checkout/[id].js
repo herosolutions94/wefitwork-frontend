@@ -18,6 +18,11 @@ import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 import { parse } from "cookie";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
+import McoverPaystack from "@/components/components/mcoverPaystack";
+import { saveMaintenanceCoverPayment } from "@/components/states/actions/buyer/maintenanceCover";
+import { useDispatch, useSelector } from "react-redux";
+import PopupSmall from "@/components/components/popupSmall";
+import LoginPopup from "@/components/components/authPopup";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;
@@ -45,7 +50,7 @@ export const getServerSideProps = async (context) => {
 export default function Checkout({ result }) {
   let { page_title, meta_desc, content, maintenance_cover, included, memData } =
     result;
-
+const token = authToken();
   const [step, setStep] = useState(0);
   const [cardMethod, setCardMethod] = useState(false);
   const toggleCard = () => {
@@ -57,8 +62,32 @@ export default function Checkout({ result }) {
     setPaypalMethod(!paypalMethod);
     setCardMethod(false);
   };
-  const NextToggle = () => {
-    setStep(step + 1);
+  const NextToggle = async () => {
+    let fieldsToValidate = [];
+    // Determine which fields to validate based on the current step
+    switch (step) {
+      case 0:
+        fieldsToValidate.push("fullname", "email", "phone", "house_type", "address");
+        break;
+      case 1:
+        fieldsToValidate.push("agree");
+        break;
+      default:
+        // Handle other steps if needed
+        // fieldsToValidate = [];
+    }
+
+    const isValid = await trigger(fieldsToValidate);
+
+    if (!isValid) {
+      console.log("Validation Errors:", errors);
+    }
+
+    if (isValid) {
+      // setStep(step + 1);
+      setStep(step + 1);
+    }
+    
   };
   const BackToggle = () => {
     setStep(step - 1);
@@ -72,6 +101,28 @@ export default function Checkout({ result }) {
     setValue,
     watch,
   } = useForm();
+
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.maintenanceCover.content);
+  const member = useSelector((state) => state.maintenanceCover.mem);
+  const isLoading = useSelector((state) => state.maintenanceCover.isLoading);
+  const isFormProcessing = useSelector(
+    (state) => state.maintenanceCover.isFormProcessing
+  );
+
+  const [payInProcess, setPayInProcess] = useState(false);
+
+  const handleSavePayment = (data, saveFormData = false) => {
+      if (saveFormData === true) {
+        data = {...data, maintenance_cover_id: parseInt(maintenance_cover?.id)}
+        dispatch(saveMaintenanceCoverPayment(data));
+      }
+  }
+
+
+  const [authPopup, setAuthPopup] = useState(false);
+  const [simpleLogin, setSimpleLogin] = useState(false);
+
 
   return (
     <>
@@ -101,7 +152,7 @@ export default function Checkout({ result }) {
                   <span className={step == 2 ? "active" : ""}>Payment</span>
                 </div>
                 <div className="checkout_blk">
-                  <form method="POST">
+                  <form method="POST" onSubmit={handleSubmit(handleSavePayment)}>
                     <fieldset className={step == 0 ? "active" : ""}>
                       <h4 className="heading">Please fill these fields</h4>
                       <div className="row form_row">
@@ -162,7 +213,7 @@ export default function Checkout({ result }) {
                             mask="+234 999 999 9999"
                             name="phone"
                             autoComplete="phone"
-                            value={memData?.mem_phone}
+                            defaultValue={memData?.mem_phone}
                             placeholder="Phone Number"
                             className="input"
                             {...register("phone", {
@@ -178,16 +229,35 @@ export default function Checkout({ result }) {
                         </div>
                         <div className="col-xs-6">
                           <h6>Type of house</h6>
-                          <select className="input" name="">
-                            <option value="">Studio</option>
-                            <option value="">2 bedroom</option>
-                            <option value="">3 bedroom</option>
-                            <option value="">4+ bedrooms</option>
+                          <select className="input" name="" {...register("house_type", {
+                              required: "Type of House is Required",
+                            })}>
+                            <option value="">Choose type of house</option>
+                            <option value="studio">Studio</option>
+                            <option value="2_bedroom">2 bedroom</option>
+                            <option value="3_bedroom">3 bedroom</option>
+                            <option value="4+_bedrooms">4+ bedrooms</option>
+                            <option value="office">Office</option>
+
                           </select>
+                          <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.house_type?.message}
+                          </div>
                         </div>
                         <div className="col-xs-12">
                           <h6>Address</h6>
-                          <input type="text" name="address" className="input" />
+                          <input type="text" name="address" className="input" defaultValue={memData?.mem_address} {...register("address", {
+                              required: "Address is Required",
+                            })} />
+                            <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.address?.message}
+                          </div>
                         </div>
                       </div>
                       <div className="br"></div>
@@ -211,12 +281,20 @@ export default function Checkout({ result }) {
                           </div>
                           <div className="br"></div>
                           <div className="lbl_btn">
-                            <input type="checkbox" name="same" id="agree" />
+                            <input type="checkbox" name="same" id="agree" {...register("agree", {
+                              required: " Required",
+                            })} />
                             <label for="agree">
                               <Text string={content?.sec1_checkbox_text} />
                               <a href="/terms-conditions"> terms of use</a> and
                               our <a href="/privacy-policy">privacy notice</a>.
                             </label>
+                          </div>
+                          <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.agree?.message}
                           </div>
                         </div>
                       </div>
@@ -242,7 +320,7 @@ export default function Checkout({ result }) {
                       <h4 className="heading">Payment Methods</h4>
                       <div className="outer_method">
                         <div className="main_method">
-                          <div className="blk_method">
+                          {/* <div className="blk_method">
                             <div className="lbl_btn">
                               <input
                                 type="radio"
@@ -281,9 +359,9 @@ export default function Checkout({ result }) {
                                 <input type="text" name="" className="input" />
                               </div>
                             </div>
-                          </div>
+                          </div> */}
 
-                          <div className="blk_method">
+                          {/* <div className="blk_method">
                             <div className="lbl_btn">
                               <input
                                 type="radio"
@@ -311,7 +389,35 @@ export default function Checkout({ result }) {
                                 to PayPal to complete your purchase securely.
                               </p>
                             </div>
+                          </div> */}
+
+                          <div className="blk_method">
+                            <div className="lbl_btn">
+                              <input
+                                type="radio"
+                                name="method"
+                                value="paystack"
+                                id="paystack"
+                                checked={true}
+                              />
+                              <label htmlFor="paystack">
+                                <div className="img_icon">
+                                  <img src="/images/paystack.png" alt="" />
+                                </div>
+                                <span>Paystack</span>
+                              </label>
+                            </div>
+                            <div className="show_sec active">
+                              <div className="image_paypal">
+                                <img src="/images/card-out.svg" alt="" />
+                              </div>
+                              <p className="text-center">
+                                After clicking "Submit", Paystack payment 
+                                popup will appear to complete your purchase securely.
+                              </p>
+                            </div>
                           </div>
+
                         </div>
                       </div>
                       <div className="br"></div>
@@ -323,9 +429,46 @@ export default function Checkout({ result }) {
                         >
                           Back
                         </button>
-                        <button type="submit" className="site_btn">
+                        {!token && (memData?.mem_email == "" || memData?.mem_email == null || !memData || memData == null || memData == undefined) ? 
+                        <button type="button" className="site_btn" disabled={isFormProcessing}
+                            onClick={() => {
+                              toast.error(
+                                "please login first to make payment"
+                              );
+                                setAuthPopup(true)
+                                setSimpleLogin(true)
+                            }
+                              
+                            }>
                           Submit
                         </button>
+                        : 
+                        isFormProcessing ? (
+                          <button type="button" className="site_btn" disabled={isFormProcessing}
+                            >
+                          Submit{isFormProcessing && (
+                            <i
+                              className={
+                                isFormProcessing ? "spinner" : "spinnerHidden"
+                              }
+                            ></i>
+                          )}
+                        </button>
+                        ) : (
+                          <McoverPaystack 
+                        memData={memData}
+                        handleSavePayment={handleSavePayment}
+                        watcFields={watch()}
+                        mem_email={memData?.mem_email}
+                        planCode={maintenance_cover?.paystack_plan_code}
+                        
+                        /> 
+                        )
+                        
+                        }
+                        
+
+                        
                       </div>
                     </fieldset>
                   </form>
@@ -366,6 +509,20 @@ export default function Checkout({ result }) {
           </div>
         </section>
       </main>
+
+      {authPopup && (
+        <PopupSmall isOpen={authPopup} onClose={() => setAuthPopup(false)}>
+          <LoginPopup
+            handleOpenPopupSend={false}
+            proData={false}
+            setAuthPopup={setAuthPopup}
+            isChatLogin={false}
+            startChat={false}
+            simpleLogin={simpleLogin}
+
+          />
+        </PopupSmall>
+      )}
     </>
   );
 }

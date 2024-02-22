@@ -6,19 +6,23 @@ import Text from "./text";
 import { SUCCESSFUL_SIGNIN_MESSAGE } from "../constants/messages";
 import toast from "react-hot-toast";
 import { setCookie } from "cookies-next";
+import { useRouter } from "next/router";
 
 export default function LoginPopup({
   handleOpenPopupSend,
   proData,
   setAuthPopup,
   isChatLogin,
-  startChat
+  startChat,
+  simpleLogin = false,
 }) {
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const router = useRouter();
 
   const [isFormProcessing, setIsFormProcessing] = useState(false);
 
@@ -41,12 +45,17 @@ export default function LoginPopup({
             localStorage.removeItem("redirect_url");
             setIsFormProcessing(false);
           }, 2000);
-          if(!isChatLogin){
-            handleOpenPopupSend(proData, data.data.authToken);
-
+          if(simpleLogin){
+            router.reload();
           }else{
-            startChat(proData);
+            if(!isChatLogin){
+              handleOpenPopupSend(proData, data.data.authToken);
+  
+            }else{
+              startChat(proData);
+            }
           }
+          
           setAuthPopup(false);
         } else {
           if (data.data.validationErrors) {

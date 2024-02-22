@@ -312,3 +312,16 @@ export function formatDigits(number) {
   // Pad single-digit numbers with a leading zero
   return number > 0 && number < 10  ? `0${number}` : number.toString();
 }
+
+export function requestStatus(status) {
+  // console.log(typeof(status));
+  if(status == 'pending'){
+    return <span className="badge yellow">Pending</span>
+  }else if(status == 'completed'){
+    return <span className="badge green">Completed</span>
+
+  }else{
+    return <span className="badge red">Cancelled</span>
+  }
+
+}

@@ -5,7 +5,7 @@ import { fetchBuyerDashboardData } from "../states/actions/buyer/account";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import { cmsFileUrl, timeAgo } from "../helpers/helpers";
-import { deleteCookie } from "cookies-next";
+import { deleteCookie, getCookies } from "cookies-next";
 import { SIGNIN_PAGE } from "../constants/link";
 
 export default function LoggedBuyerHeader() {
@@ -47,10 +47,16 @@ export default function LoggedBuyerHeader() {
     };
   }, []);
 
+
   const logout = (e) => {
     e.preventDefault();
-    deleteCookie("authToken");
+    const cookies = getCookies();
+    Object.keys(cookies).forEach((cookieName) => {
+      deleteCookie(cookieName);
+    });
+    localStorage.clear();
     router.push(SIGNIN_PAGE);
+   
   };
 
   return (

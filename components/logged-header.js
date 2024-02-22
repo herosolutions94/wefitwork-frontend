@@ -6,7 +6,7 @@ import { fetchProfessioanlDashboardData } from "../states/actions/professional/p
 import { useDispatch, useSelector } from "react-redux";
 import { cmsFileUrl, getArrayCount, getObjKeyCount, isArrayEmpty, isEmpty, timeAgo } from "../helpers/helpers";
 import Image from "next/image";
-import { deleteCookie } from "cookies-next";
+import { deleteCookie, getCookies } from "cookies-next";
 import { isEmptyObject } from "jquery";
 
 export default function LoggedHeader() {
@@ -39,8 +39,13 @@ export default function LoggedHeader() {
 
   const logout = (e) => {
     e.preventDefault();
-    deleteCookie("authToken");
+    const cookies = getCookies();
+    Object.keys(cookies).forEach((cookieName) => {
+      deleteCookie(cookieName);
+    });
+    localStorage.clear();
     router.push("/login");
+   
   };
 
   return (
