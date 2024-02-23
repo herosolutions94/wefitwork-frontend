@@ -316,12 +316,12 @@ export function formatDigits(number) {
 export function requestStatus(status) {
   // console.log(typeof(status));
   if(status == 'pending'){
-    return <span className="badge yellow">Pending</span>
+    return <strong><span className="badge yellow">Pending</span></strong>
   }else if(status == 'completed'){
-    return <span className="badge green">Completed</span>
+    return <strong><span className="badge green">Completed</span></strong>
 
   }else{
-    return <span className="badge red">Cancelled</span>
+    return <strong><span className="badge red">Cancelled</span></strong>
   }
 
 }

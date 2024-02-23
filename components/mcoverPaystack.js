@@ -17,8 +17,8 @@ export default function McoverPaystack({memData, handleSavePayment, watcFields, 
       text: "Submit",
       onSuccess: (response) =>{
         console.log(response);
-        handleSavePayment({...formData, txn_reference: response.reference, plan_code: plan_code}, true),
-        toast.success("Thanks for doing business with us! Come back soon!!");
+        handleSavePayment({...formData, txn_reference: response.reference, plan_code: plan_code}, true);
+        toast.success("Payment ongoing Please wait a while....", {duration: 6000})
       },
       
       onClose: () => {alert("Wait! Don't leave :(")},

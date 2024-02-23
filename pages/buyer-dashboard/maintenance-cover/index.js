@@ -5,11 +5,14 @@ import NextNProgress from "nextjs-progressbar";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Text from "@/components/components/text";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
-import { fetchBuyerMaintenanceRequests } from "@/components/states/actions/buyer/maintenanceCover";
+import { fetchBuyerMaintenanceRequests} from "@/components/states/actions/buyer/maintenanceCover";
 import { useDispatch, useSelector } from "react-redux";
-import { formatDate, isEmpty, requestStatus } from "@/components/helpers/helpers";
+import { formatDate, isEmpty, requestStatus, doObjToFormData } from "@/components/helpers/helpers";
+import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
+import { authToken } from "@/components/helpers/authToken";
+import http from "@/components/helpers/http";
 
 
 export default function MaintenanceCover() {
@@ -18,18 +21,42 @@ export default function MaintenanceCover() {
   const data = useSelector((state) => state.maintenanceCover.content);
   const member = useSelector((state) => state.maintenanceCover.mem);
   const isLoading = useSelector((state) => state.maintenanceCover.isLoading);
-
-  console.log(data);
+  const mc_requests = useSelector((state) => state.maintenanceCover.mc_requests);
+  const isFormProcessing = useSelector(
+    (state) => state.maintenanceCover.isFormProcessing
+  );
+  // console.log(data);
   const {
     site_settings,
     page_title,
     mc_purchased_status,
-    mc_requests,
+   
   } = data;
 
   useEffect(() => {
     dispatch(fetchBuyerMaintenanceRequests());
   }, []);
+
+  
+
+  const handleRequestDelete = (request_id) => {
+    const reqData = {request_id: parseInt(request_id)}
+    try {
+      http
+        .post("user/delete-maintenance-cover-request", doObjToFormData({ request_id: request_id, token: authToken() }))
+        .then((data) => {
+          if (data?.data?.status == true) {
+            toast.success("Request Deleted")
+            router.reload();
+          } else {
+            toast.error("technical problem")
+          }
+        });
+    } catch (errors) {
+      
+      console.log("Errors", errors);
+    }
+  }
 
   return (
     <>
@@ -69,9 +96,9 @@ export default function MaintenanceCover() {
                 </div>
               </div>
               {!isEmpty(mc_requests) ? (
-                mc_requests?.map((req, r) => {
+              mc_requests?.map((req, r) => {
                   return (
-                    <div className="contract_list custom_blk">
+                    <div className="contract_list custom_blk" key={req?.id}>
                     <div className="col">
                     <div className="inner">
                         <p>
@@ -116,14 +143,16 @@ export default function MaintenanceCover() {
                     <div className="col col_s">
                     <div className="inner action_lnks_maintenance">
                         <Link
-                        href="/buyer-dashboard/maintenance-details"
+                        href={`/buyer-dashboard/maintenance-cover/${encrypt_decrypt("encrypt", req?.id)}`}
                         >
                         View
                         </Link>
                         <Link
-                        href="" className="red"
+                        href="" onClick={() => handleRequestDelete(req?.id)} className="red"
                         >
                         Delete
+                        
+                        
                         </Link>
                     </div>
                     </div>
@@ -131,7 +160,7 @@ export default function MaintenanceCover() {
                   )
                 })
               ) : (
-                <div className="alert alert-danger text-center">Tou haven't made any requests.Click Add New to made a maintenance request </div>
+                <div className="alert alert-danger text-center">You haven't made any requests.Click Add New to made a maintenance request </div>
               )}
                 
                
