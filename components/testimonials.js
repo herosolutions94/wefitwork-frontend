@@ -37,7 +37,7 @@ export default function Testimonials({data}) {
   return (
     <>
       <OwlCarousel className="owl-carousel owl-theme" {...testiSlider}>
-        {data.map((val)=>{
+        {data?.map((val)=>{
             return(
                 <div className="item" key={val?.id}>
                     <div className="inner">

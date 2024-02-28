@@ -29,7 +29,6 @@ export const getServerSideProps = async (context) => {
     .post("maintenance-covers", doObjToFormData({token : authToken}))
     .then((response) => response.data)
     .catch((error) => error.response.data.message);
-
   return { props: { result } };
 };
 
