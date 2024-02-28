@@ -313,7 +313,7 @@ export default function Home({ result }) {
                 </div> */}
 
                 <div className="br"></div>
-                <Link href="/maintenance-cover" className="blk_shield">
+                {/* <Link href="/maintenance-cover" className="blk_shield">
                   <div className="icon_img">
                     <img src="/images/shield.png" alt="" />
                   </div>
@@ -321,7 +321,7 @@ export default function Home({ result }) {
                     <h4>Get our maintenance cover</h4>
                     <p>Your Home Deserves the Best Care: Introducing Our Comprehensive Maintenance Solutions!</p>
                   </div>
-                </Link>
+                </Link> */}
               </div>
               <div className="colR">
                 <OwlCarousel className="owl-carousel owl-theme" {...option}>
