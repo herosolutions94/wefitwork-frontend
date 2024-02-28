@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import http from "@/components/helpers/http";
 import Text from "@/components/components/text";
@@ -13,6 +13,8 @@ import toast, { Toaster } from "react-hot-toast";
 import Faq from "@/components/components/faq";
 import {parse} from "cookie";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
+import PopupSmall from "@/components/components/popupSmall";
+import LoginPopup from "@/components/components/authPopup";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;
@@ -34,6 +36,7 @@ export const getServerSideProps = async (context) => {
 
 export default function DetailMaintenanceCover({result}) {
 
+  const router = useRouter();
   // console.log(result);
   let {
     page_title,
@@ -46,55 +49,27 @@ export default function DetailMaintenanceCover({result}) {
     memData,
   } = result;
 
-  const data = {
-  faq_list : [
-    {
-      id:"1",
-      title:"What types of electrical installations do electricians handle?",
-      content:"Electricians handle various installations, including wiring for new constructions, lighting fixtures, outlets, and electrical panels."
-    },
-    {
-      id:"2",
-      title:"How can I identify electrical issues that require repair?",
-      content:"Look out for signs such as flickering lights, tripped circuit breakers, or burning odors. Any unusual behavior with your electrical system may indicate a problem."
-    },
-    {
-      id:"3",
-      title:"Do electricians offer emergency services?",
-      content:"Many electricians provide emergency services for urgent issues such as power outages, electrical malfunctions, or safety concerns."
-    },
-    {
-      id:"4",
-      title:"What is involved in a safety inspection by an electrician?",
-      content:"Safety inspections involve a thorough examination of your electrical system to identify potential hazards, ensure compliance with codes, and recommend improvements."
-    },
-    {
-      id:"5",
-      title:"When should I consider a panel upgrade?",
-      content:"Consider a panel upgrade if you're experiencing frequent tripped breakers, outdated electrical panels, or if you're adding new appliances that require additional power."
-    },
-    {
-      id:"6",
-      title:"Can electricians assist with energy-efficient lighting solutions?",
-      content:"Yes, electricians can help you upgrade to energy-efficient lighting, such as LED installations, to reduce energy consumption and lower utility bills."
-    },
-    {
-      id:"7",
-      title:"What types of electrical repairs do electricians commonly handle?",
-      content:"Electricians can address a wide range of repairs, including fixing faulty wiring, repairing outlets, and resolving issues with circuit breakers."
-    },
-    {
-      id:"8",
-      title:"How do I choose the right electrical service for my home or business?",
-      content:"Consider the specific needs of your property, the expertise of the electrician, and any recommendations for improvements or upgrades they may provide."
-    },
-    {
-      id:"9",
-      title:"Are electricians licensed and insured?",
-      content:"Yes, reputable electricians are typically licensed and insured. It's important to verify their credentials to ensure quality and safety."
-    },
-  ]
+  const token = authToken();
+
+  const [authPopup, setAuthPopup] = useState(false);
+  const [simpleLogin, setSimpleLogin] = useState(false);
+
+  const handleRedirectCheckout = (id) =>{
+    if(token !== undefined && token !== null && token !== "" && token){
+
+      router.push(`/checkout/${encrypt_decrypt('encrypt', id)}`)
+    }else{
+      toast.error("You need to login to your account to continue. Please Login")
+      setTimeout(() => {
+        setAuthPopup(true);
+        setSimpleLogin(true);
+      }, 1000)
+      
+    }
   }
+
+
+
   return (
     <>
       <Toaster position="top-center" />
@@ -125,7 +100,7 @@ export default function DetailMaintenanceCover({result}) {
                         </div>
                         <div className="mini_br"></div>
                         <div className="btn_blk">
-                          <Link href={`/checkout/${encrypt_decrypt('encrypt', maintenance_cover?.id)}`} className="site_btn block">Buy Now</Link>
+                          <button type="button" onClick={() => handleRedirectCheckout(maintenance_cover?.id)} className="site_btn block">Buy Now</button>
                         </div>
                     </div>
               </div>
@@ -183,7 +158,7 @@ export default function DetailMaintenanceCover({result}) {
                 </div>
                 <div className="mini_br"></div>
                 <div className="btn_blk">
-                  <Link href={`/checkout/${encrypt_decrypt('encrypt', maintenance_cover?.id)}`} className="site_btn"><Text string={mc_content?.sec3_button1_text} /></Link>
+                  <button type="button" onClick={() => handleRedirectCheckout(maintenance_cover?.id)} className="site_btn"><Text string={mc_content?.sec3_button1_text} /></button>
                 </div>
               </div>
             </div>
@@ -225,6 +200,20 @@ export default function DetailMaintenanceCover({result}) {
             </div>
         </section>
       </main>
+
+      {authPopup && (
+        <PopupSmall isOpen={authPopup} onClose={() => setAuthPopup(false)}>
+          <LoginPopup
+            handleOpenPopupSend={false}
+            proData={false}
+            setAuthPopup={setAuthPopup}
+            isChatLogin={false}
+            startChat={false}
+            simpleLogin={simpleLogin}
+
+          />
+        </PopupSmall>
+      )}
     </>
   );
 }

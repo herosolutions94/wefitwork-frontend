@@ -7,6 +7,7 @@ import { SUCCESSFUL_SIGNIN_MESSAGE } from "../constants/messages";
 import toast from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function LoginPopup({
   handleOpenPopupSend,
@@ -45,30 +46,31 @@ export default function LoginPopup({
             localStorage.removeItem("redirect_url");
             setIsFormProcessing(false);
           }, 2000);
-          if(simpleLogin){
+          if (simpleLogin) {
             router.reload();
-          }else{
-            if(!isChatLogin){
+          } else {
+            if (!isChatLogin) {
               handleOpenPopupSend(proData, data.data.authToken);
-  
-            }else{
+            } else {
               startChat(proData);
             }
           }
-          
+
           setAuthPopup(false);
         } else {
           if (data.data.validationErrors) {
-            toast.error(<Text string={data.data.validationErrors} parse={true} />, {
-              duration: 6000,
-            });
-          }else{
+            toast.error(
+              <Text string={data.data.validationErrors} parse={true} />,
+              {
+                duration: 6000,
+              }
+            );
+          } else {
             toast.error(<Text string={"Technical Fault"} parse={true} />, {
               duration: 6000,
             });
           }
           setIsFormProcessing(false);
-
         }
       });
     } catch (errors) {
@@ -118,7 +120,24 @@ export default function LoginPopup({
           </div>
         </div>
 
-        <div className="br"></div>
+        <div className="have_check">
+          <Link
+            href="/forgot-password"
+            target="_blank"
+            style={{
+              color: "#FF3D3D",
+              textDecoration: "none", // Optional: Remove underline on hover
+              transition: "color 0.3s ease", // Optional: Smooth transition effect
+            }}
+            onMouseOver={(e) => (e.target.style.color = "#004AAD")}
+            onMouseOut={(e) => (e.target.style.color = "#FF3D3D")}
+          >
+            <Text string={"Forgot Password?"} />
+          </Link>
+        </div>
+
+        {/* <div className="br"></div> */}
+
         <div className="btn_blk text-center">
           <button
             className="site_btn"
@@ -130,6 +149,24 @@ export default function LoginPopup({
               <i className={isFormProcessing ? "spinner" : "spinnerHidden"}></i>
             )}
           </button>
+        </div>
+        <div className="question text-center">
+          <p>
+            <Text string={`Don't have an account? `} />
+            <Link
+              href="/signup"
+              target="_blank"
+              style={{
+              color: "#FF3D3D",
+              textDecoration: "none", // Optional: Remove underline on hover
+              transition: "color 0.3s ease", // Optional: Smooth transition effect
+            }}
+              onMouseOver={(e) => (e.target.style.color = "#004AAD")}
+              onMouseOut={(e) => (e.target.style.color = "#FF3D3D")}
+            >
+              <Text string={"Sign Up Now"} />
+            </Link>
+          </p>
         </div>
       </form>
     </>
