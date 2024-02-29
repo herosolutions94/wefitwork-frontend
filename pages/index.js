@@ -505,11 +505,11 @@ export default function Home({ result }) {
           <div className="contain">
             <div className="inner">
                 <div className="sec_heading">
-                  <h1>Comprehensive Maintenance Solutions Just a Click Away!</h1>
+                  <h1><Text string={content?.rc_heading} /></h1>
                 </div>
-                <p>Your Home Deserves the Best Care: Introducing Our Comprehensive Maintenance Solutions!</p>
+                <Text string={content?.rc_detail} />
                 <div className="btn_blk text-center">
-                  <Link href="/maintenance-cover" className="site_btn color">Read More</Link>
+                  <Link href={content?.re_btn_url} className="site_btn color"><Text string={content?.re_btn_txt} /></Link>
                 </div>
               </div>
           </div>
