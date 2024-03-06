@@ -29,8 +29,10 @@ export const signin = (formData, redirectTo) => (dispatch) => {
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
           setCookie('mem_professionl_profile', data.mem_professionl_profile);
+          setCookie('contact_type', data.contact_type);
 
           if(data.memData?.mem_verified !== 1 || data.memData?.mem_verified !== '1'){
+            
             localStorage.setItem("email", data.memData?.mem_email);
             window.location.replace(`/email-verification`);
           }

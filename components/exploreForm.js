@@ -13,7 +13,7 @@ const LeafletMapComponent = dynamic(() => import("../components/leaflet-map"), {
   ssr: false, // Disable server-side rendering
 });
 
-const ExploreFrom = ({ onClose, services, serId, selectedTitle }) => {
+const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
     (state) => state.saveSearch.isFormProcessing
@@ -396,8 +396,13 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle }) => {
                   })}
                 >
                   <option value="">Select State</option>
-                  <option value="Abia">Abia</option>
-                  <option value="Adamawa">Adamawa</option>
+                  {states?.map((st)=> {
+                    return (
+                      <option key={st?.id} value={st?.title}>{st?.title}</option>
+                    )
+                  })}
+                  
+                  {/* <option value="Adamawa">Adamawa</option>
                   <option value="Akwa_Ibom">Akwa Ibom</option>
                   <option value="Anambra">Anambra</option>
                   <option value="Bauchi">Bauchi</option>
@@ -431,7 +436,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle }) => {
                   <option value="Sokoto">Sokoto</option>
                   <option value="Taraba">Taraba</option>
                   <option value="Yobe">Yobe</option>
-                  <option value="Zamfara">Zamfara</option>
+                  <option value="Zamfara">Zamfara</option> */}
                 </select>
                 <div className="validation-error" style={{ color: "red" }}>
                   {errors.state?.message}

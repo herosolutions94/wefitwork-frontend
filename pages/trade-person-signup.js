@@ -9,6 +9,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { createProfessionalProfile } from "../states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
+import PopupSmall from "../components/popupSmall";
+import EmialPopup from "../components/emailPopup";
 // import MapComponent from "../components/map-container";
 
 import dynamic from "next/dynamic";
@@ -279,6 +281,18 @@ export default function TradePersonSignup({ result }) {
 
     // console.log(watch());
   }, [locationCords]);
+
+  const [emailPoup, setEmailPopup] = useState(false);
+
+  useEffect(() => {
+    if(memData?.mem_email == null || memData?.mem_email == "null" || memData?.mem_email == undefined || memData?.mem_email == ''){
+      setEmailPopup(true);
+
+    }else{
+    setEmailPopup(false);
+
+    }
+  }, [memData])
 
   return (
     <>
@@ -834,6 +848,15 @@ export default function TradePersonSignup({ result }) {
           </div>
         </section>
       </main>
+
+      <PopupSmall isOpen={emailPoup} onClose={() => toast.error("Please provide your email first thank u")}>
+        
+          <EmialPopup
+            memData={memData}
+            setEmailPopup={setEmailPopup}
+          />
+       
+      </PopupSmall>
     </>
   );
 }

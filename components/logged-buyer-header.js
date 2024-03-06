@@ -310,7 +310,7 @@ export default function LoggedBuyerHeader() {
                     </li>
                   <div className="br"></div>
 
-                    {member?.mem_type === "professional" ? (
+                    {member?.mem_type === "professional" && (member?.mem_professionl_profile == 1 || member?.mem_professionl_profile == "1") ? (
                       <div className="btn_blk text-center">
                         <Link
                           href="/professional-dashboard"

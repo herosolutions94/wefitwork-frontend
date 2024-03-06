@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster } from "react-hot-toast";
+import { checkEmailOrPhone } from "@/components/helpers/helpers";
 
 export default function MyAccount() {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ export default function MyAccount() {
                       method="POST"
                       onSubmit={handleSubmit(handleSavePassword)}
                     >
-                      <div className="from_row row">
+                      {/* <div className="from_row row">
                         <div className="col-sm-12">
                           <div className="blk_form">
                             <h6>Email</h6>
@@ -86,9 +87,10 @@ export default function MyAccount() {
                               <input
                                 type="text"
                                 name="email"
-                                defaultValue={member?.mem_email}
+                                defaultValue={checkEmailOrPhone(member?.mem_email) == "email" ? member?.mem_email : ''}
+                                
                                 className="input"
-                                readOnly
+                                
                               />
                               <button type="button" className="verfiy_btn">
                                 Verfiy
@@ -97,7 +99,7 @@ export default function MyAccount() {
                           </div>
                         </div>
                       </div>
-                      <div className="br"></div>
+                      <div className="br"></div> */}
                       <div className="sec_heading">
                         <h4>Update Password</h4>
                       </div>

@@ -4,9 +4,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'api.shapperly.com',
-        pathname: '/**',
+        // protocol: 'https',
+        // hostname: 'api.shapperly.com',
+        // pathname: '/**',
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '/shapperly/**',
       }
       
     ]

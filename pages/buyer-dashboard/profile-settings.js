@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster } from "react-hot-toast";
-import { cmsFileUrl } from "@/components/helpers/helpers";
+import { checkEmailOrPhone, cmsFileUrl } from "@/components/helpers/helpers";
 import InputMask from "react-input-mask";
 import Image from "next/image";
 
@@ -180,13 +180,41 @@ export default function ProfileSettings() {
                             </div>
                           </div>
                         </div>
+
+                        <div className="col-sm-6">
+                          <div className="blk_form">
+                            <h6>
+                              Email 
+                            </h6>
+                            <div className="form_blk">
+                              <input
+                                type="text"
+                                name="fname"
+                                defaultValue={checkEmailOrPhone(member?.mem_email) == "email" ? member?.mem_email : ''}
+                                className="input"
+                                placeholder="Entre Email Here"
+                                {...register("email", {
+                                  required: "Email is required.",
+                                })}
+                              />
+
+                              <div
+                                className="validation-error"
+                                style={{ color: "red" }}
+                              >
+                                {errors.email?.message}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="col-sm-6">
                           <div className="blk_form">
                             <h6>Phone Number</h6>
                             <div className="form_blk">
                               <InputMask
                                 id="phone"
-                                mask="+9 999-999-9999"
+                                mask="+9 999 999 9999"
                                 name="phone"
                                 autoComplete="phone"
                                 placeholder="Phone Number"

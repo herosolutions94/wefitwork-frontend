@@ -198,7 +198,7 @@ export default function LoggedHeader() {
                   </div>
                   <div className="cntnt">
                     <h6><Text string={member?.mem_fname} /></h6>
-                    <p><Text string={member?.mem_email} /></p>
+                    <p>{member?.mem_email}</p>
                   </div>
                 </button>
                 <ul className={userDrop ? "sub active" : "sub"}>

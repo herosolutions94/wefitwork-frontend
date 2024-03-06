@@ -43,6 +43,7 @@ export default function Home({ result }) {
     featured_services,
     most_searched,
     services,
+    states
   } = result;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -639,7 +640,7 @@ export default function Home({ result }) {
         </section>
       </main>
       <Popup key={popupKey} isOpen={isPopupOpen} onClose={handleClosePopup}>
-        <ExploreFrom onClose={handleClosePopup} services={services} serId={serId} selectedTitle={serviceTitle} />
+        <ExploreFrom onClose={handleClosePopup} services={services} serId={serId} selectedTitle={serviceTitle} states={states} />
       </Popup>
 
       

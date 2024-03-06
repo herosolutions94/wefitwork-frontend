@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import Head from "next/head";
 import Text from "@/components/components/text";
 import { Toaster } from "react-hot-toast";
-import { cmsFileUrl, isEmpty } from "@/components/helpers/helpers";
+import { checkEmailOrPhone, cmsFileUrl, isEmpty } from "@/components/helpers/helpers";
 import Image from "next/image";
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 
@@ -31,7 +31,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(fetchBuyerDashboardData());
+    
   }, []);
+
+  
 
   return (
     <>
@@ -63,6 +66,17 @@ export default function Dashboard() {
         </Head>
         <section className="dashboard">
             <div className="contain">
+            {(member?.mem_email == null || member?.mem_email == "null" || member?.mem_email == "" || member?.mem_email == undefined) && (
+                  <div className="alert alert-danger text-center">
+                    Please Add your Email as soon as possible.
+                    <a
+                      href="buyer-dashboard/profile-settings"
+                      className="btn btn-lg btn-danger"
+                    >
+                      <u> Click Here To add email</u>
+                    </a>
+                  </div>
+                )}
               <div className="sec_heading">
                 <h3>
                   Welcome Back

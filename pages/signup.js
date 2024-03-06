@@ -9,7 +9,7 @@ import InputMask from "react-input-mask";
 import { useForm } from "react-hook-form";
 import { createAccount } from "../states/actions/signup";
 import { useDispatch, useSelector } from "react-redux";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { parse } from "cookie";
 import { useRouter } from "next/router";
 
@@ -61,11 +61,31 @@ export default function Signup({ result }) {
 
   const handleCreateAccount = (data, e) => {
     e.preventDefault();
+
+    const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    // const phoneRegex = /^\+234\d{10}$/;
+    const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+
+    const isEmail = emailRegex.test(data.email);
+    const isPhone = phoneRegex.test(data.email);
+
+    if (isEmail) {
+      data = { ...data, contact_type: "email" };
+    } else if (isPhone) {
+      data = { ...data, contact_type: "phone" };
+    } else {
+      toast.error("Invalid email or phone format");
+      return false;
+    }
+
+    
     if (from == "become-professional") {
       data = { ...data, mem_type: "professional" };
     } else {
       data = { ...data, mem_type: "member" };
     }
+
+    // console.log(data);
     dispatch(createAccount(data));
   };
 
@@ -156,16 +176,20 @@ export default function Signup({ result }) {
                 <div className="form_blk">
                   <input
                     id="frm-email"
-                    type="email"
+                    type="text"
                     name="email"
                     autoComplete="email"
-                    placeholder="Email address"
+                    placeholder="Email address/Phone Number"
                     className="input"
                     {...register("email", {
-                      required: "Email is Required",
+                      required: "Email / Phone is Required",
                       pattern: {
-                        value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
-                        message: "Email format is not valid!",
+                        // value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        value:
+                          /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+
+                        message:
+                          " Email / phone format is not valid! Valid email format : abc@def.fgh. Valid phone format : +2341231231234 ",
                       },
                     })}
                   />
@@ -174,22 +198,7 @@ export default function Signup({ result }) {
                     {errors.email?.message}
                   </div>
                 </div>
-                <div className="form_blk">
-                  <InputMask
-                    id="phone"
-                    mask="+234 999 999 9999"
-                    name="phone"
-                    autoComplete="phone"
-                    placeholder="Phone Number"
-                    className="input"
-                    {...register("phone", {
-                      required: "Phone Number is Required",
-                    })}
-                  />
-                  <div className="validation-error" style={{ color: "red" }}>
-                    {errors.phone?.message}
-                  </div>
-                </div>
+
                 <div className="form_blk">
                   <input
                     id="frm-password"

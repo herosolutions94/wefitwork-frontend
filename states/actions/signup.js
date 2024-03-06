@@ -35,6 +35,8 @@ export const createAccount = (formData) => (dispatch) => {
         });
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
+          setCookie('contact_type', data.contact_type);
+          
             window.location.replace("/email-verification");
         }, 2000);
       } else {

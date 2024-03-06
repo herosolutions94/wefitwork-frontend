@@ -6,7 +6,7 @@ import MetaGenerator from "../components/meta-generator";
 import Image from "next/image";
 import { cmsFileUrl } from "../helpers/helpers";
 import { parse } from "cookie";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { signin } from "../states/actions/signin";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,6 +64,23 @@ export default function Login({ result }) {
 
   const handleSignin = (data, e) => {
     e.preventDefault();
+
+    const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    // const phoneRegex = /^\+234\d{10}$/;
+    const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+
+    const isEmail = emailRegex.test(data.email);
+    const isPhone = phoneRegex.test(data.email);
+
+    if (isEmail) {
+      data = { ...data, contact_type: "email" };
+    } else if (isPhone) {
+      data = { ...data, contact_type: "phone" };
+    } else {
+      toast.error("Invalid email or phone format");
+      return false;
+    }
+
     dispatch(signin(data, redirect_url ? redirect_url : from));
   };
 
@@ -131,15 +148,15 @@ export default function Login({ result }) {
                 <div className="form_blk">
                   <input
                     id="frm-email"
-                    type="email"
+                    type="text"
                     name="email"
                     autoComplete="email"
-                    placeholder="Enter your email"
+                    placeholder="Enter your email/phone"
                     className="input"
                     {...register("email", {
                       required: "Required",
                       pattern: {
-                        value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
+                        value: /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         message: "Email format is not valid!",
                       },
                     })}
