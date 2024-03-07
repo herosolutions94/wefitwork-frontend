@@ -30,6 +30,24 @@ export default function LoginPopup({
   const handleSignin = (formData) => {
     // console.log('handle sign in', data);
     setIsFormProcessing(true);
+
+    const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^\+234\d{10}$/;
+    // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+
+    const isEmail = emailRegex.test(formData.email);
+    const isPhone = phoneRegex.test(formData.email);
+
+    if (isEmail) {
+      formData = { ...formData, contact_type: "email" };
+    } else if (isPhone) {
+      formData = { ...formData, contact_type: "phone" };
+    } else {
+      toast.error("Invalid email or phone format");
+      return false;
+    }
+
+
     try {
       http.post("auth/signin", doObjToFormData(formData)).then((data) => {
         // console.log(data);
@@ -42,6 +60,7 @@ export default function LoginPopup({
               "mem_professionl_profile",
               data.data.mem_professionl_profile
             );
+            setCookie('contact_type', data.contact_type);
 
             localStorage.removeItem("redirect_url");
             setIsFormProcessing(false);
@@ -94,7 +113,7 @@ export default function LoginPopup({
             {...register("email", {
               required: "Required",
               pattern: {
-                value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
+                value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 message: "Email format is not valid!",
               },
             })}

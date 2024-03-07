@@ -63,8 +63,8 @@ export default function Signup({ result }) {
     e.preventDefault();
 
     const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    // const phoneRegex = /^\+234\d{10}$/;
-    const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+    const phoneRegex = /^\+234\d{10}$/;
+    // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
     const isEmail = emailRegex.test(data.email);
     const isPhone = phoneRegex.test(data.email);
@@ -184,9 +184,8 @@ export default function Signup({ result }) {
                     {...register("email", {
                       required: "Email / Phone is Required",
                       pattern: {
-                        // value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        value:
-                          /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        
 
                         message:
                           " Email / phone format is not valid! Valid email format : abc@def.fgh. Valid phone format : +2341231231234 ",

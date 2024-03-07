@@ -93,8 +93,8 @@ export default function EmailVerification({ result }) {
     const mem_email = localStorage.getItem("email");
     
     const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // const phoneRegex = /^\+234\d{10}$/;
-  const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+  const phoneRegex = /^\+234\d{10}$/;
+  // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
   const isEmail = emailRegex.test(mem_email);
   const isPhone = phoneRegex.test(mem_email);

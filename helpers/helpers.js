@@ -328,8 +328,8 @@ export function requestStatus(status) {
 
 export function checkEmailOrPhone(emailPhone) {
   const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // const phoneRegex = /^\+234\d{10}$/;
-  const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/; 
+  const phoneRegex = /^\+234\d{10}$/;
+  // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/; 
 
   // Test the entered value against both regular expressions
   const isEmail = emailRegex.test(emailPhone);

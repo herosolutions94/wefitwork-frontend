@@ -66,8 +66,8 @@ export default function Login({ result }) {
     e.preventDefault();
 
     const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    // const phoneRegex = /^\+234\d{10}$/;
-    const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+    const phoneRegex = /^\+234\d{10}$/;
+    // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
     const isEmail = emailRegex.test(data.email);
     const isPhone = phoneRegex.test(data.email);
@@ -156,7 +156,7 @@ export default function Login({ result }) {
                     {...register("email", {
                       required: "Required",
                       pattern: {
-                        value: /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         message: "Email format is not valid!",
                       },
                     })}
