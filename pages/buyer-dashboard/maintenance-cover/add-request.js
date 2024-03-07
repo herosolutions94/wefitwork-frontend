@@ -26,7 +26,7 @@ export default function AddRequest() {
 
   const { site_settings, page_title, maintenance_services } = data;
 
-  //   console.log(data);
+    console.log(data);
 
   useEffect(() => {
     dispatch(fetchAddRequestPage());

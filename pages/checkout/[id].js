@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import http from "@/components/helpers/http";
 import Text from "@/components/components/text";
@@ -48,7 +48,7 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function Checkout({ result }) {
-  let { page_title, meta_desc, content, maintenance_cover, included, memData } =
+  let { page_title, meta_desc, content, maintenance_cover, included, memData, type_prices } =
     result;
 const token = authToken();
   const [step, setStep] = useState(0);
@@ -122,6 +122,22 @@ const token = authToken();
 
   const [authPopup, setAuthPopup] = useState(false);
   const [simpleLogin, setSimpleLogin] = useState(false);
+
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const selectedHouseType = watch("house_type");
+
+  const handleSetPrice = (typeOfHouse) => {
+    const selectedType = type_prices.find((typ) => typ.type_of_house === typeOfHouse);
+    if (selectedType) {
+      setTotalPrice(selectedType.price);
+    }
+  };
+  
+  // Watch for changes in the "house_type" field and update the price
+  useEffect(() => {
+    handleSetPrice(selectedHouseType);
+  }, [selectedHouseType]);
 
 
   return (
@@ -231,13 +247,15 @@ const token = authToken();
                           <h6>Type of house</h6>
                           <select className="input" name="" {...register("house_type", {
                               required: "Type of House is Required",
+                              
                             })}>
                             <option value="">Choose type of house</option>
-                            <option value="studio">Studio</option>
-                            <option value="2_bedroom">2 bedroom</option>
-                            <option value="3_bedroom">3 bedroom</option>
-                            <option value="4+_bedrooms">4+ bedrooms</option>
-                            <option value="office">Office</option>
+                            {type_prices?.map((typ) => {
+                              return (
+                                <option key={typ?.id} value={typ?.type_of_house}>{typ?.type_of_house}</option>
+                              )
+                            })}
+                            
 
                           </select>
                           <div
@@ -459,8 +477,8 @@ const token = authToken();
                         memData={memData}
                         handleSavePayment={handleSavePayment}
                         watcFields={watch()}
-                        mem_email={memData?.mem_email}
-                        planCode={maintenance_cover?.paystack_plan_code}
+                        mem_email={watch().email}
+                        price={totalPrice}
                         
                         /> 
                         )
@@ -482,10 +500,12 @@ const token = authToken();
                   <h3>
                     <Text string={maintenance_cover?.service_title} />
                   </h3>
+                 
+                  
                   <h1>
-                    {format_amount_comma(parseFloat(maintenance_cover?.price))}{" "}
+                    {totalPrice > 0 ? format_amount_comma(parseFloat(totalPrice)) : format_amount_comma(parseFloat(maintenance_cover?.price))}
                     <sub>
-                      {maintenance_cover?.interval == "monthly" && "Per Month"}{" "}
+                      {maintenance_cover?.interval == "monthly" && "Per Month"}
                       {maintenance_cover?.interval == "yearly" && "Per Year"}
                     </sub>
                   </h1>
