@@ -108,7 +108,7 @@ export default function LoginPopup({
             type="email"
             name="email"
             autoComplete="email"
-            placeholder="Enter your email"
+            placeholder="Enter your email / phone"
             className="input"
             {...register("email", {
               required: "Required",
