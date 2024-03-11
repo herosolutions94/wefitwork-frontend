@@ -3,6 +3,7 @@ import Link from "next/link";
 import LayoutDashboard from "@/components/components/layoutDashbord";
 import ProfessionalSidebar from "@/components/components/professionalSidebar";
 import { fetchMemSubscriptions } from "@/components/states/actions/professional/subscriptions";
+import { createProfessionalProfile } from "@/components/states/actions/professional/proProfile";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import Text from "@/components/components/text";
@@ -14,8 +15,10 @@ import {
   format_amount,
   format_amount_comma,
   isArrayEmpty,
+  isTrialExpired,
   subscriptionStatus,
 } from "@/components/helpers/helpers";
+import PayStackPayment from "@/components/components/pay-stack";
 
 export default function Subscription() {
   const dispatch = useDispatch();
@@ -27,15 +30,24 @@ export default function Subscription() {
     (state) => state.subscriptions.isFormProcessing
   );
 
+  const isPaymentProcessing = useSelector(
+    (state) => state.subscriptions.isFormProcessing
+  );
+
   useEffect(() => dispatch(fetchMemSubscriptions()), []);
 
-  // console.log(data);
+  console.log(data);
   const {
     site_settings,
     page_title,
     mem_active_subscription,
     mem_subscriptions,
+   
   } = data;
+
+  const handleCreateProfile = (data) => {
+    dispatch(createProfessionalProfile(data));
+  }
 
   return (
     <>
@@ -93,16 +105,40 @@ export default function Subscription() {
                         mem_active_subscription === "" ||
                         mem_active_subscription === undefined ? (
                           <>
+                          {pro_profile?.trial_period == "trial" && !isTrialExpired(pro_profile?.trail_end) ?
+                          <div className="alert alert-warning">
+                              You are in trial mode. You should have to pay for subscription after. 
+                           
+                              <h6 className="text-danger">{formatDateTime(pro_profile?.trail_end)}</h6>
+                              
+                            </div>
+
+                            
+                            :
+
+                            
+                            <div>
                             <div className="alert alert-danger">
                               You Don't have any active subscription. PLease
                               Subscribe to Plan. Thank you!
                             </div>
-
+                            <div className="br"></div>
                             <div className="btn_blk">
-                              <a href="?" className="site_btn color">
-                                Subscribe
-                              </a>
+                            <PayStackPayment
+                            memData={member}
+                            handleCreateProfile={handleCreateProfile}
+                            watcFields={pro_profile}
+                            mem_email={pro_profile?.payment_email}
+                            mem_customer_code={
+                              member?.mem_paystack_customer_code
+                            } 
+
+                            />
                             </div>
+                            </div>
+                            
+                          }
+                            
                           </>
                         ) : (
                           <>

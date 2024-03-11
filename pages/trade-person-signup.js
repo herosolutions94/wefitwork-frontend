@@ -175,7 +175,12 @@ export default function TradePersonSignup({ result }) {
   };
 
   const handleCreateProfile = (data, saveFormData = false) => {
+    
     if (saveFormData === true) {
+      dispatch(createProfessionalProfile(data));
+    }else{
+      
+      data = {...data, trial_period: 'trial', txn_reference: null, plan_code: null,  }
       dispatch(createProfessionalProfile(data));
     }
   };
@@ -809,7 +814,9 @@ export default function TradePersonSignup({ result }) {
                     ) : (
                       <>
                         {watch().payment_email ? (
-                          <PayStackPayment
+                          <>
+                            {site_settings?.site_accept_order == 1 || site_settings?.site_accept_order == "1" ? 
+                            <PayStackPayment
                             memData={memData}
                             handleCreateProfile={handleCreateProfile}
                             watcFields={watch()}
@@ -818,6 +825,24 @@ export default function TradePersonSignup({ result }) {
                               memData?.mem_paystack_customer_code
                             }
                           />
+                          : 
+                          <button
+                            className="site_btn"
+                            type="submit"
+                            disabled={isFormProcessing}
+                            
+                          >
+                            Pay now
+                            {isFormProcessing && (
+                              <i
+                                className={
+                                  isFormProcessing ? "spinner" : "spinnerHidden"
+                                }
+                              ></i>
+                            )}
+                          </button>
+                            }
+                          </>
                         ) : (
                           <button
                             className="site_btn"

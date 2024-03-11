@@ -9,8 +9,10 @@ import { Toaster } from "react-hot-toast";
 import Head from "next/head";
 import {
   cmsFileUrl,
+  formatDateTime,
   isArrayEmpty,
   isEmpty,
+  isTrialExpired,
 } from "@/components/helpers/helpers";
 import Image from "next/image";
 
@@ -74,6 +76,19 @@ export default function Dashboard() {
                   </div>
                 )}
 
+                {pro_profile?.trial_period == "trial" && !isTrialExpired(pro_profile?.trail_end) ?
+                          <div className="alert alert-warning">
+                              You are in trial mode. You should have to pay for subscription after. 
+                           
+                              <h6 className="text-danger">{formatDateTime(pro_profile?.trail_end)}</h6>
+                              
+                            </div>
+
+                            
+                            :
+                            ''
+                            
+                          }
               <div className="sec_heading">
                 <h3>
                   Welcome Back

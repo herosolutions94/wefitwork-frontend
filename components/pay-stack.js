@@ -22,11 +22,11 @@ export default function PayStackPayment({handleCreateProfile, watcFields, mem_em
     text: "Pay Now",
     onSuccess: (response) =>{
       // console.log(response);
-      handleCreateProfile({...formData, txn_reference: response.reference, plan_code: plan_code}, true),
+      handleCreateProfile({...formData, txn_reference: response.reference, plan_code: plan_code, trial_period: 'trial_end'}, true),
       toast.success("Thanks for doing business with us! Come back soon!!");
     },
     
-    onClose: () => {alert("Wait! Don't leave :(")},
+    onClose: () => {toast.error("Payment cancelled")},
     className: "site_btn",
     disabled:true
   }

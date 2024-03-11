@@ -344,3 +344,20 @@ export function checkEmailOrPhone(emailPhone) {
     return false;
   }
 }
+
+export function isTrialExpired(trialEndDateString) {
+ 
+  if (!trialEndDateString) {
+    return false;
+  }
+  const trialEndDate = new Date(trialEndDateString);
+  const currentDate = new Date();
+
+  // Compare the dates
+  if(currentDate > trialEndDate){
+    return true;
+  }else{
+    return false;
+  }
+  
+};
