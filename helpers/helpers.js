@@ -347,16 +347,17 @@ export function checkEmailOrPhone(emailPhone) {
 
 export function isTrialExpired(trialEndDateString) {
  
-  if (!trialEndDateString) {
-    return false;
-  }
   const trialEndDate = new Date(trialEndDateString);
   const currentDate = new Date();
 
   // Compare the dates
+  // console.log(currentDate + ' || ' + trialEndDate)
   if(currentDate > trialEndDate){
+    // console.log('true')
     return true;
   }else{
+    // console.log('false')
+
     return false;
   }
   

@@ -815,7 +815,7 @@ export default function TradePersonSignup({ result }) {
                       <>
                         {watch().payment_email ? (
                           <>
-                            {site_settings?.site_accept_order == 1 || site_settings?.site_accept_order == "1" ? 
+                            {site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0" ? 
                             <PayStackPayment
                             memData={memData}
                             handleCreateProfile={handleCreateProfile}

@@ -105,10 +105,10 @@ export default function Subscription() {
                         mem_active_subscription === "" ||
                         mem_active_subscription === undefined ? (
                           <>
-                          {pro_profile?.trial_period == "trial" && !isTrialExpired(pro_profile?.trail_end) ?
+                          { pro_profile?.trial_period == "trial" && (isTrialExpired(pro_profile?.trail_end) == 'false' || isTrialExpired(pro_profile?.trail_end) == false) ?
                           <div className="alert alert-warning">
-                              You are in trial mode. You should have to pay for subscription after. 
-                           
+                              You are in trial mode. You should have to pay for subscription after. {isTrialExpired(pro_profile?.trail_end)}
+
                               <h6 className="text-danger">{formatDateTime(pro_profile?.trail_end)}</h6>
                               
                             </div>
