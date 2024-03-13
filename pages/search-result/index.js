@@ -210,6 +210,7 @@ export default function SearchResult({ result }) {
       setAuthPopup(true);
       setProData(pro_mem_data);
       setIsChat(false);
+      setIsSimpleLogin(false);
     }
   };
   const handleClosePopupSend = () => {

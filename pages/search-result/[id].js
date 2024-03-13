@@ -62,6 +62,7 @@ export default function SearchResult({ result, authToken }) {
 
     pro_wishlisted,
     memData,
+    site_settings
   } = result;
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -102,6 +103,7 @@ export default function SearchResult({ result, authToken }) {
   const [proData, setProData] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
   const [isChat, setIsChat] = useState(false);
+  const [isSimpleLogin, setIsSimpleLogin] = useState(false);
 
   const handleOpenPopupSend = (pro_mem_data, mem_token = authToken) => {
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
@@ -115,6 +117,7 @@ export default function SearchResult({ result, authToken }) {
       setAuthPopup(true);
       setProData(pro_mem_data);
       setIsChat(false);
+      setIsSimpleLogin(false);
     }
   };
   const handleClosePopupSend = () => {
@@ -122,6 +125,7 @@ export default function SearchResult({ result, authToken }) {
     setIsPopupOpenSend(false);
     setAuthPopup(false);
     setIsChat(false);
+    setIsSimpleLogin(false);
   };
 
   let pro_wishl = pro_wishlisted ? true : false;
@@ -212,6 +216,45 @@ export default function SearchResult({ result, authToken }) {
       setProData(form_data);
       setIsChat(true);
       setAuthPopup(true);
+      setIsSimpleLogin(false);
+    }
+  };
+
+  const [callSpinner, setCallSpinner] = useState(false);
+  const handleCallNow = (pro_mem_data, mem_token = authToken) => {
+    // console.log(pro_mem_data);
+    setCallSpinner(true);
+    
+    if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
+      setProData(pro_mem_data);
+      setIsPopupOpenSend(false);
+       setIsChat(false);
+
+    try {
+      http
+        .post("user/call-click", doObjToFormData({ token: mem_token, pro_mem_id: parseInt(pro_mem_data?.mem_id), phone: pro_mem_data?.business_phone }))
+        .then((data) => {
+          if (data?.data?.status == true) {
+            router.push(`tel:${pro_mem_data?.business_phone}`);
+          } else {
+            toast.error(data?.data?.msg);
+
+          }
+        });
+        setCallSpinner(false);
+    } catch (errors) {
+      setCallSpinner(false);
+      console.log("Errors", errors);
+    }
+
+    } else {
+      toast.error(
+        "You are not logedin. Please Login to your account to send SMS"
+      );
+      setAuthPopup(true);
+      setProData(pro_mem_data);
+      setIsChat(false);
+      setIsSimpleLogin(true);
     }
   };
 
@@ -322,6 +365,12 @@ export default function SearchResult({ result, authToken }) {
                         >
                           Send SMS
                         </button>
+
+                        {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
+                                  <button type="button" className="site_btn white block" onClick={() => handleCallNow(pro_mem_data)}>
+                                        Call Now
+                                  </button>
+                                  }
                       </>
                     )}
                   </div>
@@ -482,6 +531,7 @@ export default function SearchResult({ result, authToken }) {
             setAuthPopup={setAuthPopup}
             isChatLogin={isChat}
             startChat={startChat}
+            simpleLogin={isSimpleLogin}
           />
         </PopupSmall>
       )}
