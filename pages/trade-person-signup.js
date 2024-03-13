@@ -469,7 +469,7 @@ export default function TradePersonSignup({ result }) {
                       </div>
                     </div>
                     <div className="form_blk">
-                      <h6>Address of your business</h6>
+                      <h6>Address of your business (Only Nigerian Address)</h6>
                       {/* <input
                         type="text"
                         name="business_address"
@@ -700,7 +700,9 @@ export default function TradePersonSignup({ result }) {
                     <div className="form_blk">
                       <h6>Checkout</h6>
                       <div className="btn_blk payment_btn">
-                        <button
+
+                      {(site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0") && 
+                      <button
                           type="button"
                           className={`site_btn blank credit ${
                             payment === "credit_card" ? "active" : ""
@@ -710,6 +712,8 @@ export default function TradePersonSignup({ result }) {
                           <img src="/images/creditcard.svg" alt="credit card" />
                           <span>Pay with Paystack</span>
                         </button>
+                      }
+                        
                         {/* <button
                           type="button"
                           className={`site_btn blank paypal ${payment === "pay_pal" ? "active" : ""
@@ -832,7 +836,7 @@ export default function TradePersonSignup({ result }) {
                             disabled={isFormProcessing}
                             
                           >
-                            Pay now
+                            Complete Registration
                             {isFormProcessing && (
                               <i
                                 className={

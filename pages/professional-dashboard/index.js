@@ -34,6 +34,8 @@ export default function Dashboard() {
     impressions,
   } = data;
 
+  console.log(data);
+
   useEffect(() => {
     dispatch(fetchProfessioanlDashboardData());
   }, []);

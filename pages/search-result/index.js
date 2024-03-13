@@ -267,7 +267,7 @@ const [callSpinner, setCallSpinner] = useState(false);
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
       setProData(pro_mem_data);
       setIsPopupOpenSend(false);
-    setIsChat(false);
+       setIsChat(false);
 
     try {
       http
@@ -662,6 +662,7 @@ const [callSpinner, setCallSpinner] = useState(false);
             setAuthPopup={setAuthPopup}
             isChatLogin={isChat}
             startChat={startChat}
+            simpleLogin={isSimpleLogin}
           />
         </PopupSmall>
       )}
