@@ -338,18 +338,19 @@ export default function SearchResult({ result, authToken }) {
                         : "Not Mention"}
                     </h3>
                   </div>
-                  <div className="btn_blk">
+                  <div className="btn_blk new_icons_btn detail_ls_btn">
                     {pro_mem_data?.mem_id == memData?.mem_id ? (
                       ""
                     ) : (
                       <>
                         <button
                           type="button"
-                          className="site_btn color block"
+                          className="icon_btns"
                           disabled={isFormProcessing}
                           onClick={() => handleStartChat(pro_mem_data?.mem_id)}
                         >
-                          Start Chat
+                          <img src="/images/ChatCircleText.svg" alt="Start Chat" />
+                          <span>Start Chat</span>
                           {isFormProcessing && (
                             <i
                               className={
@@ -361,14 +362,16 @@ export default function SearchResult({ result, authToken }) {
                         <button
                           type="button"
                           onClick={() => handleOpenPopupSend(pro_mem_data)}
-                          className="site_btn block"
+                          className="icon_btns"
                         >
-                          Send SMS
+                          <img src="/images/contact_email.svg" alt="Start Chat" />
+                           <span>Send SMS</span>
                         </button>
 
                         {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="site_btn white block" onClick={() => handleCallNow(pro_mem_data)}>
-                                        Call Now
+                                  <button type="button" className="icon_btns" onClick={() => handleCallNow(pro_mem_data)}>
+                                       <img src="/images/contact_phone.svg" alt="Start Chat" />
+                                        <span>Call Now</span>
                                   </button>
                                   }
                       </>

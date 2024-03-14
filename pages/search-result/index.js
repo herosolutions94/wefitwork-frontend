@@ -341,9 +341,9 @@ const [callSpinner, setCallSpinner] = useState(false);
                           );
                         })}
                       </select>
-                      <button type="button">
+                      {/* <button type="button">
                         <img src="/images/PencilSimple.svg" alt="" />
-                      </button>
+                      </button> */}
                     </div>
                     <div className="validation-error" style={{ color: "red" }}>
                       {errors.service_id?.message}
@@ -373,18 +373,18 @@ const [callSpinner, setCallSpinner] = useState(false);
                             );
                           })}
                       </select>
-                      <button type="button">
+                      {/* <button type="button">
                         <img src="/images/PencilSimple.svg" alt="" />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                   <div className="form_blk">
                     <div className="relative_field">
                       <AddressAutocomplete onPlaceSelect={handlePlaceSelect} />
                       {/* <input type="text" className="input" name="address" defaultValue={"1711 O Street Sanger,CA 93657 Suite 102"} /> */}
-                      <button type="button">
+                      {/* <button type="button">
                         <img src="/images/PencilSimple.svg" alt="" />
-                      </button>
+                      </button> */}
 
                       <input
                         type="hidden"
@@ -581,7 +581,7 @@ const [callSpinner, setCallSpinner] = useState(false);
                                   : 0}
                               </h3>
                             </div>
-                            <div className="btn_blk">
+                            <div className="btn_blk new_icons_btn">
                               {val?.mem_id == memData?.mem_id ? (
                                 <>
                                   <Link
@@ -598,11 +598,12 @@ const [callSpinner, setCallSpinner] = useState(false);
                                 <>
                                   <button
                                     type="button"
-                                    className="site_btn color block"
+                                    className="icon_btns"
                                     onClick={() => handleStartChat(val?.mem_id)}
                                     disabled={isFormProcessing}
                                   >
-                                    Start Chat
+                                    <img src="/images/ChatCircleText.svg" alt="Start Chat" />
+                                    <span>Start Chat</span>
                                     {isFormProcessing && (
                                       <i
                                         className={
@@ -616,14 +617,16 @@ const [callSpinner, setCallSpinner] = useState(false);
                                   <button
                                     type="button"
                                     onClick={() => handleOpenPopupSend(val)}
-                                    className="site_btn block"
+                                    className="icon_btns"
                                   >
-                                    Send SMS
+                                    <img src="/images/contact_email.svg" alt="Start Chat" />
+                                    <span>Send SMS</span>
                                   </button>
 
                                   {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="site_btn white block" onClick={() => handleCallNow(val)}>
-                                        Call Now
+                                  <button type="button" className="icon_btns" onClick={() => handleCallNow(val)}>
+                                    <img src="/images/contact_phone.svg" alt="Start Chat" />
+                                        <span>Call Now</span>
                                   </button>
                                   }
                                   

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { useRouter} from 'next/router'
-import React,{useState} from 'react'
+import React,{useState , useRef, useEffect} from 'react'
 import Image from "next/image";
 import { cmsFileUrl } from "../helpers/helpers";
 import { authToken } from "../helpers/authToken";
@@ -9,14 +9,44 @@ import { getCookie } from "cookies-next";
 export default function Header({siteSettings}) {
   const [homeOwner, setHomeOwner] = useState();
   const [professional, setProfessional] = useState();
-  const toggleHomeOwner = () => {
+  const dropdownRef = useRef(null);
+  const dropprofessionalRef = useRef(null);
+  const toggleHomeOwner = (event) => {
     setHomeOwner(!homeOwner);
+    event.stopPropagation();
     setProfessional(false);
   }
   const toggleProfessional = () => {
     setProfessional(!professional);
     setHomeOwner(false);
   }
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setHomeOwner(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropprofessionalRef.current && !dropprofessionalRef.current.contains(event.target)) {
+        setProfessional(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   const token = authToken();
   // console.log(siteSettings);
     const[toggle,setToggle] = useState(false);
@@ -42,7 +72,7 @@ export default function Header({siteSettings}) {
           <nav id="nav" className={toggle ? "active" : ""}>
             <ul>
               <li className="drop">
-                  <div onClick={toggleHomeOwner} className="btn_nav">Homeowner</div>
+                  <div onClick={toggleHomeOwner} className="btn_nav" ref={dropdownRef}>Homeowner</div>
                   <div className={homeOwner ? "sub active" : "sub"}>
                       <ul>
                       {!token ? 
@@ -97,7 +127,7 @@ export default function Header({siteSettings}) {
                   </div>
               </li>
               <li className="drop">
-                  <div onClick={toggleProfessional} className="btn_nav">Professionals</div>
+                  <div onClick={toggleProfessional} className="btn_nav" ref={dropprofessionalRef}>Professionals</div>
                   <div className={professional ? "sub active" : "sub"}>
                       <ul>
                       {!token ? 

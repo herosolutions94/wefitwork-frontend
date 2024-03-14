@@ -4537,3 +4537,71 @@
         }
     }
 }
+
+// ======new css====
+
+.new_icons_btn{
+    flex-wrap: nowrap;
+    gap: 1rem;
+    .icon_btns{
+        flex: 1 1;
+        text-align: center;
+        border: 1px solid #ff3d3d66;
+        position: relative;
+        padding: .5rem;
+        border-radius: 5px;
+        background: #fff2f3;
+        @include trans;
+        img{
+            width: 2.5rem;
+            height: 2rem;
+            margin: 0 auto;
+        }
+        span{
+            font-size: 1.3rem;
+        }
+        &:hover{
+            @include trans;
+            opacity: 0.7;
+        }
+    }
+}
+
+.flex_view{
+    .new_icons_btn{
+        align-self: center;
+        .icon_btns{
+            span{
+            display: none;
+            }
+            
+        }
+    }
+}
+.view_grid{
+    .new_icons_btn{
+
+        .icon_btns{
+            span{
+            display: block;
+            }
+        }
+    }  
+}
+.detail_ls_btn{
+    &.new_icons_btn{
+        align-self: center!important;
+        margin-top: 2rem;
+        justify-content: flex-end;
+        @include mobile_sm{
+            justify-content: flex-start;
+        }
+        .icon_btns{
+            flex: unset;
+            span{
+            display: none;
+            }
+            
+        }
+    }
+}
