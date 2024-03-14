@@ -7,10 +7,12 @@ import { authToken } from "../helpers/authToken";
 import { getCookie } from "cookies-next";
 
 export default function Header({siteSettings}) {
+  const router = useRouter();
   const [homeOwner, setHomeOwner] = useState();
   const [professional, setProfessional] = useState();
   const dropdownRef = useRef(null);
   const dropprofessionalRef = useRef(null);
+  const leaseReviewRef = useRef(null);
   const toggleHomeOwner = (event) => {
     setHomeOwner(!homeOwner);
     event.stopPropagation();
@@ -34,6 +36,7 @@ export default function Header({siteSettings}) {
     };
   }, []);
   
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,6 +58,13 @@ export default function Header({siteSettings}) {
     const[toggle,setToggle] = useState(false);
     const ToggleAction = () =>{
       setToggle(!toggle);
+    }
+    const ToggleReviewAction = (e) =>{
+      e.preventDefault()
+      setToggle(false);
+      setProfessional(false);
+        setHomeOwner(false);
+        router.push('/search');
     }
     const[userDrop,setUserDrop] = useState(false);
     const ToggleUserDrop = () => {
@@ -121,9 +131,9 @@ export default function Header({siteSettings}) {
                               <h5>Leave a Review</h5>
                               <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
                               <div className="btn_blk">
-                              <Link href="/search" onClick={ToggleAction} className="site_btn">Leave a review</Link>
+                              <Link href="#!" onClick={ToggleReviewAction} className="site_btn">Leave a review</Link>
                               </div>
-                              <Link href="/search" onClick={ToggleAction} className="site_btn hide_hide_hide">Leave a review</Link>
+                              <Link href="#!"  onClick={ToggleReviewAction} className="site_btn hide_hide_hide">Leave a review</Link>
                           </div>
                         </li>
                       </ul>
@@ -150,9 +160,9 @@ export default function Header({siteSettings}) {
                               <h5>Signup</h5>
                               <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
                               <div className="btn_blk">
-                              <Link href="/become-professional" onClick={ToggleAction} className="site_btn">Signup</Link>
+                              <Link href="/become-professional" onClick={ToggleReviewAction} className="site_btn">Signup</Link>
                               </div>
-                              <Link href="/become-professional" onClick={ToggleAction} className="hide_hide_hide">Signup</Link>
+                              <Link href="/become-professional" onClick={ToggleReviewAction} className="hide_hide_hide">Signup</Link>
                           </div>
                         </li>
 </>
