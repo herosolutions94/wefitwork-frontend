@@ -4593,15 +4593,19 @@
         align-self: center!important;
         margin-top: 2rem;
         justify-content: flex-end;
+        flex: .5 !important;
+        @include ipad_sm{
+            flex: unset!important;
+        }
         @include mobile_sm{
             justify-content: flex-start;
         }
-        .icon_btns{
-            flex: unset;
-            span{
-            display: none;
-            }
+        // .icon_btns{
+        //     flex: unset;
+        //     span{
+        //     display: none;
+        //     }
             
-        }
+        // }
     }
 }
