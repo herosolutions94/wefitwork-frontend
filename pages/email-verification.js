@@ -51,7 +51,7 @@ export default function EmailVerification({ result }) {
 
   const contactType = getCookie('contact_type');
   // console.log(contactType);
-  
+
 
   const { handleSubmit, control, formState } = useForm();
 
@@ -59,21 +59,21 @@ export default function EmailVerification({ result }) {
     e.preventDefault();
     const mem_email = localStorage.getItem("email");
     const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // const phoneRegex = /^\+234\d{10}$/;
-  const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+    const phoneRegex = /^\+234\d{10}$/;
+    // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
-  const isEmail = emailRegex.test(mem_email);
-  const isPhone = phoneRegex.test(mem_email);
+    const isEmail = emailRegex.test(mem_email);
+    const isPhone = phoneRegex.test(mem_email);
+    // console.log(isEmail, isPhone); return;
+    if (isEmail) {
+      data = { ...data, contact_type: "email" }
+    } else if (isPhone) {
+      data = { ...data, contact_type: "phone" }
 
-  if (isEmail) {
-    data = { ...data, contact_type: "email"}
-  } else if (isPhone) {
-    data = { ...data, contact_type: "phone"}
-
-  } else {
-    alert("Invalid email or phone format");
-    return;
-  } 
+    } else {
+      alert("Invalid email or phone format");
+      return;
+    }
 
     data = { ...data, email: localStorage.getItem("email") };
     dispatch(verifyEmail(data));
@@ -91,22 +91,22 @@ export default function EmailVerification({ result }) {
     setEmailVerify(true);
     var form_data = new FormData();
     const mem_email = localStorage.getItem("email");
-    
+
     const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const phoneRegex = /^\+234\d{10}$/;
-  // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+    const phoneRegex = /^\+234\d{10}$/;
+    // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
-  const isEmail = emailRegex.test(mem_email);
-  const isPhone = phoneRegex.test(mem_email);
+    const isEmail = emailRegex.test(mem_email);
+    const isPhone = phoneRegex.test(mem_email);
 
-  if (isEmail) {
-    form_data.append("contact_type", "email")
-  } else if (isPhone) {
-    form_data.append("contact_type", "phone")
-  } else {
-    alert("Invalid email or phone format");
-    return;
-  } 
+    if (isEmail) {
+      form_data.append("contact_type", "email")
+    } else if (isPhone) {
+      form_data.append("contact_type", "phone")
+    } else {
+      alert("Invalid email or phone format");
+      return;
+    }
     form_data.append("email", mem_email);
 
     await http.post("auth/resend-email", form_data).then((data) => {
@@ -125,7 +125,7 @@ export default function EmailVerification({ result }) {
     });
   };
 
-  
+
 
   return (
     <>
@@ -173,25 +173,25 @@ export default function EmailVerification({ result }) {
               </div>
             </div>
             <div className="right_inner">
-            {contactType == 'phone' && <>
-            <h2>
-                <Text string={"Phone Verification"} />
-              </h2>
-              <p>
-                <Text string={"We Have send an phone verification code on your phone number. Please Entre That six digit code to verify your account"} />
-              </p>
-            </>
-            
-            }
-            {contactType == "email" && <>
-            <h2>
-                <Text string={content?.right_sec_heading} />
-              </h2>
-              <p>
-                <Text string={content?.right_sec_tagline} />
-              </p>
-            </>}
-              
+              {contactType == 'phone' && <>
+                <h2>
+                  <Text string={"Phone Verification"} />
+                </h2>
+                <p>
+                  <Text string={"We Have send an phone verification code on your phone number. Please Entre That six digit code to verify your account"} />
+                </p>
+              </>
+
+              }
+              {contactType == "email" && <>
+                <h2>
+                  <Text string={content?.right_sec_heading} />
+                </h2>
+                <p>
+                  <Text string={content?.right_sec_tagline} />
+                </p>
+              </>}
+
               <form method="POST" onSubmit={handleSubmit(handleVerifyEmail)}>
                 <div className="form_blk">
                   <Controller
