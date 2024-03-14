@@ -347,8 +347,8 @@ export default function Services() {
                                     readOnly
                                     {...register("business_phone")}
                                   />
-                                  {pro_profile?.phone_verified !== "1" &&
-                                  pro_profile?.phone_verified !== 1 ? (
+                                  {(pro_profile?.phone_verified !== "1" &&
+                                  pro_profile?.phone_verified !== 1 ) || (pro_profile?.business_phone == "")? (
                                     <button
                                       type="button"
                                       onClick={handleVerifyPhonePopup}

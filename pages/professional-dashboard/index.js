@@ -65,8 +65,8 @@ export default function Dashboard() {
         {!isLoading && (
           <section className="dashboard">
             <div className="contain">
-              {pro_profile?.phone_verified == "0" &&
-                pro_profile?.phone_verified == 0 && (
+              {((pro_profile?.phone_verified == "0" &&
+                pro_profile?.phone_verified == 0) || pro_profile?.business_phone == "") && (
                   <div className="alert alert-danger text-center">
                     Your Bussiness Phone is missing or not Verified.
                     <a
