@@ -33,6 +33,7 @@ export default function Header({siteSettings}) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -47,6 +48,8 @@ export default function Header({siteSettings}) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+ 
   const token = authToken();
   // console.log(siteSettings);
     const[toggle,setToggle] = useState(false);
@@ -71,8 +74,8 @@ export default function Header({siteSettings}) {
           <div className={toggle ? "toggle active" : "toggle"} onClick={ToggleAction}><span></span></div>
           <nav id="nav" className={toggle ? "active" : ""}>
             <ul>
-              <li className="drop">
-                  <div onClick={toggleHomeOwner} className="btn_nav" ref={dropdownRef}>Homeowner</div>
+              <li className="drop" ref={dropdownRef}>
+                  <div onClick={toggleHomeOwner} className="btn_nav" >Homeowner</div>
                   <div className={homeOwner ? "sub active" : "sub"}>
                       <ul>
                       {!token ? 
@@ -126,8 +129,8 @@ export default function Header({siteSettings}) {
                       </ul>
                   </div>
               </li>
-              <li className="drop">
-                  <div onClick={toggleProfessional} className="btn_nav" ref={dropprofessionalRef}>Professionals</div>
+              <li className="drop" ref={dropprofessionalRef}>
+                  <div onClick={toggleProfessional} className="btn_nav" >Professionals</div>
                   <div className={professional ? "sub active" : "sub"}>
                       <ul>
                       {!token ? 
