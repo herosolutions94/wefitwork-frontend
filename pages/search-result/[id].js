@@ -345,12 +345,11 @@ export default function SearchResult({ result, authToken }) {
                       <>
                         <button
                           type="button"
-                          className="icon_btns"
+                          className="site_btn color block"
                           disabled={isFormProcessing}
                           onClick={() => handleStartChat(pro_mem_data?.mem_id)}
                         >
-                          <img src="/images/ChatCircleText.svg" alt="Start Chat" />
-                          <span>Start Chat</span>
+                          Start Chat
                           {isFormProcessing && (
                             <i
                               className={
@@ -362,16 +361,15 @@ export default function SearchResult({ result, authToken }) {
                         <button
                           type="button"
                           onClick={() => handleOpenPopupSend(pro_mem_data)}
-                          className="icon_btns"
+                          className="site_btn block"
                         >
-                          <img src="/images/contact_email.svg" alt="Start Chat" />
-                           <span>Send SMS</span>
+                           Send SMS
                         </button>
 
                         {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="icon_btns" onClick={() => handleCallNow(pro_mem_data)}>
-                                       <img src="/images/contact_phone.svg" alt="Start Chat" />
-                                        <span>Call Now</span>
+                                  <button type="button" className="site_btn blank block" onClick={() => handleCallNow(pro_mem_data)}>
+                                       
+                                        Call Now
                                   </button>
                                   }
                       </>

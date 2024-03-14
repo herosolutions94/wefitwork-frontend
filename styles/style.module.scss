@@ -4596,6 +4596,7 @@
         flex: .5 !important;
         @include ipad_sm{
             flex: unset!important;
+            flex-flow: wrap;
         }
         @include mobile_sm{
             justify-content: flex-start;

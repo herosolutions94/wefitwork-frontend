@@ -581,7 +581,7 @@ const [callSpinner, setCallSpinner] = useState(false);
                                   : 0}
                               </h3>
                             </div>
-                            <div className="btn_blk new_icons_btn">
+                            <div className="btn_blk">
                               {val?.mem_id == memData?.mem_id ? (
                                 <>
                                   <Link
@@ -598,12 +598,11 @@ const [callSpinner, setCallSpinner] = useState(false);
                                 <>
                                   <button
                                     type="button"
-                                    className="icon_btns"
+                                    className="site_btn color block"
                                     onClick={() => handleStartChat(val?.mem_id)}
                                     disabled={isFormProcessing}
                                   >
-                                    <img src="/images/ChatCircleText.svg" alt="Start Chat" />
-                                    <span>Start Chat</span>
+                                    Start Chat
                                     {isFormProcessing && (
                                       <i
                                         className={
@@ -617,16 +616,15 @@ const [callSpinner, setCallSpinner] = useState(false);
                                   <button
                                     type="button"
                                     onClick={() => handleOpenPopupSend(val)}
-                                    className="icon_btns"
+                                    className="site_btn block"
                                   >
-                                    <img src="/images/contact_email.svg" alt="Start Chat" />
-                                    <span>Send SMS</span>
+                                    Send SMS
                                   </button>
 
                                   {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="icon_btns" onClick={() => handleCallNow(val)}>
-                                    <img src="/images/contact_phone.svg" alt="Start Chat" />
-                                        <span>Call Now</span>
+                                  <button type="button" className="site_btn blank block" onClick={() => handleCallNow(val)}>
+                                    
+                                        Call Now
                                   </button>
                                   }
                                   
