@@ -596,7 +596,7 @@ const [callSpinner, setCallSpinner] = useState(false);
                                 </>
                               ) : (
                                 <>
-                                  <button
+                                  {/* <button
                                     type="button"
                                     className="site_btn color block"
                                     onClick={() => handleStartChat(val?.mem_id)}
@@ -612,7 +612,7 @@ const [callSpinner, setCallSpinner] = useState(false);
                                         }
                                       ></i>
                                     )}
-                                  </button>
+                                  </button> */}
                                   <button
                                     type="button"
                                     onClick={() => handleOpenPopupSend(val)}

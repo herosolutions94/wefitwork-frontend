@@ -81,7 +81,7 @@ export default function Dashboard() {
                 <h3>
                   Welcome Back
                   <span className="color">
-                    <Text string={member?.mem_fname} />
+                    {member?.mem_fname}
                   </span>
                 </h3>
               </div>
@@ -159,7 +159,7 @@ export default function Dashboard() {
                           </div>
                           <div className="cntnt">
                             <h5>
-                              <Text string={sms?.to_mem_name} />
+                              {sms?.to_mem_name} 
                             </h5>
                           </div>
                         </div>
@@ -171,7 +171,7 @@ export default function Dashboard() {
                           </p>
                           <p>
                             <strong>
-                              <Text string={sms?.date} />
+                              {sms?.date} 
                             </strong>
                           </p>
                         </div>
@@ -183,7 +183,7 @@ export default function Dashboard() {
                           </p>
                           <p>
                             <strong>
-                              <Text string={sms?.service} />
+                              {sms?.service} 
                             </strong>
                           </p>
                         </div>
@@ -195,7 +195,7 @@ export default function Dashboard() {
                           </p>
                           <p>
                             <strong>
-                              <Text string={sms?.to_mem_address} />
+                             {sms?.to_mem_address} 
                             </strong>
                           </p>
                         </div>

@@ -120,7 +120,7 @@ export default function LoggedHeader() {
                   </ul>
                 </div>
               </li>
-              <li className="logged_drop icon_drop">
+              {/* <li className="logged_drop icon_drop">
                 <button className="logged_drop_btn" onClick={ToggleEnvelopeDrop}>
                   <div className="user_img">
                     <img src="/images/envelope_color.svg" alt="" />
@@ -174,7 +174,7 @@ export default function LoggedHeader() {
                     </li>
                   </ul>
                 </div>
-              </li>
+              </li> */}
               <li className="logged_drop">
                 <button className="logged_drop_btn" onClick={ToggleUserDrop}>
                   <div className="user_img">

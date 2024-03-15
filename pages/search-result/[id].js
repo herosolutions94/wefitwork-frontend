@@ -343,7 +343,7 @@ export default function SearchResult({ result, authToken }) {
                       ""
                     ) : (
                       <>
-                        <button
+                        {/* <button
                           type="button"
                           className="site_btn color block"
                           disabled={isFormProcessing}
@@ -357,7 +357,7 @@ export default function SearchResult({ result, authToken }) {
                               }
                             ></i>
                           )}
-                        </button>
+                        </button> */}
                         <button
                           type="button"
                           onClick={() => handleOpenPopupSend(pro_mem_data)}

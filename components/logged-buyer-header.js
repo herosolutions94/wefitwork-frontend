@@ -134,7 +134,7 @@ export default function LoggedBuyerHeader() {
                   </ul>
                 </div>
               </li>
-              <li className="logged_drop icon_drop">
+              {/* <li className="logged_drop icon_drop">
                 <button
                   className="logged_drop_btn"
                   onClick={ToggleEnvelopeDrop}
@@ -215,7 +215,7 @@ export default function LoggedBuyerHeader() {
                     </li>
                   </ul>
                 </div>
-              </li>
+              </li> */}
               {isLoading ? (
                 <div className="text-center">
                   <div className="spinner-border text-success" role="status">
@@ -299,7 +299,7 @@ export default function LoggedBuyerHeader() {
                         onClick={ToggleUserDrop}
                       >
                         <img src="/images/user-gear.svg" alt="" />
-                        <span>Maintenance Cover</span>
+                        <span>Repair Cover</span>
                       </Link>
                     </li>
                     <li>
