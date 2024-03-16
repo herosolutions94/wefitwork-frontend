@@ -18,7 +18,7 @@ export function doObjToFormData(obj) {
       if (typeof obj[key] == "object") {
         formData.append(key, JSON.stringify(obj[key]));
       } else {
-        if(obj[key] !== null && obj[key] !== undefined){
+        if (obj[key] !== null && obj[key] !== undefined) {
           formData.append(key, obj[key]);
 
         }
@@ -39,12 +39,12 @@ export function doObjToFormDataWithBlob(obj) {
       if (typeof obj[key] == "object") {
         if (key === "video") {
           formData.append(key, obj[key], "Interview-Video.mp4");
-        }else{
+        } else {
           formData.append(key, JSON.stringify(obj[key]));
         }
 
 
-        
+
       } else {
         formData.append(key, obj[key]);
       }
@@ -191,7 +191,7 @@ export function formatDate(dateString) {
   const month = date.toLocaleString('default', { month: 'short' });
   const year = date.getFullYear();
 
-  
+
 
   return `${day} ${month} ${year}`;
 }
@@ -203,7 +203,7 @@ export function blogDate(dateString) {
   const month = date.toLocaleString('default', { month: 'short' });
   const year = date.getFullYear();
 
-  
+
 
   return `${month} ${day}, ${year}`;
 }
@@ -225,7 +225,7 @@ export function getArrayCount(arr) {
   return arr.length;
 }
 
-export function getObjKeyCount(obj){
+export function getObjKeyCount(obj) {
   return Object.keys(obj).length;
 };
 
@@ -255,12 +255,12 @@ export function formatDateTime(dateTimeString) {
 
 export function subscriptionStatus(status) {
   // console.log(typeof(status));
-  if(status == 'active'){
+  if (status == 'active') {
     return <span className="badge rounded-pill bg-success">Active</span>
-  }else if(status == 'non-renewing'){
+  } else if (status == 'non-renewing') {
     return <span className="badge rounded-pill bg-warning">Non Renewing</span>
 
-  }else{
+  } else {
     return <span className="badge rounded-pill bg-danger">Cancelled</span>
   }
 
@@ -277,50 +277,54 @@ export async function FileUpload(event, type = 'attchments', file_name) {
   fd.append("file_name", file_name);
 
   return http.post("upload-file", fd).then((res) => {
-      return res.data;
+    return res.data;
   });
 }
 export async function uploadMultiFiles(event, type) {
   let newImages = [];
   let images_arr = event.target.files;
   for (let i = 0; i < images_arr.length; i++) {
-      let fileSize = images_arr[i].size;
-      let fileName = images_arr[i].name;
+    let fileSize = images_arr[i].size;
+    let fileName = images_arr[i].name;
 
-      let sizeMb = bytesToMegaBytes(fileSize);
-      if (sizeMb < 40) {
-          let image = await FileUpload(images_arr[i], type, fileName).then((data) => {
-              // console.log("uploadMultiFiles", data)
-              if (data.file != undefined && data?.status === 1) {
-                  newImages.push({ file: data.file, file_name: data?.file_name_text });
-              }
-              else if (data?.status === 0) {
-                toast.error(data?.msg);
-                   return;
-              }
-          });
-      }
+    let sizeMb = bytesToMegaBytes(fileSize);
+    if (sizeMb < 40) {
+      let image = await FileUpload(images_arr[i], type, fileName).then((data) => {
+        // console.log("uploadMultiFiles", data)
+        if (data.file != undefined && data?.status === 1) {
+          newImages.push({ file: data.file, file_name: data?.file_name_text });
+        }
+        else if (data?.status === 0) {
+          toast.error(data?.msg);
+          return;
+        }
+      });
+    }
   }
   return newImages;
 
-  
+
 
 
 }
 
 export function formatDigits(number) {
   // Pad single-digit numbers with a leading zero
-  return number > 0 && number < 10  ? `0${number}` : number.toString();
+  return number > 0 && number < 10 ? `0${number}` : number.toString();
 }
 
 export function requestStatus(status) {
   // console.log(typeof(status));
-  if(status == 'pending'){
+  if (status == 'pending') {
     return <strong><span className="badge yellow">Pending</span></strong>
-  }else if(status == 'completed'){
+  }
+  else if (status == "in_progress") {
+    return <strong><span className="badge gold">In Progress</span></strong>
+  }
+  else if (status == 'completed') {
     return <strong><span className="badge green">Completed</span></strong>
 
-  }else{
+  } else {
     return <strong><span className="badge red">Cancelled</span></strong>
   }
 
@@ -340,25 +344,25 @@ export function checkEmailOrPhone(emailPhone) {
   } else if (isPhone) {
     return "phone"
   } else {
-    
+
     return false;
   }
 }
 
 export function isTrialExpired(trialEndDateString) {
- 
+
   const trialEndDate = new Date(trialEndDateString);
   const currentDate = new Date();
 
   // Compare the dates
   // console.log(currentDate + ' || ' + trialEndDate)
-  if(currentDate > trialEndDate){
+  if (currentDate > trialEndDate) {
     // console.log('true')
     return true;
-  }else{
+  } else {
     // console.log('false')
 
     return false;
   }
-  
+
 };

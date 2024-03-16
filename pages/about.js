@@ -188,6 +188,9 @@ export default function About({ result }) {
                     <div className="cntnt">
                       <h4>{val?.name}</h4>
                       <p>{val?.designation}</p>
+                      <div className="_text">
+                        <Text string={val?.detail} />
+                      </div>
                     </div>
                   </div>
                 );

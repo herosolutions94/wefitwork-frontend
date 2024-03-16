@@ -93,8 +93,8 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
   };
 
   useEffect(() => {
-    if(serId > 0){
-      handleServiceLabelClick('',  serId, selectedTitle)
+    if (serId > 0) {
+      handleServiceLabelClick('', serId, selectedTitle)
       setValue('service_id', serId)
       handleNext()
     }
@@ -248,7 +248,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
         <div
           className={`step ${step === 1 ? "field_set active" : "field_set"}`}
         >
-          <h6>Search Serrvice</h6>
+          <h6>Search Service</h6>
           <div className="form_blk">
             <input
               type="text"
@@ -278,9 +278,8 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
                   return (
                     <li key={val.id}>
                       <div
-                        className={`lbl_btn ${
-                          selectedServiceValue === val?.id ? "active" : ""
-                        }`}
+                        className={`lbl_btn ${selectedServiceValue === val?.id ? "active" : ""
+                          }`}
                       >
                         <input
                           type="radio"
@@ -341,9 +340,8 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
                 return (
                   <li key={sub_ser?.id}>
                     <div
-                      className={`lbl_btn ${
-                        selectedSubServiceValue === sub_ser?.id ? "active" : ""
-                      }`}
+                      className={`lbl_btn ${selectedSubServiceValue === sub_ser?.id ? "active" : ""
+                        }`}
                     >
                       <input
                         type="radio"
@@ -396,12 +394,12 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
                   })}
                 >
                   <option value="">Select State</option>
-                  {states?.map((st)=> {
+                  {states?.map((st) => {
                     return (
                       <option key={st?.id} value={st?.title}>{st?.title}</option>
                     )
                   })}
-                  
+
                   {/* <option value="Adamawa">Adamawa</option>
                   <option value="Akwa_Ibom">Akwa Ibom</option>
                   <option value="Anambra">Anambra</option>
@@ -448,7 +446,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
                   <AddressAutocomplete
                     onPlaceSelect={handlePlaceSelect}
                     setAddress={setBusinessAddress}
-                  
+
                   />
                   {/* <input
                     type="text"
@@ -512,10 +510,10 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
             <div className="colR">
               <div className="map_sec">
                 {reloadMap &&
-                watchAllFields?.latitude !== null &&
-                watchAllFields?.latitude !== undefined &&
-                watchAllFields?.longitude !== null &&
-                watchAllFields?.longitude !== undefined ? (
+                  watchAllFields?.latitude !== null &&
+                  watchAllFields?.latitude !== undefined &&
+                  watchAllFields?.longitude !== null &&
+                  watchAllFields?.longitude !== undefined ? (
                   <LeafletMapComponent
                     locationCords={locationCords}
                     setLocationCords={setLocationCords}
@@ -584,9 +582,8 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
                 return (
                   <li key={val.id}>
                     <div
-                      className={`lbl_btn ${
-                        selectedValue === val.id ? "active" : ""
-                      }`}
+                      className={`lbl_btn ${selectedValue === val.id ? "active" : ""
+                        }`}
                     >
                       <input
                         type="radio"
@@ -632,7 +629,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
               Next
             </button>
           ) : (
-            <button type="submit" className="site_btn">
+            <button type="submit" className="site_btn" id="search-button">
               Search
               {isFormProcessing && (
                 <i
