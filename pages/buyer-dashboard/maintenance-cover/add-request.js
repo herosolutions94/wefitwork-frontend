@@ -26,7 +26,7 @@ export default function AddRequest() {
 
   const { site_settings, page_title, maintenance_services } = data;
 
-    console.log(data);
+  console.log(data);
 
   useEffect(() => {
     dispatch(fetchAddRequestPage());
@@ -134,7 +134,7 @@ export default function AddRequest() {
             <section className="dashboard professional_details">
               <div className="contain">
                 <div className="sec_heading">
-                  <h3>Add New Maintenance Request</h3>
+                  <h3>Add New Repair Request</h3>
                 </div>
                 <div className="custom_blk_main">
                   <form

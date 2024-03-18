@@ -13,9 +13,9 @@ import { cmsFileUrl, formatDate, isEmpty, requestStatus } from "@/components/hel
 
 export default function MaintenanceDetails() {
   const router = useRouter();
-  const {id} = router.query;
+  const { id } = router.query;
   const request_id = encrypt_decrypt("decrypt", id);
-  const formData = {request_id: request_id}
+  const formData = { request_id: request_id }
 
 
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ export default function MaintenanceDetails() {
     site_settings,
     page_title,
     requestData,
-    
+
   } = data;
 
 
@@ -42,12 +42,12 @@ export default function MaintenanceDetails() {
       {/* <NextNProgress color="#004AAD" /> */}
       <main>
         <Toaster position="top-center" />
-        
+
         {isLoading && (
           <>
-          <Head>
-          <title>{"fetching..."}</title>
-        </Head>
+            <Head>
+              <title>{"fetching..."}</title>
+            </Head>
             <div className="br"></div>
             <div className="text-center">
               <div
@@ -62,67 +62,70 @@ export default function MaintenanceDetails() {
         )}
         {!isLoading && (
           <>
-          <Head>
-          <title>{page_title ? page_title : "fetching..."}</title>
-        </Head>
-        <section className="dashboard professional_details">
-            <div className="contain">
+            <Head>
+              <title>{page_title ? page_title : "fetching..."}</title>
+            </Head>
+            <section className="dashboard professional_details">
+              <div className="contain">
                 <div className="professiona_view_tile">
-                    <div className="col custom_blk">
-                    <h3 className="color"><Text string={requestData?.request_title} /></h3>
+                  <div className="col custom_blk">
+                    <div className="btn_blk">
+                      <h3 className="color"><Text string={requestData?.request_title} /></h3>
+                      <Link href="/buyer-dashboard/maintenance-cover" className="site_btn color">Back</Link>
+                    </div>
                     <div className="mini_br"></div>
                     <div className="address_booking">
-                        <img src="/images/MapPin.svg" alt="" />
-                        <span>
+                      <img src="/images/MapPin.svg" alt="" />
+                      <span>
                         <Text string={requestData?.address} />
-                        </span>
+                      </span>
                     </div>
                     <div className="br"></div>
                     <div className="main_ul_new">
-                        <p><span className="dim_text_main">Category :</span> <strong><Text string={requestData?.service_title} /></strong></p>
-                        <p><span className="dim_text_main">Sub Category :</span> <strong><Text string={requestData?.sub_service} /></strong></p>
-                        <p><span className="dim_text_main">Date :</span> <strong>{formatDate(requestData?.created_date)}</strong></p>
-                        <p><span className="dim_text_main">Status :</span> {requestStatus(requestData?.status)}</p>
+                      <p><span className="dim_text_main">Category :</span> <strong><Text string={requestData?.service_title} /></strong></p>
+                      <p><span className="dim_text_main">Sub Category :</span> <strong><Text string={requestData?.sub_service} /></strong></p>
+                      <p><span className="dim_text_main">Date :</span> <strong>{formatDate(requestData?.created_date)}</strong></p>
+                      <p><span className="dim_text_main">Status :</span> {requestStatus(requestData?.status)}</p>
                     </div>
                     <div className="br"></div>
                     <h4 className="color">Work Scope</h4>
                     <p><Text string={requestData?.detail} /></p>
-                    </div>
-                    <div className="col custom_blk">
+                  </div>
+                  <div className="col custom_blk">
                     <h3 className="color">Images</h3>
                     <div className="mini_br"></div>
-                        <div className="profile_grid_maintenance scrollbar">
-                            <div className="flex">
-                            {!isEmpty(requestImages) ? (requestImages?.map((img) => {
-                              return (
-                                <div className="img_col" key={img?.id}>
-                                    <div className="inner_img">
-                                    {img?.image ? <img
-                                        src={cmsFileUrl(img?.image, 'members/mc_request_images')}
-                                        alt="image"
-                                        />
-                                        : 
-                                        <img
-                                        src="/images/no-image.svg"
-                                        alt="image"
-                                        />
-                                    }
-                                        
-                                    </div>
-                                </div>
-                              )
-                            })) : (
-                              <div className="alert alert-danger text-center">No images are provided</div>
-                            )}
-                              
+                    <div className="profile_grid_maintenance scrollbar">
+                      <div className="flex">
+                        {!isEmpty(requestImages) ? (requestImages?.map((img) => {
+                          return (
+                            <div className="img_col" key={img?.id}>
+                              <div className="inner_img">
+                                {img?.image ? <img
+                                  src={cmsFileUrl(img?.image, 'members/mc_request_images')}
+                                  alt="image"
+                                />
+                                  :
+                                  <img
+                                    src="/images/no-image.svg"
+                                    alt="image"
+                                  />
+                                }
+
+                              </div>
                             </div>
-                        </div>
+                          )
+                        })) : (
+                          <div className="alert alert-danger text-center">No images are provided</div>
+                        )}
+
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </div>
-          </section>
+              </div>
+            </section>
           </>
-          
+
         )}
       </main>
     </>

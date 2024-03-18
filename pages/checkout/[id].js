@@ -34,8 +34,8 @@ export const getServerSideProps = async (context) => {
   const cookieValue = parse(cookieHeader);
   const authToken =
     cookieValue["authToken"] !== undefined &&
-    cookieValue["authToken"] !== null &&
-    cookieValue["authToken"] !== ""
+      cookieValue["authToken"] !== null &&
+      cookieValue["authToken"] !== ""
       ? cookieValue["authToken"]
       : null;
 
@@ -48,9 +48,13 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function Checkout({ result }) {
+  const router = useRouter();
+
+  // Access URL parameters
+  const { id } = router.query;
   let { page_title, meta_desc, content, maintenance_cover, included, memData, type_prices } =
     result;
-const token = authToken();
+  const token = authToken();
   const [step, setStep] = useState(0);
   const [cardMethod, setCardMethod] = useState(false);
   const toggleCard = () => {
@@ -73,8 +77,8 @@ const token = authToken();
         fieldsToValidate.push("agree");
         break;
       default:
-        // Handle other steps if needed
-        // fieldsToValidate = [];
+      // Handle other steps if needed
+      // fieldsToValidate = [];
     }
 
     const isValid = await trigger(fieldsToValidate);
@@ -87,7 +91,7 @@ const token = authToken();
       // setStep(step + 1);
       setStep(step + 1);
     }
-    
+
   };
   const BackToggle = () => {
     setStep(step - 1);
@@ -113,10 +117,10 @@ const token = authToken();
   const [payInProcess, setPayInProcess] = useState(false);
 
   const handleSavePayment = (data, saveFormData = false) => {
-      if (saveFormData === true) {
-        data = {...data, maintenance_cover_id: parseInt(maintenance_cover?.id)}
-        dispatch(saveMaintenanceCoverPayment(data));
-      }
+    if (saveFormData === true) {
+      data = { ...data, maintenance_cover_id: parseInt(maintenance_cover?.id) }
+      dispatch(saveMaintenanceCoverPayment(data));
+    }
   }
 
 
@@ -133,7 +137,7 @@ const token = authToken();
       setTotalPrice(selectedType.price);
     }
   };
-  
+
   // Watch for changes in the "house_type" field and update the price
   useEffect(() => {
     handleSetPrice(selectedHouseType);
@@ -188,13 +192,13 @@ const token = authToken();
                             })}
                           />
                           <div
-                          className="validation-error"
-                          style={{ color: "red" }}
-                        >
-                          {errors.fullname?.message}
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.fullname?.message}
+                          </div>
                         </div>
-                        </div>
-                        
+
                         <div className="col-xs-6">
                           <h6>Email</h6>
                           <input
@@ -246,16 +250,16 @@ const token = authToken();
                         <div className="col-xs-6">
                           <h6>Type of house</h6>
                           <select className="input" name="" {...register("house_type", {
-                              required: "Type of House is Required",
-                              
-                            })}>
+                            required: "Type of House is Required",
+
+                          })}>
                             <option value="">Choose type of house</option>
                             {type_prices?.map((typ) => {
                               return (
                                 <option key={typ?.id} value={typ?.type_of_house}>{typ?.type_of_house}</option>
                               )
                             })}
-                            
+
 
                           </select>
                           <div
@@ -268,9 +272,9 @@ const token = authToken();
                         <div className="col-xs-12">
                           <h6>Address</h6>
                           <input type="text" name="address" className="input" defaultValue={memData?.mem_address} {...register("address", {
-                              required: "Address is Required",
-                            })} />
-                            <div
+                            required: "Address is Required",
+                          })} />
+                          <div
                             className="validation-error"
                             style={{ color: "red" }}
                           >
@@ -280,6 +284,13 @@ const token = authToken();
                       </div>
                       <div className="br"></div>
                       <div className="btn_blk text-center">
+                        <Link
+                          href={"/maintenance-cover/" + id}
+                          className="site_btn color"
+                          onClick={BackToggle}
+                        >
+                          Back
+                        </Link>
                         <button
                           type="button"
                           className="site_btn"
@@ -430,7 +441,7 @@ const token = authToken();
                                 <img src="/images/card-out.svg" alt="" />
                               </div>
                               <p className="text-center">
-                                After clicking "Submit", Paystack payment 
+                                After clicking "Submit", Paystack payment
                                 popup will appear to complete your purchase securely.
                               </p>
                             </div>
@@ -447,46 +458,46 @@ const token = authToken();
                         >
                           Back
                         </button>
-                        {!token && (memData?.mem_email == "" || memData?.mem_email == null || !memData || memData == null || memData == undefined) ? 
-                        <button type="button" className="site_btn" disabled={isFormProcessing}
+                        {!token && (memData?.mem_email == "" || memData?.mem_email == null || !memData || memData == null || memData == undefined) ?
+                          <button type="button" className="site_btn" disabled={isFormProcessing}
                             onClick={() => {
                               toast.error(
                                 "please login first to make payment"
                               );
-                                setAuthPopup(true)
-                                setSimpleLogin(true)
+                              setAuthPopup(true)
+                              setSimpleLogin(true)
                             }
-                              
-                            }>
-                          Submit
-                        </button>
-                        : 
-                        isFormProcessing ? (
-                          <button type="button" className="site_btn" disabled={isFormProcessing}
-                            >
-                          Submit{isFormProcessing && (
-                            <i
-                              className={
-                                isFormProcessing ? "spinner" : "spinnerHidden"
-                              }
-                            ></i>
-                          )}
-                        </button>
-                        ) : (
-                          <McoverPaystack 
-                        memData={memData}
-                        handleSavePayment={handleSavePayment}
-                        watcFields={watch()}
-                        mem_email={watch().email}
-                        price={totalPrice}
-                        
-                        /> 
-                        )
-                        
-                        }
-                        
 
-                        
+                            }>
+                            Submit
+                          </button>
+                          :
+                          isFormProcessing ? (
+                            <button type="button" className="site_btn" disabled={isFormProcessing}
+                            >
+                              Submit{isFormProcessing && (
+                                <i
+                                  className={
+                                    isFormProcessing ? "spinner" : "spinnerHidden"
+                                  }
+                                ></i>
+                              )}
+                            </button>
+                          ) : (
+                            <McoverPaystack
+                              memData={memData}
+                              handleSavePayment={handleSavePayment}
+                              watcFields={watch()}
+                              mem_email={watch().email}
+                              price={totalPrice}
+
+                            />
+                          )
+
+                        }
+
+
+
                       </div>
                     </fieldset>
                   </form>
@@ -500,8 +511,8 @@ const token = authToken();
                   <h3>
                     <Text string={maintenance_cover?.service_title} />
                   </h3>
-                 
-                  
+
+
                   <h1>
                     {totalPrice > 0 ? format_amount_comma(parseFloat(totalPrice)) : format_amount_comma(parseFloat(maintenance_cover?.price))}
                     <sub>

@@ -90,7 +90,7 @@ export default function MaintenanceCover() {
               <section className="dashboard main_tenance_dash">
                 <div className="contain">
                   <div className="sec_heading flex">
-                    <h2>Maintenance Requests</h2>
+                    <h2>Repair Request</h2>
                     <div className="btn_blk">
                       <Link href="/buyer-dashboard/maintenance-cover/add-request" className="site_btn color">Add New</Link>
                     </div>
@@ -172,14 +172,14 @@ export default function MaintenanceCover() {
               <section className="dashboard main_tenance_dash">
                 <div className="contain">
                   <div className="alert alert-danger">
-                    <h5 className="text-center">You have'nt purchased any Maintenance Cover service. Please follow on the button to purchase your willng maintenance cover</h5>
+                    <h5 className="text-center">You have'nt purchased any Repair Cover service. Please follow on the button to purchase your willng Repair cover</h5>
                     <div className="mini_br"></div>
                     <div className="btn_blk text-center">
                       <Link
                         href="/maintenance-cover"
                         className="site_btn color min_wid"
                       >
-                        Maintenance Cover
+                        Repair Cover
                       </Link>
                     </div>
                   </div>

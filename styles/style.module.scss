@@ -2336,6 +2336,10 @@
             position: relative;
             margin-bottom: 3rem;
 
+            .btn_blk {
+                justify-content: space-between;
+            }
+
             .inner {
                 @include flex($flow: wrap);
 

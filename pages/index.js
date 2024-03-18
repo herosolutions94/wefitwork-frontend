@@ -319,7 +319,7 @@ export default function Home({ result }) {
                     <img src="/images/shield.png" alt="" />
                   </div>
                   <div className="cn_tnt">
-                    <h4>Get our maintenance cover</h4>
+                    <h4>Get our Repair cover</h4>
                     <p>Your Home Deserves the Best Care: Introducing Our Comprehensive Maintenance Solutions!</p>
                   </div>
                 </Link> */}

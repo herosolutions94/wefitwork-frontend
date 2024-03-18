@@ -35,7 +35,7 @@ export const saveMaintenanceCoverPayment = (formData) => (dispatch) => {
     .post("user/save-maintenance-cover-payment", doObjToFormData(formData))
     .then(({ data }) => {
       if (data.status) {
-        toast.success("Maintenance Cover Purchased Successfully", {
+        toast.success("Repair Cover Purchased Successfully", {
           duration: 6000,
         });
         dispatch({
