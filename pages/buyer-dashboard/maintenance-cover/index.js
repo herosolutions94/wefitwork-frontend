@@ -160,7 +160,7 @@ export default function MaintenanceCover() {
                       )
                     })
                   ) : (
-                    <div className="alert alert-danger text-center">You haven't made any requests.Click Add New to made a Maintenance. </div>
+                    <div className="alert alert-danger text-center">You haven't made any requests.Click Add New to made a Repair Request. </div>
                   )}
 
 
