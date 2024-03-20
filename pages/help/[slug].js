@@ -85,9 +85,10 @@ export default function HelpDetails({ result }) {
                         </h5>
                         <ul>
                           {val?.articles.map((article, a) => {
+                            
                             return (
                               <li key={a}>
-                                <Link href="">
+                                <Link href={`/help/article/${article?.id}`}>
                                   <Text string={article?.article_name} />
                                 </Link>
                               </li>
