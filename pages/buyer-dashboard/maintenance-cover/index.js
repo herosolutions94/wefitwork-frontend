@@ -30,13 +30,14 @@ export default function MaintenanceCover() {
     site_settings,
     page_title,
     mc_purchased_status,
+    request_count,
 
   } = data;
 
   useEffect(() => {
     dispatch(fetchBuyerMaintenanceRequests());
   }, []);
-  console.log(mc_requests)
+  // console.log(data)
 
 
   const handleRequestDelete = (request_id) => {
@@ -90,11 +91,17 @@ export default function MaintenanceCover() {
               <section className="dashboard main_tenance_dash">
                 <div className="contain">
                   <div className="sec_heading flex">
-                    <h2>Repair Request</h2>
+                    <h2>Repair Request </h2>
                     <div className="btn_blk">
+                    {request_count < 10 ? 
                       <Link href="/buyer-dashboard/maintenance-cover/add-request" className="site_btn color">Add New</Link>
+                    : 
+                    <Link href="#" onClick={() => toast.error('You have reach your limit of 10 repair cover request contact customer care if you need to make more request.')} className="site_btn color">Add New</Link>
+
+                    }
                     </div>
                   </div>
+                  <p>Requests Limit : ({`${request_count} / 10`})</p>
                   {!isEmpty(mc_requests) ? (
                     mc_requests?.map((req, r) => {
                       return (
