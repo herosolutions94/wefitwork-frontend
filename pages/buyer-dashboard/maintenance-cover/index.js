@@ -13,6 +13,8 @@ import { formatDate, isEmpty, requestStatus, doObjToFormData } from "@/component
 import { encrypt_decrypt } from "@/components/helpers/rsa-helper";
 import { authToken } from "@/components/helpers/authToken";
 import http from "@/components/helpers/http";
+import Popup from "@/components/components/popup";
+import MsgPopup from "@/components/components/msgPopup";
 
 
 export default function MaintenanceCover() {
@@ -59,6 +61,9 @@ export default function MaintenanceCover() {
     }
   }
 
+  const [popupKey, setPopupKey] = useState(true);
+  const [msgPopup, setMsgPopup] = useState(false);
+
   return (
     <>
       {/* <NextNProgress color="#004AAD" /> */}
@@ -96,7 +101,7 @@ export default function MaintenanceCover() {
                     {request_count < 10 ? 
                       <Link href="/buyer-dashboard/maintenance-cover/add-request" className="site_btn color">Add New</Link>
                     : 
-                    <Link href="#" onClick={() => toast.error('You have reach your limit of 10 repair cover request contact customer care if you need to make more request.')} className="site_btn color">Add New</Link>
+                    <Link href="#" onClick={() => setMsgPopup(true)} className="site_btn color">Add New</Link>
 
                     }
                     </div>
@@ -197,6 +202,11 @@ export default function MaintenanceCover() {
 
         )}
       </main>
+
+      <Popup key={popupKey} isOpen={msgPopup} onClose={() => setMsgPopup(false)}>
+        <MsgPopup heading="Alert" msg="You have reach your limit of 10 repair cover request contact customer care if you need to make more request."  />
+      </Popup>
+
     </>
   );
 }
