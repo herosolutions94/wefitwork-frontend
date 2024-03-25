@@ -23,7 +23,7 @@ const DistanceSlider = ({handleRadiusCahnge}) => {
         onChange={handleSliderChange}
       />
       {/* <div className='mini_mile_lbl'>{distance[1]} Miles</div> */}
-      <div className='mini_mile_lbl'>{distance} Miles</div>
+      <div className='mini_mile_lbl'>{distance} Kilometers</div>
 
     </div>
   );

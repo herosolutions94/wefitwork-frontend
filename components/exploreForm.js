@@ -551,7 +551,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
           <div className="form_blk w_6">
             <h6>Estimated Budget (₦)</h6>
             <input
-              type="text"
+              type="number"
               name="budget"
               className="input"
               {...register("budget", {

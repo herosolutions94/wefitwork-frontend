@@ -160,14 +160,14 @@ export default function About({ result }) {
                 </div>
                 <Text string={content?.sec3_detail} />
                 <div className="mini_br"></div>
-                <div className="btn_blk">
+                {/* <div className="btn_blk">
                   <Link
                     href={content?.sec3_button1_link}
                     className="site_btn min_wid"
                   >
                     {content?.sec3_button1_text}
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

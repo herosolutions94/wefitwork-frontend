@@ -153,6 +153,10 @@ export default function Contact({ result }) {
                           className="input"
                           {...register("full_name", {
                             required: "Full Name is required.",
+                            pattern: {
+                        value: /^[a-zA-Z][a-zA-Z ]*$/,
+                        message: "Invalid Value",
+                      },
                             minLength: {
                               value: 2,
                               message:
@@ -169,7 +173,24 @@ export default function Contact({ result }) {
                       </div>
 
                       <div className="form_blk">
+                      <div className="d-flex align-items-center">
+    <img src="/images/ni-flag.png" alt="Nigerian Flag" style={{ width: "32px", height: "32px" }} />
+    <InputMask
+      id="frm-phone"
+      mask="99999999999"
+      
+      name="phone"
+      autoComplete="tel"
+      placeholder="Phone Number"
+      className="input"
+      {...register("phone", {
+        required: "Phone Number is Required",
+      })}
+    />
+  </div>
+                      {/* <img src="/images/ni-flag.png" alt="" srcset="" style={{width: "32px", height:"32px"}} />
                         <InputMask
+                        
                           id="frm-phone"
                           mask="+999-999-9999 9999"
                           name="phone"
@@ -179,7 +200,7 @@ export default function Contact({ result }) {
                           {...register("phone", {
                             required: "Phone Number is Required",
                           })}
-                        />
+                        /> */}
 
                         <div
                           className="validation-error"

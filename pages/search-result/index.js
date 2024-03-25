@@ -559,7 +559,7 @@ const [callSpinner, setCallSpinner] = useState(false);
                                 {val?.distance && (
                                   <p>
                                     <strong>
-                                      {parseInt(val?.distance) + " miles away"}
+                                      {parseInt(val?.distance) + " Kilometers away"}
                                     </strong>
                                   </p>
                                 )}
@@ -567,8 +567,7 @@ const [callSpinner, setCallSpinner] = useState(false);
                                 <div className="rating_lbl">
                                   <img src="/images/star.svg" alt="" />
                                   <span>
-                                    {val?.avg_rating} ({val?.reviews_counts}
-                                    Reviews)
+                                    {val?.avg_rating} ({`${val?.reviews_counts} Reviews`} )
                                   </span>
                                 </div>
                               </div>

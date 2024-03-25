@@ -85,7 +85,7 @@ export default function Header({ siteSettings }) {
         <nav id="nav" className={toggle ? "active" : ""}>
           <ul>
             <li className="drop" ref={dropdownRef}>
-              <div onClick={toggleHomeOwner} className="btn_nav" >Homeowner</div>
+              <div onClick={toggleHomeOwner} className="btn_nav" >Homeowners</div>
               <div className={homeOwner ? "sub active" : "sub"}>
                 <ul>
                   {!token ?
@@ -94,7 +94,7 @@ export default function Header({ siteSettings }) {
                       <li>
                         <div className="inner_sub_nav">
                           <h5>Login</h5>
-                          <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                          <p>Login and have access to our services.</p>
                           <div className="btn_blk">
                             <Link href="/login" onClick={ToggleAction} className="site_btn color">Login</Link>
                           </div>
@@ -104,7 +104,7 @@ export default function Header({ siteSettings }) {
                       <li>
                         <div className="inner_sub_nav">
                           <h5>Signup</h5>
-                          <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                          <p>Signup and enjoy our services.</p>
                           <div className="btn_blk">
                             <Link href="/signup" onClick={ToggleAction} className="site_btn color">Signup</Link>
                           </div>
@@ -116,7 +116,7 @@ export default function Header({ siteSettings }) {
                     <li>
                       <div className="inner_sub_nav">
                         <h5>See Your Dashboard</h5>
-                        <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                        <p>Visit your Dashboard</p>
                         <div className="btn_blk">
                           <Link href="/buyer-dashboard" onClick={ToggleAction} className="site_btn color">Dashboard</Link>
                         </div>
@@ -129,7 +129,7 @@ export default function Header({ siteSettings }) {
                   <li>
                     <div className="inner_sub_nav">
                       <h5>Leave a Review</h5>
-                      <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                      <p>Let us know how satisfied with you are with a professional's work.</p>
                       <div className="btn_blk">
                         <Link href="#!" onClick={(e) => ToggleReviewAction(e, '/search')} className="site_btn">Leave a review</Link>
                       </div>
@@ -148,7 +148,7 @@ export default function Header({ siteSettings }) {
                       <li>
                         <div className="inner_sub_nav">
                           <h5>Login</h5>
-                          <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                          <p>Login into your dashboard and see your work request.</p>
                           <div className="btn_blk">
                             <Link href="/login" onClick={ToggleAction} className="site_btn">Login</Link>
                           </div>
@@ -158,7 +158,7 @@ export default function Header({ siteSettings }) {
                       <li>
                         <div className="inner_sub_nav">
                           <h5>Signup</h5>
-                          <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                          <p>Signup and become a professional on our platform so that homeowners can locate you.</p>
                           <div className="btn_blk">
                             <Link href="/become-professional" onClick={(e) => ToggleReviewAction(e, '/become-professional')} className="site_btn">Signup</Link>
                           </div>
@@ -171,7 +171,7 @@ export default function Header({ siteSettings }) {
                       <li>
                         <div className="inner_sub_nav">
                           <h5>Become A Pro</h5>
-                          <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                          <p>Become a professional on our platform so that homeowners can locate you..</p>
                           <div className="btn_blk">
                             <Link href="/become-professional" onClick={ToggleAction} className="site_btn">Become A Pro</Link>
                           </div>
@@ -182,7 +182,7 @@ export default function Header({ siteSettings }) {
                       <li>
                         <div className="inner_sub_nav">
                           <h5>Professional Dashboard</h5>
-                          <p>Only the Best Make the Cut We carefully vet every pro with a rigorous selection process.</p>
+                          <p>Manage your professional account..</p>
                           <div className="btn_blk">
                             <Link href="/professional-dashboard" onClick={ToggleAction} className="site_btn">Pro Dashboard</Link>
                           </div>

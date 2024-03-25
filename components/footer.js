@@ -31,7 +31,7 @@ export default function Footer({ siteSettings }) {
       },
       {
         id: 4,
-        text: "Privacy policies",
+        text: "Privacy Policy",
         link: "/privacy-policy",
       },
       {
@@ -61,11 +61,11 @@ export default function Footer({ siteSettings }) {
         text: "Careers",
         link: "/",
       },
-      {
-        id: 6,
-        text: "Our Impact",
-        link: "/",
-      },
+      // {
+      //   id: 6,
+      //   text: "Our Impact",
+      //   link: "/",
+      // },
     ],
   };
 

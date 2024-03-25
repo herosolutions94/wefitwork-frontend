@@ -154,13 +154,13 @@ export default function MaintenanceCover() {
                               >
                                 View
                               </Link>
-                              <Link
+                              {/* <Link
                                 href="" onClick={() => handleRequestDelete(req?.id)} className="red"
                               >
                                 Delete
 
 
-                              </Link>
+                              </Link> */}
                             </div>
                           </div>
                         </div>
