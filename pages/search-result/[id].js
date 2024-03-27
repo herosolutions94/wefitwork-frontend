@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import Link from "next/link";
 // import Gallery from "@/components/components/Gallery";
 import GalleryPopup from "@/components/components/GalleryPopup";
@@ -42,7 +42,7 @@ export const getServerSideProps = async (context) => {
 
 export default function SearchResult({ result, authToken }) {
   const router = useRouter();
-  // console.log("detsil", result);
+  // console.log("detsil", router);
   let {
     page_title,
     meta_desc,
@@ -263,7 +263,12 @@ export default function SearchResult({ result, authToken }) {
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
       <main>
         <section className="professional_details">
+          
           <div className="contain">
+            <div className="btn_blk">
+            <Link href="/search-result" className="site_btn color">Back</Link>
+            </div>
+            <div className="br" ></div>
             <div className="professiona_view_tile">
               <div className="col">
                 <div className="action_buttons">
@@ -367,7 +372,7 @@ export default function SearchResult({ result, authToken }) {
                         </button>
 
                         {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="site_btn blank block" onClick={() => handleCallNow(pro_mem_data)}>
+                                  <button type="button" className="site_btn color block" onClick={() => handleCallNow(pro_mem_data)}>
                                        
                                         Call Now
                                   </button>
@@ -464,7 +469,7 @@ export default function SearchResult({ result, authToken }) {
                       })}
                     </div>
                   </div>
-                  <div className="rateing_list_review">
+                  <div className="rateing_list_review" id="mem_reviews">
                     {reviews.map((val) => {
                       return (
                         <div className="buyer_review" key={val.id}>

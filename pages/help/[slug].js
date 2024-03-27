@@ -85,12 +85,12 @@ export default function HelpDetails({ result }) {
                         </h5>
                         <ul>
                           {val?.articles.map((article, a) => {
-                            
+                            console.log("article", article);
                             return (
                               <li key={a}>
-                                <Link href={`/help/article/${article?.id}`}>
-                                  <Text string={article?.article_name} />
-                                </Link>
+                                {/* <Link href={`/help/article/${article?.id}`}> */}
+                                  <Text string={article?.detail} />
+                                {/* </Link> */}
                               </li>
                             );
                           })}

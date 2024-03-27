@@ -129,7 +129,7 @@ export default function Header({ siteSettings }) {
                   <li>
                     <div className="inner_sub_nav">
                       <h5>Leave a Review</h5>
-                      <p>Let us know how satisfied with you are with a professional's work.</p>
+                      <p>Let us know how satisfied you are with a professional's work.</p>
                       <div className="btn_blk">
                         <Link href="#!" onClick={(e) => ToggleReviewAction(e, '/search')} className="site_btn">Leave a review</Link>
                       </div>

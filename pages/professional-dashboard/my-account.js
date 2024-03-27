@@ -87,9 +87,16 @@ export default function MyAccount() {
                                 className="input"
                                 readOnly
                               />
-                              <button type="button" className="verfiy_btn">
-                                Verfiy
-                              </button>
+                              {member?.mem_verified == 1 || member?.mem_verified == "1" ? 
+                              <button type="button" className="verfiy_btn"  style={{ color: "#02932A" }}>
+                              Verified
+                            </button>
+                            :
+                            <button type="button" className="verfiy_btn">
+                              Verify
+                            </button>
+                            }
+                              
                             </div>
                           </div>
                         </div>

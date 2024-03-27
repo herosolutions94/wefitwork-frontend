@@ -26,7 +26,11 @@ import MetaGenerator from "@/components/components/meta-generator";
 import { startConversation } from "@/components/states/actions/chat";
 import { useDispatch, useSelector } from "react-redux";
 import { parse } from "cookie";
-import { rating_boxes, completed_projects, pro_specializations } from "@/components/constants/filters";
+import {
+  rating_boxes,
+  completed_projects,
+  pro_specializations,
+} from "@/components/constants/filters";
 
 export const getServerSideProps = async (context) => {
   const query = context?.query;
@@ -38,8 +42,6 @@ export const getServerSideProps = async (context) => {
   const rating = query?.rating;
   const completed = query?.completed;
   const specialization = query?.specialization;
-
-
 
   const cookies = parse(context?.req?.headers?.cookie || "");
   const memauthToken = cookies?.authToken || "";
@@ -74,9 +76,8 @@ export default function SearchResult({ result }) {
   const longitude = route_query?.longitude;
   const loc_radius = route_query?.radius;
   const rating_val = route_query?.rating;
-  const completed_val= route_query?.completed;
+  const completed_val = route_query?.completed;
   const specialization_val = route_query?.specialization;
-
 
   let {
     professions,
@@ -86,14 +87,13 @@ export default function SearchResult({ result }) {
     page_title,
     meta_desc,
     memData,
-    site_settings
-
+    site_settings,
   } = result;
   // console.log(result);
 
   useEffect(() => {
-    if(service_id && service_id > 0){
-      handleGetSubService(service_id, '')
+    if (service_id && service_id > 0) {
+      handleGetSubService(service_id, "");
     }
   }, [service_id]);
   // console.log(result)
@@ -103,7 +103,7 @@ export default function SearchResult({ result }) {
   const countProfessions = professions ? getObjKeyCount(professions) : 0;
   const service_tilte = selected_service ? selected_service?.title : "";
 
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState("list");
   const [openCat, setOpenCat] = useState(false);
   const ToggleCat = () => {
     setOpenCat(!openCat);
@@ -158,7 +158,7 @@ export default function SearchResult({ result }) {
 
   const handleSearch = (search_data) => {
     console.log("search_data", search_data);
-    
+
     router.replace(
       `/search-result?${
         search_data?.service_id > 0
@@ -176,7 +176,21 @@ export default function SearchResult({ result }) {
         search_data?.longitude !== null
           ? "longitude=" + search_data?.longitude + "&"
           : ""
-      }${search_data?.radius > 0 ? "radius=" + search_data?.radius + "&" : ""}${search_data.rating > 0 ? "rating="+search_data.rating + "&" : ""}${search_data?.completed == '' || search_data?.completed == null || search_data?.completed =='null' ? "" : "completed="+search_data?.completed + "&"}${search_data?.specialization == '' || search_data?.specialization == null || search_data?.specialization =='null'  ? "" : "specialization="+search_data?.specialization}`
+      }${search_data?.radius > 0 ? "radius=" + search_data?.radius + "&" : ""}${
+        search_data.rating > 0 ? "rating=" + search_data.rating + "&" : ""
+      }${
+        search_data?.completed == "" ||
+        search_data?.completed == null ||
+        search_data?.completed == "null"
+          ? ""
+          : "completed=" + search_data?.completed + "&"
+      }${
+        search_data?.specialization == "" ||
+        search_data?.specialization == null ||
+        search_data?.specialization == "null"
+          ? ""
+          : "specialization=" + search_data?.specialization
+      }`
     );
   };
 
@@ -195,14 +209,11 @@ export default function SearchResult({ result }) {
   const [isChat, setIsChat] = useState(false);
   const [isSimpleLogin, setIsSimpleLogin] = useState(false);
 
-
-
   const handleOpenPopupSend = (pro_mem_data, mem_token = token) => {
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
       setProData(pro_mem_data);
       setIsPopupOpenSend(true);
-    setIsChat(false);
-
+      setIsChat(false);
     } else {
       toast.error(
         "You are not logedin. Please Login to your account to send SMS"
@@ -242,51 +253,55 @@ export default function SearchResult({ result }) {
 
   const startChat = (data) => {
     dispatch(startConversation(data));
-  }
+  };
 
   const handleStartChat = (receiver_id, mem_token = token) => {
     const form_data = { receiver_id: receiver_id };
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
-      
       startChat(form_data);
     } else {
       toast.error(
         "You are not logedin. Please Login to your account to start the chat with Professional"
       );
-    setProData(form_data);
+      setProData(form_data);
       setIsChat(true);
       setAuthPopup(true);
       setIsSimpleLogin(false);
     }
   };
 
-const [callSpinner, setCallSpinner] = useState(false);
+  const [callSpinner, setCallSpinner] = useState(false);
   const handleCallNow = (pro_mem_data, mem_token = token) => {
     // console.log(pro_mem_data);
     setCallSpinner(true);
-    
+
     if (mem_token !== undefined && mem_token !== null && mem_token !== "") {
       setProData(pro_mem_data);
       setIsPopupOpenSend(false);
-       setIsChat(false);
+      setIsChat(false);
 
-    try {
-      http
-        .post("user/call-click", doObjToFormData({ token: mem_token, pro_mem_id: parseInt(pro_mem_data?.mem_id), phone: pro_mem_data?.business_phone }))
-        .then((data) => {
-          if (data?.data?.status == true) {
-            router.push(`tel:${pro_mem_data?.business_phone}`);
-          } else {
-            toast.error(data?.data?.msg);
-
-          }
-        });
+      try {
+        http
+          .post(
+            "user/call-click",
+            doObjToFormData({
+              token: mem_token,
+              pro_mem_id: parseInt(pro_mem_data?.mem_id),
+              phone: pro_mem_data?.business_phone,
+            })
+          )
+          .then((data) => {
+            if (data?.data?.status == true) {
+              router.push(`tel:${pro_mem_data?.business_phone}`);
+            } else {
+              toast.error(data?.data?.msg);
+            }
+          });
         setCallSpinner(false);
-    } catch (errors) {
-      setCallSpinner(false);
-      console.log("Errors", errors);
-    }
-
+      } catch (errors) {
+        setCallSpinner(false);
+        console.log("Errors", errors);
+      }
     } else {
       toast.error(
         "You are not logedin. Please Login to your account to send SMS"
@@ -297,8 +312,6 @@ const [callSpinner, setCallSpinner] = useState(false);
       setIsSimpleLogin(true);
     }
   };
-
-  
 
   return (
     <>
@@ -413,75 +426,65 @@ const [callSpinner, setCallSpinner] = useState(false);
                   <div className="mini_br"></div>
                   <h5>Ratings</h5>
                   <div className="rating_blk_filter">
-                  {rating_boxes?.map((rate, i) => {
-                    return (
-                      <div className="lbl_btn" key={i}>
-                      <input
-                        type="radio"
-                        name="rating"
-                        defaultValue={rate.value}
-                        id={rate.id}
-                    {...register("rating")}
-
-                        
-                      />
-                      <label htmlFor={rate.id}>
-                        <img src={rate.image} alt="stars" />
-                        <span>{rate?.title}</span>
-                      </label>
-                    </div>
-                    )
-                    
-                  })}
-                    
-                    
+                    {rating_boxes?.map((rate, i) => {
+                      return (
+                        <div className="lbl_btn" key={i}>
+                          <input
+                            type="radio"
+                            name="rating"
+                            defaultValue={rate.value}
+                            id={rate.id}
+                            {...register("rating")}
+                          />
+                          <label htmlFor={rate.id}>
+                            <img src={rate.image} alt="stars" />
+                            <span>{rate?.title}</span>
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="mini_br"></div>
                   <h5>Projects Completed</h5>
                   <div className="project_completed_filter">
-                  {completed_projects?.map((pro, i) => {
-                    return (
-                      <div className="lbl_btn" key={i}>
-                      <input
-                        type="radio"
-                        name="project_done"
-                        defaultValue={pro?.value}
-                        id={pro?.id}
-                        {...register("completed")}
-                      />
-                      <label htmlFor={pro?.id}>{pro?.title}</label>
-                    </div>
-                    )
-                  })}
-                    
-                    
+                    {completed_projects?.map((pro, i) => {
+                      return (
+                        <div className="lbl_btn" key={i}>
+                          <input
+                            type="radio"
+                            name="project_done"
+                            defaultValue={pro?.value}
+                            id={pro?.id}
+                            {...register("completed")}
+                          />
+                          <label htmlFor={pro?.id}>{pro?.title}</label>
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="mini_br"></div>
                   <div className="mini_br"></div>
                   <h5>Specializations</h5>
                   <div className="specialization_filter">
-                  {pro_specializations?.map((spec, i) => {
-                    return (
-                      <div className="lbl_btn" key={i}>
-                      <input
-                        type="radio"
-                        name="specialization"
-                        defaultValue={spec?.value}
-                        id={spec?.id}
-                        {...register("specialization")}
-                      />
-                      <label htmlFor={spec?.id}>{spec?.title}</label>
-                    </div>
-                    )
-                  })}
-                    
-                    
+                    {pro_specializations?.map((spec, i) => {
+                      return (
+                        <div className="lbl_btn" key={i}>
+                          <input
+                            type="radio"
+                            name="specialization"
+                            defaultValue={spec?.value}
+                            id={spec?.id}
+                            {...register("specialization")}
+                          />
+                          <label htmlFor={spec?.id}>{spec?.title}</label>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   <div className="br"></div>
                   <div className="btn_blk text-center">
                     <button type="submit" className="site_btn">
-                      
                       Search
                     </button>
                   </div>
@@ -490,8 +493,11 @@ const [callSpinner, setCallSpinner] = useState(false);
               <div className="colR">
                 <div className="result_head">
                   <p>
-                    {formatDigits(countProfessions) + ' '} {service_tilte !== "" && service_tilte}
-                    {countProfessions === 1 ? " Professional " : " Professionals "}
+                    {formatDigits(countProfessions) + " "}{" "}
+                    {service_tilte !== "" && service_tilte}
+                    {countProfessions === 1
+                      ? " Professional "
+                      : " Professionals "}
                     found.
                   </p>
 
@@ -559,17 +565,20 @@ const [callSpinner, setCallSpinner] = useState(false);
                                 {val?.distance && (
                                   <p>
                                     <strong>
-                                      {parseInt(val?.distance) + " Kilometers away"}
+                                      {parseInt(val?.distance) +
+                                        " Kilometers away"}
                                     </strong>
                                   </p>
                                 )}
-
-                                <div className="rating_lbl">
-                                  <img src="/images/star.svg" alt="" />
-                                  <span>
-                                    {val?.avg_rating} ({`${val?.reviews_counts} Reviews`} )
-                                  </span>
-                                </div>
+                                <Link href={`/search-result/${encrypt_decrypt("encrypt", val?.mem_id)}`}>
+                                  <div className="rating_lbl">
+                                    <img src="/images/star.svg" alt="" />
+                                    <span>
+                                      {val?.avg_rating} (
+                                      {`${val?.reviews_counts} Reviews`} )
+                                    </span>
+                                  </div>
+                                </Link>
                               </div>
                             </div>
                             <div className="done_work">
@@ -620,13 +629,16 @@ const [callSpinner, setCallSpinner] = useState(false);
                                     Send SMS
                                   </button>
 
-                                  {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="site_btn blank block" onClick={() => handleCallNow(val)}>
-                                    
-                                        Call Now
-                                  </button>
-                                  }
-                                  
+                                  {(site_settings?.pro_call_now_btn == "1" ||
+                                    site_settings?.pro_call_now_btn == 1) && (
+                                    <button
+                                      type="button"
+                                      className="site_btn color block"
+                                      onClick={() => handleCallNow(val)}
+                                    >
+                                      Call Now
+                                    </button>
+                                  )}
                                 </>
                               )}
                             </div>
@@ -641,13 +653,16 @@ const [callSpinner, setCallSpinner] = useState(false);
                   )}
                 </div>
                 <div className="text-center pagination_outer">
-                {!isEmpty(currentProfessions) && professions.length > itemsPerPage ? (
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={Math.ceil(professions.length / itemsPerPage)}
-                    onPageChange={handlePageChange}
-                  />
-                ) : ""}
+                  {!isEmpty(currentProfessions) &&
+                  professions.length > itemsPerPage ? (
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(professions.length / itemsPerPage)}
+                      onPageChange={handlePageChange}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
