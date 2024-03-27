@@ -52,7 +52,7 @@ export default function Checkout({ result }) {
 
   // Access URL parameters
   const { id } = router.query;
-  let { page_title, meta_desc, content, maintenance_cover, included, memData, type_prices } =
+  let { page_title, meta_desc, content, maintenance_cover, included, memData, type_prices, sales_managers } =
     result;
   const token = authToken();
   const [step, setStep] = useState(0);
@@ -71,7 +71,7 @@ export default function Checkout({ result }) {
     // Determine which fields to validate based on the current step
     switch (step) {
       case 0:
-        fieldsToValidate.push("fullname", "email", "phone", "house_type", "address");
+        fieldsToValidate.push("fullname", "email", "phone", "house_type", "address", "refferd_by");
         break;
       case 1:
         fieldsToValidate.push("agree");
@@ -176,6 +176,28 @@ export default function Checkout({ result }) {
                     <fieldset className={step == 0 ? "active" : ""}>
                       <h4 className="heading">Please fill these fields</h4>
                       <div className="row form_row">
+                      <div className="col-xs-6">
+                          <h6>Reffered By</h6>
+                          <select className="input" name="" {...register("refferd_by", {
+                            required: " Required",
+
+                          })}>
+                            <option value="">Select Refferd</option>
+                            {sales_managers?.map((sale) => {
+                              return (
+                                <option key={sale?.id} value={sale?.id}>{sale?.name}</option>
+                              )
+                            })}
+
+
+                          </select>
+                          <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {errors.refferd_by?.message}
+                          </div>
+                        </div>
                         <div className="col-xs-6">
                           <h6>Full name</h6>
                           <input

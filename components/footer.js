@@ -61,11 +61,11 @@ export default function Footer({ siteSettings }) {
         text: "Careers",
         link: "/",
       },
-      // {
-      //   id: 6,
-      //   text: "Our Impact",
-      //   link: "/",
-      // },
+      {
+        id: 6,
+        text: "Our Partners",
+        link: "/partners",
+      },
     ],
   };
 
