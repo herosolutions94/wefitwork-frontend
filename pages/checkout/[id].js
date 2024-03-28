@@ -177,7 +177,7 @@ export default function Checkout({ result }) {
                       <h4 className="heading">Please fill these fields</h4>
                       <div className="row form_row">
                       <div className="col-xs-6">
-                          <h6>Reffered By</h6>
+                          <h6>Sales By</h6>
                           <select className="input" name="" {...register("refferd_by", {
                             required: " Required",
 
@@ -185,7 +185,7 @@ export default function Checkout({ result }) {
                             <option value="">Select Refferd</option>
                             {sales_managers?.map((sale) => {
                               return (
-                                <option key={sale?.id} value={sale?.id}>{sale?.name}</option>
+                                <option key={sale?.id} value={sale?.id} selected={sale?.id == 0 ? true : false}>{sale?.name}</option>
                               )
                             })}
 
