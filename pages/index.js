@@ -70,7 +70,7 @@ export default function Home({ result }) {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setSerId(false);
-      setServiceTitle(false);
+    setServiceTitle(false);
   };
 
   const tabs = [
@@ -126,7 +126,7 @@ export default function Home({ result }) {
     router.push(`search-result?service_id=${service_id}`);
   };
 
-  
+
   const [isSearching, setIsSearching] = useState(false);
   const [stopSearch, setStopSearch] = useState(false);
 
@@ -165,7 +165,7 @@ export default function Home({ result }) {
     <>
       <Toaster position="top-center" />
       <MetaGenerator page_title={page_title} meta_desc={meta_desc} />
-      
+
       <main>
         <section className="banner_main">
           <div className="contain">
@@ -183,7 +183,7 @@ export default function Home({ result }) {
                         ? "input focus_block"
                         : "input"
                     }
-                    
+
                     name="search_name"
                     placeholder={
                       searchMode == "popup"
@@ -505,14 +505,14 @@ export default function Home({ result }) {
         >
           <div className="contain">
             <div className="inner">
-                <div className="sec_heading">
-                  <h1><Text string={content?.rc_heading} /></h1>
-                </div>
-                <Text string={content?.rc_detail} />
-                <div className="btn_blk text-center">
-                  <Link href={content?.re_btn_url} className="site_btn color"><Text string={content?.re_btn_txt} /></Link>
-                </div>
+              <div className="sec_heading">
+                <h1><Text string={content?.rc_heading} /></h1>
               </div>
+              <Text string={content?.rc_detail} />
+              <div className="btn_blk text-center">
+                <Link href={content?.re_btn_url} className="site_btn color"><Text string={content?.re_btn_txt} /></Link>
+              </div>
+            </div>
           </div>
         </section>
         <section className="how_it_works">
@@ -643,7 +643,7 @@ export default function Home({ result }) {
         <ExploreFrom onClose={handleClosePopup} services={services} serId={serId} selectedTitle={serviceTitle} states={states} />
       </Popup>
 
-      
+
     </>
   );
 }

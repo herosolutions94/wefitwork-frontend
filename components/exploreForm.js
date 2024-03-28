@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import FileInputButton from "./fileInputButton";
 import { useForm } from "react-hook-form";
 import http from "../helpers/http";
@@ -14,6 +14,7 @@ const LeafletMapComponent = dynamic(() => import("../components/leaflet-map"), {
 });
 
 const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
+  const searchRef = useRef(null)
   const dispatch = useDispatch();
   const isFormProcessing = useSelector(
     (state) => state.saveSearch.isFormProcessing
@@ -68,11 +69,15 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
   const [subServices, setSubServices] = useState(false);
   const [getingSubServices, setGetingSubServices] = useState(false);
   const [serviceTitle, setServiceTitle] = useState(false);
-
+  const handleChangeService = (service_id) => {
+    setSelectedServiceValue(service_id)
+  }
   const handleServiceLabelClick = (event, id, selected_title) => {
     setSelectedServiceValue(id);
     setServiceTitle(selected_title);
-
+    if (searchRef.current) {
+      searchRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     try {
       setGetingSubServices(true);
       http
@@ -287,7 +292,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
                           value={val?.id}
                           id={`ser_id${val?.id}`}
                           checked={selectedServiceValue === val?.id}
-                          onChange={() => setSelectedServiceValue(val?.id)}
+                          onChange={() => handleChangeService(val?.id)}
                           {...register("service_id", {
                             required: "Please choose the service you wants",
                           })}
@@ -625,7 +630,7 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
             </button>
           )}
           {step < 4 ? (
-            <button onClick={handleNext} type="button" className="site_btn">
+            <button onClick={handleNext} type="button" className="site_btn" ref={searchRef}>
               Next
             </button>
           ) : (
