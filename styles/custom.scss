@@ -4169,7 +4169,7 @@ a.close.disabled {
     }
   }
   > .sub {
-    @include pos($t: calc(100% - 0.4rem), $b: null, $z: 2);
+    @include pos($t: calc(100% - 0.4rem), $b: null, $z: 2, $l:null);
     background: $light;
     text-align: left;
     padding: 1.3rem 0;
@@ -4184,6 +4184,7 @@ a.close.disabled {
     box-shadow: $shadow2;
     pointer-events: none;
     @include trans;
+    width: 20rem;
     overflow: hidden;
     // @include ipad_sm {
     //   position: static;
