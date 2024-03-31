@@ -65,9 +65,8 @@ export default function TradePersonSignup({ result }) {
   const isFormProcessing = useSelector(
     (state) => state.proProfile.isFormProcessing
   );
-  let { page_title, meta_desc, content, site_settings, services, memData } =
+  let { page_title, meta_desc, content, site_settings, services, memData, subscription_plan } =
     result;
-  // console.log("result", result);
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
@@ -175,12 +174,12 @@ export default function TradePersonSignup({ result }) {
   };
 
   const handleCreateProfile = (data, saveFormData = false) => {
-    
+
     if (saveFormData === true) {
       dispatch(createProfessionalProfile(data));
-    }else{
-      
-      data = {...data, trial_period: 'trial', txn_reference: null, plan_code: null,  }
+    } else {
+
+      data = { ...data, trial_period: 'trial', txn_reference: null, plan_code: null, }
       dispatch(createProfessionalProfile(data));
     }
   };
@@ -290,15 +289,15 @@ export default function TradePersonSignup({ result }) {
   const [emailPoup, setEmailPopup] = useState(false);
 
   useEffect(() => {
-    if(memData?.mem_email == null || memData?.mem_email == "null" || memData?.mem_email == undefined || memData?.mem_email == ''){
+    if (memData?.mem_email == null || memData?.mem_email == "null" || memData?.mem_email == undefined || memData?.mem_email == '') {
       setEmailPopup(true);
 
-    }else{
-    setEmailPopup(false);
+    } else {
+      setEmailPopup(false);
 
     }
   }, [memData])
-
+  // console.log(subscription_plan)
   return (
     <>
       <Toaster position="top-center" />
@@ -320,16 +319,16 @@ export default function TradePersonSignup({ result }) {
                     <div className="mini_pro">
                       <img src="/images/pro_membership.svg" alt="" />
                       <span>
-                        <Text string={content?.pkg_short_heading} />
+                        <Text string={subscription_plan?.plan_name} />
                       </span>
                     </div>
                     <div className="price_head">
                       <h2>
-                        {format_amount(content?.pkg_price)}
-                        <span>{content?.pkg_duration}</span>
+                        {format_amount(subscription_plan?.plan_price)}
+                        <span>{subscription_plan?.plan_interval === 'Monthly' ? 'per month' : subscription_plan?.plan_interval}</span>
                       </h2>
                     </div>
-                    <Text string={content?.pkg_detail} />
+                    <Text string={subscription_plan?.plan_desc} />
                   </div>
                 </div>
               </div>
@@ -369,9 +368,8 @@ export default function TradePersonSignup({ result }) {
               <form method="POST" onSubmit={handleSubmit(handleCreateProfile)}>
                 <div className="multi-step-form trade_register_form">
                   <div
-                    className={`step ${
-                      step === 1 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step ${step === 1 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <h6>What Service You Offered</h6>
                     <div className="form_blk">
@@ -446,9 +444,8 @@ export default function TradePersonSignup({ result }) {
                     </div>
                   </div>
                   <div
-                    className={`step ${
-                      step === 2 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step ${step === 2 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <div className="form_blk">
                       <h6>What is your business called?</h6>
@@ -510,10 +507,10 @@ export default function TradePersonSignup({ result }) {
                       </div>
                       <div className="map_sec">
                         {reloadMap &&
-                        locationCords?.lat !== null &&
-                        locationCords?.lat !== undefined &&
-                        locationCords?.long !== null &&
-                        locationCords?.long !== undefined ? (
+                          locationCords?.lat !== null &&
+                          locationCords?.lat !== undefined &&
+                          locationCords?.long !== null &&
+                          locationCords?.long !== undefined ? (
                           <LeafletMapComponent
                             locationCords={locationCords}
                             setLocationCords={setLocationCords}
@@ -531,9 +528,8 @@ export default function TradePersonSignup({ result }) {
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${
-                                  selectedValue === val.id ? "active" : ""
-                                }`}
+                                className={`lbl_btn ${selectedValue === val.id ? "active" : ""
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -572,9 +568,8 @@ export default function TradePersonSignup({ result }) {
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${
-                                  employeValue === val.id ? "active" : ""
-                                }`}
+                                className={`lbl_btn ${employeValue === val.id ? "active" : ""
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -645,9 +640,8 @@ export default function TradePersonSignup({ result }) {
                     </div>
                   </div>
                   <div
-                    className={`step ${
-                      step === 3 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step ${step === 3 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <div className="form_blk">
                       <h6>What are you looking for?</h6>
@@ -656,9 +650,8 @@ export default function TradePersonSignup({ result }) {
                           return (
                             <li key={val.id}>
                               <div
-                                className={`lbl_btn ${
-                                  lookingForValue === val.id ? "active" : ""
-                                }`}
+                                className={`lbl_btn ${lookingForValue === val.id ? "active" : ""
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -693,27 +686,25 @@ export default function TradePersonSignup({ result }) {
                     </div>
                   </div>
                   <div
-                    className={`step checkout_step ${
-                      step === 4 ? "field_set active" : "field_set"
-                    }`}
+                    className={`step checkout_step ${step === 4 ? "field_set active" : "field_set"
+                      }`}
                   >
                     <div className="form_blk">
                       <h6>Checkout</h6>
                       <div className="btn_blk payment_btn">
 
-                      {(site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0") && 
-                      <button
-                          type="button"
-                          className={`site_btn blank credit ${
-                            payment === "credit_card" ? "active" : ""
-                          }`}
-                          onClick={() => setPayment("credit_card")}
-                        >
-                          <img src="/images/creditcard.svg" alt="credit card" />
-                          <span>Pay with Paystack</span>
-                        </button>
-                      }
-                        
+                        {(site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0") &&
+                          <button
+                            type="button"
+                            className={`site_btn blank credit ${payment === "credit_card" ? "active" : ""
+                              }`}
+                            onClick={() => setPayment("credit_card")}
+                          >
+                            <img src="/images/creditcard.svg" alt="credit card" />
+                            <span>Pay with Paystack</span>
+                          </button>
+                        }
+
                         {/* <button
                           type="button"
                           className={`site_btn blank paypal ${payment === "pay_pal" ? "active" : ""
@@ -728,9 +719,8 @@ export default function TradePersonSignup({ result }) {
                         </button> */}
                       </div>
                       <div
-                        className={`credit_fields ${
-                          payment === "credit_card" ? "" : "hide"
-                        }`}
+                        className={`credit_fields ${payment === "credit_card" ? "" : "hide"
+                          }`}
                       >
                         {/* <div className="form_blk relative_field">
                           <input
@@ -784,9 +774,8 @@ export default function TradePersonSignup({ result }) {
                         </div> */}
                       </div>
                       <div
-                        className={`credit_fields ${
-                          payment === "pay_pal" ? "" : "hide"
-                        }`}
+                        className={`credit_fields ${payment === "pay_pal" ? "" : "hide"
+                          }`}
                       >
                         <p>
                           After clicking "Submit", you will be redirected to
@@ -819,32 +808,32 @@ export default function TradePersonSignup({ result }) {
                       <>
                         {watch().payment_email ? (
                           <>
-                            {site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0" ? 
-                            <PayStackPayment
-                            memData={memData}
-                            handleCreateProfile={handleCreateProfile}
-                            watcFields={watch()}
-                            mem_email={memData?.mem_email}
-                            mem_customer_code={
-                              memData?.mem_paystack_customer_code
-                            }
-                          />
-                          : 
-                          <button
-                            className="site_btn"
-                            type="submit"
-                            disabled={isFormProcessing}
-                            
-                          >
-                            Complete Registration
-                            {isFormProcessing && (
-                              <i
-                                className={
-                                  isFormProcessing ? "spinner" : "spinnerHidden"
+                            {site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0" ?
+                              <PayStackPayment
+                                memData={memData}
+                                handleCreateProfile={handleCreateProfile}
+                                watcFields={watch()}
+                                mem_email={memData?.mem_email}
+                                mem_customer_code={
+                                  memData?.mem_paystack_customer_code
                                 }
-                              ></i>
-                            )}
-                          </button>
+                              />
+                              :
+                              <button
+                                className="site_btn"
+                                type="submit"
+                                disabled={isFormProcessing}
+
+                              >
+                                Complete Registration
+                                {isFormProcessing && (
+                                  <i
+                                    className={
+                                      isFormProcessing ? "spinner" : "spinnerHidden"
+                                    }
+                                  ></i>
+                                )}
+                              </button>
                             }
                           </>
                         ) : (
@@ -879,12 +868,12 @@ export default function TradePersonSignup({ result }) {
       </main>
 
       <PopupSmall isOpen={emailPoup} onClose={() => toast.error("Please provide your email first thank u")}>
-        
-          <EmialPopup
-            memData={memData}
-            setEmailPopup={setEmailPopup}
-          />
-       
+
+        <EmialPopup
+          memData={memData}
+          setEmailPopup={setEmailPopup}
+        />
+
       </PopupSmall>
     </>
   );

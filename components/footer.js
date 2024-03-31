@@ -59,7 +59,8 @@ export default function Footer({ siteSettings }) {
       {
         id: 5,
         text: "Careers",
-        link: "/",
+        link: siteSettings?.site_careers_link,
+        target: "_blank"
       },
       {
         id: 6,
@@ -84,9 +85,9 @@ export default function Footer({ siteSettings }) {
   let year = date.getFullYear();
 
   return (
-    
+
     <footer>
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <div className="contain">
         <div className="flex_row main_row row">
           <div className="col-lg">
@@ -176,7 +177,7 @@ export default function Footer({ siteSettings }) {
                 {data.list_03.map((val) => {
                   return (
                     <li key={val.id}>
-                      <Link href={val.link}>{val.text}</Link>
+                      <Link href={val.link} target={val?.target}>{val.text}</Link>
                     </li>
                   );
                 })}
@@ -208,15 +209,15 @@ export default function Footer({ siteSettings }) {
                     })}
                   />
 
-                    <div
-                          className="validation-error"
-                          style={{ color: "red" }}
-                        >
-                          {errors.email?.message}
-                        </div>
+                  <div
+                    className="validation-error"
+                    style={{ color: "red" }}
+                  >
+                    {errors.email?.message}
+                  </div>
 
                   <button type="submit" disabled={isFormProcessing}>
-                    <img src="/images/send.svg" /> {isFormProcessing && <i className={ isFormProcessing ? "spinner" : "spinnerHidden"}></i>}
+                    <img src="/images/send.svg" /> {isFormProcessing && <i className={isFormProcessing ? "spinner" : "spinnerHidden"}></i>}
                   </button>
                 </form>
               </div>

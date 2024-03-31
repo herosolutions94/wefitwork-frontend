@@ -28,17 +28,20 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
   } = useForm();
 
   const handleRequestVerifyPhone = () => {
-    let formData = {phone : watch()?.phone, type: phoneType};
+    let formData = { phone: watch()?.phone, type: phoneType };
     dispatch(requestPhoneVerify(formData));
   };
 
   const handlePhoneVerification = (data) => {
     const verify_phone = getCookie("verify_phone");
-    if(data.phone === verify_phone){
-      data = {...data, type: phoneType}
+    const formattedPhoneNumber = data?.phone.replace(/\s/g, '');
+    const formattedCookiePhoneNumber = verify_phone.replace(/\s/g, '');
+    console.log(phoneType)
+    if (formattedPhoneNumber === formattedCookiePhoneNumber) {
+      data = { ...data, type: phoneType }
       dispatch(VerifyPhoneNumber(data));
-    }else{
-      toast.error("Something Wrong Try Again or Try refreshing Page");      
+    } else {
+      toast.error("Something Wrong Try Again or Try refreshing Page");
       // dispatch(VerifyPhoneNumber(data));
     }
   }
@@ -47,16 +50,16 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
 
   return (
     <>
-    <div className="sec_heading">
-            <h2>Verify Your Phone Number</h2>
-          </div>
+      <div className="sec_heading">
+        <h2>Verify Your Phone Number</h2>
+      </div>
       {!verify_popup && (
         <>
-          <h6>{phoneType == "pro" ? "Entre Your Business Phone Number" : "Entre Your Personal Phone Number" }</h6>
+          <h6>{phoneType == "pro" ? "Entre Your Business Phone Number" : "Entre Your Personal Phone Number"}</h6>
           <div className="form_blk">
             <InputMask
               id="phone"
-              
+
               mask="+234 999 999 9999"
               name="phone"
               defaultValue={phoneNumber}
@@ -81,13 +84,13 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
 
       {verify_popup && (
         <>
-        <p>
+          <p>
             Enter the 6-digit verification code you received on your given phone
             number
           </p>
           <form method="POST" onSubmit={handleSubmit(handlePhoneVerification)}>
-          <div className="form_blk d-flex justify-content-center align-items-center">
-          <Controller
+            <div className="form_blk d-flex justify-content-center align-items-center">
+              <Controller
                 name="code"
                 control={control}
                 defaultValue=""
@@ -107,28 +110,28 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
                 )}
               />
 
-            <div className="validation-error" style={{ color: "red" }}>
-              {errors.phone?.message}
+              <div className="validation-error" style={{ color: "red" }}>
+                {errors.phone?.message}
+              </div>
             </div>
-          </div>
 
-          <div className="col text-center">
-          
-          <p>
-        Don't received the code? <a type="button" onClick={handleRequestVerifyPhone} className="verfiy_btn" style={{color: '#004AAD'}} disabled={isFormProcessing}>
-              <b>Resend Code</b>
-            </a>
-          </p>
-        </div>
+            <div className="col text-center">
 
-          <div className="btn_blk text-right">
-            <button type="submit" className="site_btn" disabled={isFormProcessing}>
-              Verify {isFormProcessing && (<i className={isFormProcessing ? "spinner" : "spinnerHidden"}></i>)}
-            </button>
-          </div>
+              <p>
+                Don't received the code? <a type="button" onClick={handleRequestVerifyPhone} className="verfiy_btn" style={{ color: '#004AAD' }} disabled={isFormProcessing}>
+                  <b>Resend Code</b>
+                </a>
+              </p>
+            </div>
+
+            <div className="btn_blk text-right">
+              <button type="submit" className="site_btn" disabled={isFormProcessing}>
+                Verify {isFormProcessing && (<i className={isFormProcessing ? "spinner" : "spinnerHidden"}></i>)}
+              </button>
+            </div>
           </form>
           {/* <h6>Entre Verification Code</h6> */}
-          
+
         </>
       )}
 

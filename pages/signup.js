@@ -20,8 +20,8 @@ export const getServerSideProps = async (context) => {
   const cookieValue = parse(cookieHeader);
   const authToken =
     cookieValue["authToken"] !== undefined &&
-    cookieValue["authToken"] !== null &&
-    cookieValue["authToken"] !== ""
+      cookieValue["authToken"] !== null &&
+      cookieValue["authToken"] !== ""
       ? cookieValue["authToken"]
       : null;
   if (authToken !== null) {
@@ -78,7 +78,7 @@ export default function Signup({ result }) {
       return false;
     }
 
-    
+
     if (from == "become-professional") {
       data = { ...data, mem_type: "professional" };
     } else {
@@ -173,7 +173,7 @@ export default function Signup({ result }) {
                   </div>
                 </div>
 
-                <div className="form_blk">
+                <div className="form_blk relative">
                   <input
                     id="frm-email"
                     type="text"
@@ -185,14 +185,26 @@ export default function Signup({ result }) {
                       required: "Email / Phone is Required",
                       pattern: {
                         value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        
+
 
                         message:
                           " Email / phone format is not valid! Valid email format : abc@def.fgh. Valid phone format : +2341231231234 ",
                       },
                     })}
                   />
+                  <div class="settings_header">
+                    <div class="info">
+                      <strong></strong>
+                      <div class="infoIn ckEditor">
+                        <p>Your password must contain the following:</p>
+                        <ol>
+                          <li>At least 8 characters in length (a strong password has at least 14 characters)</li>
+                          <li>At least 1 letter and at least 1 number or symbol</li>
+                        </ol>
+                      </div>
+                    </div>
 
+                  </div>
                   <div className="validation-error" style={{ color: "red" }}>
                     {errors.email?.message}
                   </div>

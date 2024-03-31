@@ -12,12 +12,12 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
     const place = autocompleteRef.current.getPlace();
     // console.log('ad,' , place.formatted_address);
     const { lat, lng } = place.geometry.location;
-      const location = {
-        latitude: lat(),
-        longitude: lng(),
-      };
+    const location = {
+      latitude: lat(),
+      longitude: lng(),
+    };
 
-      // console.log("loc", location);
+    // console.log("loc", location);
     // console.log(place.geometry.location.lat);
     onPlaceSelect(location);
     setAddress(place.formatted_address)
@@ -35,10 +35,10 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
         }}
         onPlaceChanged={handlePlaceSelect}
         options={{
-          componentRestrictions: { country: 'ng'},
+          componentRestrictions: { country: 'us' },
         }}
       >
-        <input type="text" placeholder="Enter address" className='input'  />
+        <input type="text" placeholder="Enter address" className='input' />
       </Autocomplete>
     </LoadScript>
   );

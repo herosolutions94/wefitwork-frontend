@@ -3258,7 +3258,7 @@
                 overflow: hidden;
                 @include radius(50%);
                 background-color: $color;
-                padding: 2rem;
+                // padding: 2rem;
 
                 img {
                     object-fit: cover;
@@ -5611,4 +5611,12 @@
             }
         }
     }
+}
+.settings_header {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    right: -30px;
+    top: 15px;
 }

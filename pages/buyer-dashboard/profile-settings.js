@@ -184,7 +184,7 @@ export default function ProfileSettings() {
                         <div className="col-sm-6">
                           <div className="blk_form">
                             <h6>
-                              Email 
+                              Email
                             </h6>
                             <div className="form_blk">
                               <input
@@ -193,9 +193,11 @@ export default function ProfileSettings() {
                                 defaultValue={checkEmailOrPhone(member?.mem_email) == "email" ? member?.mem_email : ''}
                                 className="input"
                                 placeholder="Entre Email Here"
-                                {...register("email", {
-                                  required: "Email is required.",
-                                })}
+                                // {...register("email", {
+                                //   required: "Email is required.",
+                                // })}
+                                readOnly
+                                disabled={true}
                               />
 
                               <div
