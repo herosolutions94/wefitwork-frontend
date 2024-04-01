@@ -555,6 +555,10 @@ export default function SearchResult({ result }) {
                                     {val?.mem_fname}
                                   </Link>
                                 </h4>
+                                <div className="featured_lbl">
+                                  <img src="/favicon.ico" alt="" />
+                                  <span>Recommended</span>
+                                </div>
                                 <p>
                                   <Text
                                     string={`${

@@ -5620,3 +5620,30 @@
     right: -30px;
     top: 15px;
 }
+
+
+.featured_lbl{
+    @include flex;
+    column-gap: .4rem;
+    
+    width: fit-content;
+    color: $light;
+    img{
+        width: 2.3rem;
+        height: 2.3rem;
+        background-color: $color;
+        @include radius(.3rem);
+        padding: .2rem;
+    }
+    span{
+        flex: 1;
+        height: 2.3rem;
+        background-color: $color;
+        @include radius(.3rem);
+        padding: 0.1rem .5rem;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        @include flex(center,center);
+        letter-spacing: .5px;
+    }
+}
