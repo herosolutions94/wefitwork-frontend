@@ -196,11 +196,7 @@ export default function Signup({ result }) {
                     <div class="info">
                       <strong></strong>
                       <div class="infoIn ckEditor">
-                        <p>Your password must contain the following:</p>
-                        <ol>
-                          <li>At least 8 characters in length (a strong password has at least 14 characters)</li>
-                          <li>At least 1 letter and at least 1 number or symbol</li>
-                        </ol>
+                        <Text string={content?.email_phone_tooltip} />
                       </div>
                     </div>
 
