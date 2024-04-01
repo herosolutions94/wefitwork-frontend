@@ -555,10 +555,13 @@ export default function SearchResult({ result }) {
                                     {val?.mem_fname}
                                   </Link>
                                 </h4>
+                                {(val?.mem_featured == 1 || val?.mem_featured == '1') && 
                                 <div className="featured_lbl">
                                   <img src="/favicon.ico" alt="" />
                                   <span>Recommended</span>
                                 </div>
+                                }
+                                
                                 <p>
                                   <Text
                                     string={`${
