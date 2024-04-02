@@ -38,9 +38,12 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
   const handlePhoneVerification = (data) => {
     const verify_phone = getCookie("verify_phone");
     const formattedPhoneNumber = data?.phone.replace(/\s/g, '');
-    const formattedCookiePhoneNumber = verify_phone.replace(/\s/g, '');
-    console.log(phoneType)
+    let formattedCookiePhoneNumber = verify_phone.replace(/\s/g, '');
+    formattedCookiePhoneNumber = formattedCookiePhoneNumber.replace("+234", "0")
+    // console.log(formattedCookiePhoneNumber)
     if (formattedPhoneNumber === formattedCookiePhoneNumber) {
+      data.phone = data.phone.slice(1);
+      data.phone = "+234" + data.phone
       data = { ...data, type: phoneType }
       dispatch(VerifyPhoneNumber(data));
     } else {
