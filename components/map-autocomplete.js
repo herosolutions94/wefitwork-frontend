@@ -35,7 +35,7 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
         }}
         onPlaceChanged={handlePlaceSelect}
         options={{
-          componentRestrictions: { country: 'us' },
+          componentRestrictions: { country: 'ng' },
         }}
       >
         <input type="text" placeholder="Enter address" className='input' />
