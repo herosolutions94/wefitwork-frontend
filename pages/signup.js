@@ -63,7 +63,8 @@ export default function Signup({ result }) {
     e.preventDefault();
 
     const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const phoneRegex = /^\+234\d{10}$/;
+    const phoneRegex = /^0\d{10}$/;
+    
     // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
     const isEmail = emailRegex.test(data.email);
@@ -72,6 +73,9 @@ export default function Signup({ result }) {
     if (isEmail) {
       data = { ...data, contact_type: "email" };
     } else if (isPhone) {
+      data.email = data.email.slice(1);
+      // console.log(data.email);
+      data.email = "+234" + data.email;
       data = { ...data, contact_type: "phone" };
     } else {
       toast.error("Invalid email or phone format");
@@ -85,7 +89,7 @@ export default function Signup({ result }) {
       data = { ...data, mem_type: "member" };
     }
 
-    // console.log(data);
+    // console.log("data", data);
     dispatch(createAccount(data));
   };
 
@@ -184,11 +188,12 @@ export default function Signup({ result }) {
                     {...register("email", {
                       required: "Email / Phone is Required",
                       pattern: {
-                        value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        // value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        value: /^0\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 
-
+                        
                         message:
-                          " Email / phone format is not valid! Valid email format : abc@def.fgh. Valid phone format : +2341231231234 ",
+                          " Email / phone format is not valid! Valid email format : abc@def.fgh. Valid phone format : 01231231234 ",
                       },
                     })}
                   />

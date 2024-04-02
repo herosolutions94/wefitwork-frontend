@@ -171,7 +171,7 @@ export default function Dashboard() {
                           </div>
                           <div className="cntnt">
                             <h5>
-                              <Text string={sms?.from_mem_name} />
+                              {sms?.from_mem_name}
                             </h5>
                           </div>
                         </div>
@@ -183,7 +183,7 @@ export default function Dashboard() {
                           </p>
                           <p>
                             <strong>
-                              <Text string={sms?.date} />
+                              {sms?.date}
                             </strong>
                           </p>
                         </div>
@@ -196,7 +196,7 @@ export default function Dashboard() {
                           </p>
                           <p>
                             <strong>
-                              <Text string={sms?.from_mem_address} />
+                             {sms?.from_mem_address}
                             </strong>
                           </p>
                         </div>

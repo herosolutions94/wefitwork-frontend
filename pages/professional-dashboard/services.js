@@ -110,6 +110,8 @@ export default function Services() {
   } = useForm();
 
   const handleSaveBusinessData = (data) => {
+    
+
     if (uploadedImages !== null) data.portfolio_images = uploadedImages;
     // console.log(data);
     dispatch(saveBusinessData(data));
@@ -337,12 +339,12 @@ export default function Services() {
                                 <div className="form_blk">
                                   <InputMask
                                     id="phone"
-                                    mask="+234 999 999 9999"
+                                    mask="99999999999"
                                     // mask="+1 999 9999999"
                                     name="phone"
                                     autoComplete="phone"
                                     placeholder="Phone Number"
-                                    defaultValue={pro_profile?.business_phone}
+                                    defaultValue={pro_profile?.business_phone?.replace("+234", "0")}
                                     className="input"
                                     readOnly
                                     {...register("business_phone")}

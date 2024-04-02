@@ -54,6 +54,8 @@ export default function ProfileSettings() {
   } = useForm();
 
   const handleSaveBuyerSettings = (data) => {
+    data.phone = data.phone.slice(1);
+    data.phone = "+234"+data.phone;
     if (image !== null) data.profile = image.target.files;
     dispatch(saveBuyerAccountSettings(data));
   };
@@ -216,11 +218,11 @@ export default function ProfileSettings() {
                             <div className="form_blk">
                               <InputMask
                                 id="phone"
-                                mask="+9 999 999 9999"
+                                mask="99999999999"
                                 name="phone"
                                 autoComplete="phone"
                                 placeholder="Phone Number"
-                                value={member?.mem_phone}
+                                value={member?.mem_phone?.replace("+234", "0")}
                                 className="input"
                                 {...register("phone", {
                                   required: "Phone Number is Required",

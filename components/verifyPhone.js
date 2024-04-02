@@ -28,7 +28,10 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
   } = useForm();
 
   const handleRequestVerifyPhone = () => {
-    let formData = { phone: watch()?.phone, type: phoneType };
+    let p = watch().phone;
+    let phone = p.slice(1);
+    let phone_no = "+234"+phone
+    let formData = { phone: phone_no, type: phoneType };
     dispatch(requestPhoneVerify(formData));
   };
 
@@ -60,9 +63,9 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
             <InputMask
               id="phone"
 
-              mask="+234 999 999 9999"
+              mask="99999999999"
               name="phone"
-              defaultValue={phoneNumber}
+              defaultValue={phoneNumber?.replace("+234", "0")}
               className="input"
               {...register("phone", {
                 required: "Phone number required",
