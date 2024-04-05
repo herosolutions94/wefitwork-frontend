@@ -160,36 +160,29 @@ export default function SearchResult({ result }) {
     console.log("search_data", search_data);
 
     router.replace(
-      `/search-result?${
-        search_data?.service_id > 0
-          ? "service_id=" + search_data?.service_id + "&"
-          : ""
-      }${
-        search_data?.sub_service_id > 0
-          ? "sub_service_id=" + search_data?.sub_service_id + "&"
-          : ""
-      }${
-        search_data?.latitude !== null
-          ? "latitude=" + search_data?.latitude + "&"
-          : ""
-      }${
-        search_data?.longitude !== null
-          ? "longitude=" + search_data?.longitude + "&"
-          : ""
-      }${search_data?.radius > 0 ? "radius=" + search_data?.radius + "&" : ""}${
-        search_data.rating > 0 ? "rating=" + search_data.rating + "&" : ""
-      }${
-        search_data?.completed == "" ||
+      `/search-result?${search_data?.service_id > 0
+        ? "service_id=" + search_data?.service_id + "&"
+        : ""
+      }${search_data?.sub_service_id > 0
+        ? "sub_service_id=" + search_data?.sub_service_id + "&"
+        : ""
+      }${search_data?.latitude !== null
+        ? "latitude=" + search_data?.latitude + "&"
+        : ""
+      }${search_data?.longitude !== null
+        ? "longitude=" + search_data?.longitude + "&"
+        : ""
+      }${search_data?.radius > 0 ? "radius=" + search_data?.radius + "&" : ""}${search_data.rating > 0 ? "rating=" + search_data.rating + "&" : ""
+      }${search_data?.completed == "" ||
         search_data?.completed == null ||
         search_data?.completed == "null"
-          ? ""
-          : "completed=" + search_data?.completed + "&"
-      }${
-        search_data?.specialization == "" ||
+        ? ""
+        : "completed=" + search_data?.completed + "&"
+      }${search_data?.specialization == "" ||
         search_data?.specialization == null ||
         search_data?.specialization == "null"
-          ? ""
-          : "specialization=" + search_data?.specialization
+        ? ""
+        : "specialization=" + search_data?.specialization
       }`
     );
   };
@@ -245,6 +238,7 @@ export default function SearchResult({ result }) {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const dispatch = useDispatch();
@@ -555,18 +549,17 @@ export default function SearchResult({ result }) {
                                     {val?.mem_fname}
                                   </Link>
                                 </h4>
-                                {(val?.mem_featured == 1 || val?.mem_featured == '1') && 
-                                <div className="featured_lbl">
-                                  {/* <img src="/favicon.ico" alt="" /> */}
-                                  <span>Recommended</span>
-                                </div>
+                                {(val?.mem_featured == 1 || val?.mem_featured == '1') &&
+                                  <div className="featured_lbl">
+                                    {/* <img src="/favicon.ico" alt="" /> */}
+                                    <span>Recommended</span>
+                                  </div>
                                 }
-                                
+
                                 <p>
                                   <Text
-                                    string={`${
-                                      val?.service_title
-                                    } (${val?.sub_services?.join(", ")})`}
+                                    string={`${val?.service_title
+                                      } (${val?.sub_services?.join(", ")})`}
                                   />
                                 </p>
                                 {val?.distance && (
@@ -638,14 +631,14 @@ export default function SearchResult({ result }) {
 
                                   {(site_settings?.pro_call_now_btn == "1" ||
                                     site_settings?.pro_call_now_btn == 1) && (
-                                    <button
-                                      type="button"
-                                      className="site_btn color block"
-                                      onClick={() => handleCallNow(val)}
-                                    >
-                                      Call Now
-                                    </button>
-                                  )}
+                                      <button
+                                        type="button"
+                                        className="site_btn color block"
+                                        onClick={() => handleCallNow(val)}
+                                      >
+                                        Call Now
+                                      </button>
+                                    )}
                                 </>
                               )}
                             </div>
@@ -661,7 +654,7 @@ export default function SearchResult({ result }) {
                 </div>
                 <div className="text-center pagination_outer">
                   {!isEmpty(currentProfessions) &&
-                  professions.length > itemsPerPage ? (
+                    professions.length > itemsPerPage ? (
                     <Pagination
                       currentPage={currentPage}
                       totalPages={Math.ceil(professions.length / itemsPerPage)}
