@@ -2249,7 +2249,8 @@
     margin-top: 3rem;
 
     .pagination {
-        column-gap: .5rem;
+        flex-wrap: wrap;
+    gap: .5rem;
 
         li {
             button {
