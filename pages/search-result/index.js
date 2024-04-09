@@ -89,7 +89,7 @@ export default function SearchResult({ result }) {
     memData,
     site_settings,
   } = result;
-  console.log(result);
+  console.log(result.query);
 
   useEffect(() => {
     if (service_id && service_id > 0) {
