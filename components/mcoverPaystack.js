@@ -4,7 +4,7 @@ import { PaystackButton } from "react-paystack";
 
 
 export default function McoverPaystack({memData, handleSavePayment, watcFields, mem_email, price}) {
-    const publicKey = "pk_test_50768cfb2d5af2b1c5d2fdc5a123e5c95b85ec3e"
+    const publicKey = "pk_live_9f5bf982ab47337262cc18f14e51de826eb664f7"
     const priceToCharge = price * 100;
     
     const email = watcFields?.email ? watcFields?.email : '';
