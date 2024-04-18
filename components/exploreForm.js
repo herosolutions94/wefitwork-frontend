@@ -213,6 +213,14 @@ const ExploreFrom = ({ onClose, services, serId, selectedTitle, states }) => {
 
   const handleFormSubmit = (data) => {
     if (file !== null) data.doc_file = file.target.files;
+    if (data?.service_id === null || data?.service_id === undefined || data?.service_id === '') {
+      data = { ...data, service_id: selectedServiceValue }
+    }
+    if (data?.sub_service_id === null || data?.sub_service_id === undefined || data?.sub_service_id === '') {
+      data = { ...data, sub_service_id: selectedSubServiceValue }
+    }
+
+    // console.log(data); return;
     dispatch(saveSearch(data));
   };
   const [isSearching, setIsSearching] = useState(false);

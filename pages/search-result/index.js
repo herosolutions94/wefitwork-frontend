@@ -90,6 +90,7 @@ export default function SearchResult({ result }) {
     site_settings,
   } = result;
   console.log(result.post_data);
+  console.log(result.query);
 
   useEffect(() => {
     if (service_id && service_id > 0) {
