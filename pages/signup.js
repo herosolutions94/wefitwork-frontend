@@ -183,10 +183,10 @@ export default function Signup({ result }) {
                     type="text"
                     name="email"
                     autoComplete="email"
-                    placeholder="Email address/Phone Number"
+                    placeholder="Email address or Phone Number"
                     className="input"
                     {...register("email", {
-                      required: "Email / Phone is Required",
+                      required: "Email or Phone is Required",
                       pattern: {
                         // value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         value: /^0\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
