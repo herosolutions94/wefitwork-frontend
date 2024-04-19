@@ -582,14 +582,14 @@ export default function SearchResult({ result }) {
                                 </Link>
                               </div>
                             </div>
-                            <div className="done_work">
+                            {/* <div className="done_work">
                               <p>Projects Completed</p>
                               <h3>
                                 {val?.completed_projects > 0
                                   ? val?.completed_projects
                                   : 0}
                               </h3>
-                            </div>
+                            </div> */}
                             <div className="btn_blk">
                               {val?.mem_id == memData?.mem_id ? (
                                 <>

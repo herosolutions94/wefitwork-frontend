@@ -155,7 +155,7 @@ export default function Login({ result }) {
                     type="text"
                     name="email"
                     autoComplete="email"
-                    placeholder="Enter your email/phone"
+                    placeholder="Enter your email or phone"
                     className="input"
                     {...register("email", {
                       required: "Required",
