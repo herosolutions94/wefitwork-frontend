@@ -89,8 +89,8 @@ export default function SearchResult({ result }) {
     memData,
     site_settings,
   } = result;
-  console.log(result.post_data);
-  console.log(result.query);
+  // console.log(result.post_data);
+  // console.log(result.query);
 
   useEffect(() => {
     if (service_id && service_id > 0) {
@@ -632,13 +632,17 @@ export default function SearchResult({ result }) {
 
                                   {(site_settings?.pro_call_now_btn == "1" ||
                                     site_settings?.pro_call_now_btn == 1) && (
-                                      <button
+                                      <>
+{/*<button
                                         type="button"
                                         className="site_btn color block"
                                         onClick={() => handleCallNow(val)}
                                       >
                                         Call Now
-                                      </button>
+                                      </button>*/}
+                                      <a href={`tel:${val?.business_phone}`} className="site_btn color block">Call Now</a>
+                                      </>
+                                      
                                     )}
                                 </>
                               )}

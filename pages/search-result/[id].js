@@ -372,10 +372,15 @@ export default function SearchResult({ result, authToken }) {
                         </button>
 
                         {(site_settings?.pro_call_now_btn == "1" || site_settings?.pro_call_now_btn == 1) && 
-                                  <button type="button" className="site_btn color block" onClick={() => handleCallNow(pro_mem_data)}>
+                        <>
+                        {/* <button type="button" className="site_btn color block" onClick={() => handleCallNow(pro_mem_data)}>
                                        
-                                        Call Now
-                                  </button>
+                                       Call Now
+                                 </button> */}
+                                 <a href={`tel:${pro_mem_data?.business_phone}`} className="site_btn color block">Call Now</a>
+
+                        </>
+                                  
                                   }
                       </>
                     )}
