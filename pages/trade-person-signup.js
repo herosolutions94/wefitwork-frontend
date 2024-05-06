@@ -371,7 +371,7 @@ export default function TradePersonSignup({ result }) {
                     className={`step ${step === 1 ? "field_set active" : "field_set"
                       }`}
                   >
-                    <h6>What Service You Offered</h6>
+                    <h6>What Service Do You Offer?</h6>
                     <div className="form_blk">
                       <select
                         name="service_id"
@@ -466,7 +466,7 @@ export default function TradePersonSignup({ result }) {
                       </div>
                     </div>
                     <div className="form_blk">
-                      <h6>Address of your business (Only Nigerian Address)</h6>
+                      <h6>Address of your business</h6>
                       {/* <input
                         type="text"
                         name="business_address"
