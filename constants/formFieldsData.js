@@ -31,10 +31,10 @@ export const business_type = [
     },
   ];
   export const question_add = [
-    {
-      id: "fill_gap",
-      title: "I’m looking to fill the gaps in my diary",
-    },
+    // {
+    //   id: "fill_gap",
+    //   title: "I’m looking to fill the gaps in my diary",
+    // },
     {
       id: "flow_leads",
       title: "I need a steady flow of leads",
@@ -45,7 +45,7 @@ export const business_type = [
     },
     {
       id: "profile",
-      title: "I just want a Checkatrade profile",
+      title: "I just want a Shapperly profile",
     },
     {
       id: "not_sure",
