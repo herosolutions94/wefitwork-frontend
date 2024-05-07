@@ -690,7 +690,7 @@ export default function TradePersonSignup({ result }) {
                       }`}
                   >
                     <div className="form_blk">
-                      <h6>Checkout</h6>
+                      {/* <h6>Checkout</h6> */}
                       <div className="btn_blk payment_btn">
 
                         {(site_settings?.site_accept_order == 0 || site_settings?.site_accept_order == "0") &&
@@ -732,7 +732,7 @@ export default function TradePersonSignup({ result }) {
                           <img src="/images/ri_visa-line.svg" alt="" />
                         </div> */}
                         <div className="form_blk">
-                          <h6>Payment Email</h6>
+                          <h6>Enter your email to receive payment details:</h6>
                           <input
                             type="email"
                             name="payment_email"
