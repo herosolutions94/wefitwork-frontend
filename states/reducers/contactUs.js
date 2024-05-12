@@ -19,11 +19,21 @@ export default function (state = initialState, { type, payload }) {
         isSaved: false,
       };
     case SAVE_CONTACT_QUERY_SUCCESS:
-      return {
-        ...state,
-        isFormProcessing: false,
-        isSaved: true,
-      };
+      if (payload?.status) {
+        return {
+          ...state,
+          isFormProcessing: false,
+          isSaved: true,
+        };
+      }
+      else {
+        return {
+          ...state,
+          isFormProcessing: false,
+        };
+      }
+
+
     case SAVE_CONTACT_QUERY_FAILED:
       return {
         ...state,
