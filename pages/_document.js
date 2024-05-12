@@ -4,6 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* <script src="https://www.google.com/recaptcha/api.js" async="" defer=""></script> */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-LGX4Q0J17S" />
         <script
           // eslint-disable-next-line react/no-danger
@@ -34,15 +35,21 @@ gtag('config', 'G-LGX4Q0J17S');
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
             __html: `
-            document.getElementById('search-button').addEventListener('click', function() {
-              gtag('event', 'search', {
-                'event_category': 'Category Search',
-                'event_label': document.getElementById('search-input').value
-              });
+      document.addEventListener('DOMContentLoaded', function() {
+        var searchButton = document.getElementById('search-button');
+        if (searchButton) {
+          searchButton.addEventListener('click', function() {
+            gtag('event', 'search', {
+              'event_category': 'Category Search',
+              'event_label': document.getElementById('search-input').value
             });
-          `,
+          });
+        }
+      });
+    `,
           }}
         />
+
         <script
           dangerouslySetInnerHTML={{
             __html: `

@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import http from "../helpers/http";
 import MetaGenerator from "../components/meta-generator";
 import Text from "../components/text";
 import { useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import InputMask from "react-input-mask";
 import { saveContactQuery } from "../states/actions/contactUs";
 import { useDispatch, useSelector } from "react-redux";
+import ReCAPTCHA from 'react-google-recaptcha'
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async () => {
   const result = await http
@@ -25,21 +27,40 @@ export default function Contact({ result }) {
   const isFormProcessing = useSelector(
     (state) => state.contactUs.isFormProcessing
   );
-
+  const isSaved = useSelector(
+    (state) => state.contactUs.isSaved
+  );
+  const router = useRouter();
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue, reset
   } = useForm();
 
   const handleContactFormSubmit = (data, e) => {
     e.preventDefault();
-    dispatch(saveContactQuery(data));
-    // e.target.reset();
+    if (data?.recaptcha_token) {
+      dispatch(saveContactQuery(data));
+      // e.target.reset();
 
-    setTimeout(() => {
+
+    }
+    else {
+      toast.error("Please verify your are not a robot!"); return;
+    }
+  };
+  useEffect(() => {
+    if (isSaved) {
       reset();
-    }, 2000);
+      setTimeout(() => {
+        router.reload();
+      }, 2000);
+    }
+  }, [isSaved]);
+
+  const handleCaptchaChange = (value) => {
+    setValue('recaptcha_token', value)
   };
 
   return (
@@ -154,9 +175,9 @@ export default function Contact({ result }) {
                           {...register("full_name", {
                             required: "Full Name is required.",
                             pattern: {
-                        value: /^[a-zA-Z][a-zA-Z ]*$/,
-                        message: "Invalid Value",
-                      },
+                              value: /^[a-zA-Z][a-zA-Z ]*$/,
+                              message: "Invalid Value",
+                            },
                             minLength: {
                               value: 2,
                               message:
@@ -173,22 +194,22 @@ export default function Contact({ result }) {
                       </div>
 
                       <div className="form_blk">
-                      <div className="d-flex align-items-center">
-    <img src="/images/ni-flag.png" alt="Nigerian Flag" style={{ width: "32px", height: "32px" }} />
-    <InputMask
-      id="frm-phone"
-      mask="99999999999"
-      
-      name="phone"
-      autoComplete="tel"
-      placeholder="Phone Number"
-      className="input"
-      {...register("phone", {
-        required: "Phone Number is Required",
-      })}
-    />
-  </div>
-                      {/* <img src="/images/ni-flag.png" alt="" srcset="" style={{width: "32px", height:"32px"}} />
+                        <div className="d-flex align-items-center">
+                          <img src="/images/ni-flag.png" alt="Nigerian Flag" style={{ width: "32px", height: "32px" }} />
+                          <InputMask
+                            id="frm-phone"
+                            mask="99999999999"
+
+                            name="phone"
+                            autoComplete="tel"
+                            placeholder="Phone Number"
+                            className="input"
+                            {...register("phone", {
+                              required: "Phone Number is Required",
+                            })}
+                          />
+                        </div>
+                        {/* <img src="/images/ni-flag.png" alt="" srcset="" style={{width: "32px", height:"32px"}} />
                         <InputMask
                         
                           id="frm-phone"
@@ -252,6 +273,7 @@ export default function Contact({ result }) {
                           {errors.msg?.message}
                         </div>
                       </div>
+                      <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
                       <div className="btn_blk">
                         <button
                           type="submit"

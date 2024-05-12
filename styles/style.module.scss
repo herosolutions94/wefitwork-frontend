@@ -2250,7 +2250,7 @@
 
     .pagination {
         flex-wrap: wrap;
-    gap: .5rem;
+        gap: .5rem;
 
         li {
             button {
@@ -5572,40 +5572,48 @@
     }
 }
 
-.partners_sec{
-    .sec_heading{
+.partners_sec {
+    .sec_heading {
         margin-bottom: 3rem;
     }
-    .flex{
+
+    .flex {
         margin: -1rem;
         justify-content: center;
-        .col{
+
+        .col {
             flex: unset;
             width: 50%;
             padding: 1rem;
-            @include mobile_md{
+
+            @include mobile_md {
                 width: 100%;
             }
-            .inner{
+
+            .inner {
                 background-color: #fff;
                 @include radius(6px);
                 padding: 3rem;
-                .image{
+
+                .image {
                     width: 25rem;
                     height: 8rem;
                     overflow: hidden;
                     margin: 0 0 1rem;
-                    @include mobile_sm{
+
+                    @include mobile_sm {
                         width: 100%;
                         height: auto;
                         margin-bottom: 2rem;
                     }
-                    img{
+
+                    img {
                         @include object(contain);
                     }
                 }
-                .cntnt{
-                    p{
+
+                .cntnt {
+                    p {
                         margin-bottom: 0;
                     }
                 }
@@ -5613,6 +5621,7 @@
         }
     }
 }
+
 .settings_header {
     margin-bottom: 10px;
     display: flex;
@@ -5623,20 +5632,22 @@
 }
 
 
-.featured_lbl{
+.featured_lbl {
     @include flex;
     column-gap: .4rem;
-    
+
     width: fit-content;
     color: $light;
-    img{
+
+    img {
         width: 2.3rem;
         height: 2.3rem;
         background-color: $color;
         @include radius(.3rem);
         padding: .2rem;
     }
-    span{
+
+    span {
         flex: 1;
         height: 2.3rem;
         background-color: $color;
@@ -5644,7 +5655,11 @@
         padding: 0.1rem .5rem;
         font-size: 1.1rem;
         text-transform: uppercase;
-        @include flex(center,center);
+        @include flex(center, center);
         letter-spacing: .5px;
     }
+}
+
+.captcha_bottom {
+    margin-bottom: 20px;
 }

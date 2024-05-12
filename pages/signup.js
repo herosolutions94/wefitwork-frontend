@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { parse } from "cookie";
 import { useRouter } from "next/router";
-
+import ReCAPTCHA from 'react-google-recaptcha'
 export const getServerSideProps = async (context) => {
   const { req } = context;
   const cookieHeader = req.headers.cookie || "";
@@ -56,41 +56,52 @@ export default function Signup({ result }) {
   const {
     register,
     formState: { errors },
+    setValue,
     handleSubmit,
+    watch,
   } = useForm();
-
+  const watchAllFields = watch();
+  console.log(watchAllFields)
   const handleCreateAccount = (data, e) => {
     e.preventDefault();
+    if (data?.recaptcha_token) {
+      const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const phoneRegex = /^0\d{10}$/;
 
-    const emailRegex = /^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const phoneRegex = /^0\d{10}$/;
-    
-    // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
+      // const phoneRegex = /^\+1[2-9]\d{2}[2-9](?!11)\d{6}$/;
 
-    const isEmail = emailRegex.test(data.email);
-    const isPhone = phoneRegex.test(data.email);
+      const isEmail = emailRegex.test(data.email);
+      const isPhone = phoneRegex.test(data.email);
 
-    if (isEmail) {
-      data = { ...data, contact_type: "email" };
-    } else if (isPhone) {
-      data.email = data.email.slice(1);
-      // console.log(data.email);
-      data.email = "+234" + data.email;
-      data = { ...data, contact_type: "phone" };
-    } else {
-      toast.error("Invalid email or phone format");
-      return false;
+      if (isEmail) {
+        data = { ...data, contact_type: "email" };
+      } else if (isPhone) {
+        data.email = data.email.slice(1);
+        // console.log(data.email);
+        data.email = "+234" + data.email;
+        data = { ...data, contact_type: "phone" };
+      } else {
+        toast.error("Invalid email or phone format");
+        return false;
+      }
+
+
+      if (from == "become-professional") {
+        data = { ...data, mem_type: "professional" };
+      } else {
+        data = { ...data, mem_type: "member" };
+      }
+
+      // console.log("data", data);
+      dispatch(createAccount(data));
+    }
+    else {
+      toast.error("Please verify your are not a robot!"); return;
     }
 
-
-    if (from == "become-professional") {
-      data = { ...data, mem_type: "professional" };
-    } else {
-      data = { ...data, mem_type: "member" };
-    }
-
-    // console.log("data", data);
-    dispatch(createAccount(data));
+  };
+  const handleCaptchaChange = (value) => {
+    setValue('recaptcha_token', value)
   };
 
   return (
@@ -191,7 +202,7 @@ export default function Signup({ result }) {
                         // value: /^\+234\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         value: /^0\d{10}$|^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 
-                        
+
                         message:
                           " Email / phone format is not valid! Valid email format : abc@def.fgh. Valid phone format : 01231231234 ",
                       },
@@ -233,7 +244,7 @@ export default function Signup({ result }) {
                     {errors.password?.message}
                   </div>
                 </div>
-                <div className="have_check">
+                <div className="have_check captcha_bottom">
                   <div className="lbl_btn">
                     <input
                       type="checkbox"
@@ -252,6 +263,7 @@ export default function Signup({ result }) {
                 <div className="validation-error" style={{ color: "red" }}>
                   {errors.agree?.message}
                 </div>
+                <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
                 <div className="btn_blk">
                   <button
                     className="site_btn block"
