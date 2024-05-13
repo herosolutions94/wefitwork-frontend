@@ -61,7 +61,7 @@ export default function Signup({ result }) {
     watch,
   } = useForm();
   const watchAllFields = watch();
-  console.log(watchAllFields)
+  // console.log(watchAllFields)
   const handleCreateAccount = (data, e) => {
     e.preventDefault();
     if (data?.recaptcha_token) {

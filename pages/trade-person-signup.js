@@ -67,6 +67,7 @@ export default function TradePersonSignup({ result }) {
   );
   let { page_title, meta_desc, content, site_settings, services, memData, subscription_plan } =
     result;
+    console.log(result);
   const [payment, setPayment] = useState("credit_card");
   const [step, setStep] = useState(1);
 
