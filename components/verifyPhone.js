@@ -6,6 +6,7 @@ import { requestPhoneVerify, VerifyPhoneNumber } from "../states/actions/profess
 import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
 import toast from "react-hot-toast";
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export default function VerifyPhone({ phoneNumber, phoneType }) {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
     formState: { errors },
     register,
     watch,
+    setValue,
   } = useForm();
 
   const handleRequestVerifyPhone = () => {
@@ -51,6 +53,10 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
       // dispatch(VerifyPhoneNumber(data));
     }
   }
+
+  const handleCaptchaChange = (value) => {
+    setValue('recaptcha_token', value)
+  };
 
 
 
@@ -79,6 +85,8 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
               {errors.phone?.message}
             </div>
           </div>
+
+          <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
 
           <div className="btn_blk text-right">
             <button type="button" onClick={handleRequestVerifyPhone} className="site_btn" disabled={isFormProcessing}>
