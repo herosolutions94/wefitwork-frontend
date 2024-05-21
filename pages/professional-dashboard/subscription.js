@@ -87,12 +87,8 @@ export default function Subscription() {
                     <div className="profile_blk custom_blk">
                       <div className="subscription_block_dash">
                         <p>
-                          Contact at
-                          <Link href={`tel:${site_settings?.site_phone}`}>
-                            <Text string={site_settings?.site_phone} />
-                          </Link>
-                          or
-                          <Link
+                          Contact at <Link href={`tel:${site_settings?.site_phone}`}> <Text string={site_settings?.site_phone} /> </Link>
+                          or <Link
                             href={`mailto:${site_settings?.site_general_eamil}`}
                           >
                             <Text string={site_settings?.site_general_email} />

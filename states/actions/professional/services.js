@@ -113,7 +113,7 @@ export const saveBusinessData = (formData) => (dispatch) => {
           payload: data,
         });
         setTimeout(() => {
-          window.location.reload();
+          window.location.replace('/professional-dashboard');
         }, 1000);
       } else {
         if (data.validationErrors) {

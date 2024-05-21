@@ -30,11 +30,17 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
   } = useForm();
 
   const handleRequestVerifyPhone = () => {
+    if (watch().recaptcha_token) {
     let p = watch().phone;
     let phone = p.slice(1);
     let phone_no = "+234"+phone
-    let formData = { phone: phone_no, type: phoneType };
+    let formData = { phone: phone_no, type: phoneType, recaptcha_token: watch().recaptcha_token };
+
+    // console.log(watch())
     dispatch(requestPhoneVerify(formData));
+    }else{
+      toast.error("Please verify your are not a robot!"); return;
+    }
   };
 
   const handlePhoneVerification = (data) => {
@@ -47,6 +53,7 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
       data.phone = data.phone.slice(1);
       data.phone = "+234" + data.phone
       data = { ...data, type: phoneType }
+      // console.log(data);
       dispatch(VerifyPhoneNumber(data));
     } else {
       toast.error("Something Wrong Try Again or Try refreshing Page");

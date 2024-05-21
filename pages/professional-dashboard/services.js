@@ -695,7 +695,7 @@ export default function Services() {
                           </div>
                           <div className="add_portfolio_blk">
                             <div className="sec_heading">
-                              <h4>Add Your Portfolio</h4>
+                              <h4>Add pictures of your work</h4>
                             </div>
                             <div className="profile_grid_edit scrollbar">
                               <div className="flex">
