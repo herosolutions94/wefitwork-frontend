@@ -24,6 +24,7 @@ import MapComponent from "@/components/components/map-container";
 import PopupSmall from "@/components/components/popupSmall";
 import VerifyPhone from "@/components/components/verifyPhone";
 import AddressAutocomplete from "@/components/components/map-autocomplete";
+import Image from "next/image";
 
 import dynamic from "next/dynamic";
 const LeafletMapComponent = dynamic(
@@ -109,9 +110,29 @@ export default function Services() {
     watch,
   } = useForm();
 
+
+  const [image, setImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const fileDpRef = useRef(null);
+
+  //DP Photo
+  const handleDpClick = (e) => {
+    e.preventDefault();
+    fileDpRef.current.click();
+  };
+
+  const handleDpSelected = (e) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      setImage(e);
+      setPreviewImage(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
   const handleSaveBusinessData = (data) => {
     
-
+    if (image !== null) data.profile = image.target.files;
     if (uploadedImages !== null) data.portfolio_images = uploadedImages;
     // console.log(data);
     dispatch(saveBusinessData(data));
@@ -129,7 +150,11 @@ export default function Services() {
       lat: pro_profile?.latitude,
       long: pro_profile?.longitude,
     });
+    
+
   }, [pro_profile]);
+
+  setValue("business_address", pro_profile?.business_address);
 
   const handlePlaceSelect = (place) => {
     setReloadMap(false);
@@ -281,6 +306,43 @@ export default function Services() {
                           method="POST"
                           onSubmit={handleSubmit(handleSaveBusinessData)}
                         >
+                        <p>
+                        <strong>Profile Dp</strong>
+                      </p>
+                      <div className="dp_flex">
+                        <div className="dp_icon">
+                          {previewImage != null ? (
+                            <img src={previewImage} alt="User DP" />
+                          ) : member?.mem_image == null ||
+                            member?.mem_image == "" ? (
+                            <img src="/images/user_icon.svg" alt="DP" />
+                          ) : (
+                            <Image
+                              src={cmsFileUrl(member?.mem_image, "members")}
+                              width={400}
+                              height={400}
+                              alt={member?.mem_fname}
+                            />
+                          )}
+                        </div>
+                        <div className="btn_blk">
+                          <button
+                            className="site_btn color"
+                            type="button"
+                            onClick={handleDpClick}
+                          >
+                            Upload
+                          </button>
+                          <input
+                        type="file"
+                        ref={fileDpRef}
+                        style={{ display: "none" }}
+                        onChange={handleDpSelected}
+                      />
+                          {/* <button className="site_btn blank blue_blank" type="button">Remove</button> */}
+                        </div>
+                      </div>
+                      {/* <div className="br"></div> */}
                           <div className="br"></div>
                           <div className="from_row row">
                             <div className="col-sm-6">
@@ -554,6 +616,7 @@ export default function Services() {
                                   <AddressAutocomplete
                                     onPlaceSelect={handlePlaceSelect}
                                     setAddress={setBusinessAddress}
+                                    address={pro_profile?.business_address}
                                   />
 
                                   {/* <input

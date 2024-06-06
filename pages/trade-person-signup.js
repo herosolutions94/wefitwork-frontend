@@ -88,11 +88,9 @@ export default function TradePersonSignup({ result }) {
           "longitude",
         ];
         break;
-      case 3:
-        fieldsToValidate = ["looking_for"];
-        break;
-      case 4:
-        fieldsToValidate = ["payment_email"];
+      
+      // case 3:
+      //   fieldsToValidate = ["payment_email"];
         break;
       default:
         // Handle other steps if needed
@@ -640,7 +638,7 @@ export default function TradePersonSignup({ result }) {
                       </div>
                     </div>
                   </div>
-                  <div
+                  {/* <div
                     className={`step ${step === 3 ? "field_set active" : "field_set"
                       }`}
                   >
@@ -685,9 +683,9 @@ export default function TradePersonSignup({ result }) {
                         {errors.looking_for?.message}
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div
-                    className={`step checkout_step ${step === 4 ? "field_set active" : "field_set"
+                    className={`step checkout_step ${step === 3 ? "field_set active" : "field_set"
                       }`}
                   >
                     <div className="form_blk">
@@ -733,9 +731,9 @@ export default function TradePersonSignup({ result }) {
                           <img src="/images/ri_visa-line.svg" alt="" />
                         </div> */}
                         <div className="form_blk">
-                          <h6>Enter your email to receive payment details:</h6>
+                          <h6>Are you Sure that your inforamtion is correct. if yes click complete registration to continue</h6>
                           <input
-                            type="email"
+                            type="hidden"
                             name="payment_email"
                             placeholder="Email"
                             className="input"
@@ -795,7 +793,7 @@ export default function TradePersonSignup({ result }) {
                         Back
                       </button>
                     )}
-                    {step < 4 ? (
+                    {step < 3 ? (
                       <button
                         onClick={handleNext}
                         className="site_btn"

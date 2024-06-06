@@ -95,7 +95,7 @@ export default function Dashboard() {
               <div className="sec_heading">
                 <h3>
                   Welcome Back
-                  <span className="color">{member?.mem_fname}</span>
+                  <span className="color">{` ${member?.mem_fname}`}</span>
                 </h3>
               </div>
               <div className="dash_tile_main custom_blk">

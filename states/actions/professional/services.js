@@ -91,6 +91,9 @@ export const saveBusinessData = (formData) => (dispatch) => {
   let images = formData.portfolio_images;
   delete formData.portfolio_images;
 
+  let profile = formData.profile;
+  delete formData.profile;
+
   formData = doObjToFormData(formData);
 
   if (typeof images != "undefined" && Array.isArray(images)) {
@@ -98,6 +101,7 @@ export const saveBusinessData = (formData) => (dispatch) => {
       formData.append("portfolioImages[]", file);
     });
   }
+  if (typeof profile != "undefined") formData.append("profile", profile[0]);
 
   dispatch({
     type: SAVE_BUSINESS_DATA,
