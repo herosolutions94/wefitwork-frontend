@@ -46,7 +46,7 @@ export default function MaintenanceCover({result}) {
 
   const pkgs = {
     margin: 20,
-    autoplay: true,
+    autoplay: false,
     loop: true,
     dots: false,
     nav: true,
