@@ -54,7 +54,7 @@ export const createProfessionalProfile = (formData) => (dispatch) => {
         setTimeout(() => {
           setCookie('mem_type', data.mem_type);
 
-            window.location.replace("/professional-dashboard");
+            window.location.replace("/professional-dashboard/services");
         }, 2000);
       } else {
         if (data.validationErrors) {

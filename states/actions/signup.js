@@ -96,7 +96,7 @@ export const verifyEmail = (formData) => (dispatch) => {
           }else if(data.mem_type == 'professional' && (data.mem_professionl_profile == "0" || data.mem_professionl_profile == 0) ){
             window.location.replace('/trade-person-signup');
           }else if(data.mem_type == 'professional' && (data.mem_professionl_profile == "1" || data.mem_professionl_profile == 1)){
-            window.location.replace('/professional-dashboard');
+            window.location.replace('/professional-dashboard/services');
 
           }
         }, 2000);
