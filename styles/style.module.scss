@@ -4425,7 +4425,16 @@
                 @include block;
                 position: relative;
                 height: 100%;
-
+                .bdy_in{
+                    min-height: 65rem;
+                    max-height: 100%;
+                    @include ipad{
+                        min-height: 47rem;
+                    }
+                    @include ipad_sm{
+                        min-height: 55rem;
+                    }
+                }
                 h3 {
                     font-size: 1.8rem;
                     color: $color2;

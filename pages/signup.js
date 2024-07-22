@@ -48,7 +48,7 @@ export default function Signup({ result }) {
     (state) => state.signup.isFormProcessing
   );
 
-  let { page_title, meta_desc, content, site_settings } = result;
+  let { page_title, meta_desc, content, site_settings, secret } = result;
 
   const { from } = router.query;
   // console.log('from', from);
@@ -187,7 +187,7 @@ export default function Signup({ result }) {
                     {errors.fullname?.message}
                   </div>
                 </div>
-
+<input type="hidden" name="secret" defaultValue={secret} {...register("secret")}/>
                 <div className="form_blk relative">
                   <input
                     id="frm-email"

@@ -6,6 +6,7 @@ import { requestPhoneVerify, VerifyPhoneNumber } from "../states/actions/profess
 import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
 import toast from "react-hot-toast";
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export default function VerifyPhone({ phoneNumber, phoneType }) {
   const dispatch = useDispatch();
@@ -25,14 +26,21 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
     formState: { errors },
     register,
     watch,
+    setValue,
   } = useForm();
 
   const handleRequestVerifyPhone = () => {
+    if (watch().recaptcha_token) {
     let p = watch().phone;
     let phone = p.slice(1);
     let phone_no = "+234"+phone
-    let formData = { phone: phone_no, type: phoneType };
+    let formData = { phone: phone_no, type: phoneType, recaptcha_token: watch().recaptcha_token };
+
+    // console.log(watch())
     dispatch(requestPhoneVerify(formData));
+    }else{
+      toast.error("Please verify your are not a robot!"); return;
+    }
   };
 
   const handlePhoneVerification = (data) => {
@@ -45,12 +53,17 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
       data.phone = data.phone.slice(1);
       data.phone = "+234" + data.phone
       data = { ...data, type: phoneType }
+      // console.log(data);
       dispatch(VerifyPhoneNumber(data));
     } else {
       toast.error("Something Wrong Try Again or Try refreshing Page");
       // dispatch(VerifyPhoneNumber(data));
     }
   }
+
+  const handleCaptchaChange = (value) => {
+    setValue('recaptcha_token', value)
+  };
 
 
 
@@ -79,6 +92,8 @@ export default function VerifyPhone({ phoneNumber, phoneType }) {
               {errors.phone?.message}
             </div>
           </div>
+
+          <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY} onChange={handleCaptchaChange} />
 
           <div className="btn_blk text-right">
             <button type="button" onClick={handleRequestVerifyPhone} className="site_btn" disabled={isFormProcessing}>

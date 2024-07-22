@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { LoadScript, Autocomplete } from '@react-google-maps/api';
 
-const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
+const AddressAutocomplete = ({ onPlaceSelect, setAddress, address }) => {
   const autocompleteRef = useRef(null);
 
 
@@ -23,6 +23,10 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
     setAddress(place.formatted_address)
   };
 
+  useEffect(() => {
+    console.log(address)
+  }, [address]);
+
   return (
     <LoadScript
       googleMapsApiKey="AIzaSyAmqmsf3pVEVUoGAmwerePWzjUClvYUtwM"
@@ -38,7 +42,7 @@ const AddressAutocomplete = ({ onPlaceSelect, setAddress }) => {
           componentRestrictions: { country: 'ng' },
         }}
       >
-        <input type="text" placeholder="Enter address" className='input' />
+        <input type="text" placeholder="Enter address" defaultValue={address} className='input' />
       </Autocomplete>
     </LoadScript>
   );

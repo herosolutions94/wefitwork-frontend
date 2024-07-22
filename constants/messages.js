@@ -20,3 +20,6 @@ export const PROFESSIONAL_PROFILE_CREATED_MESSAGE = "Professional Profile create
 // Payment
 export const SUCCESSFUL_PAYMENT_MESSAGE =
   "You have sccessfully made pyment.";
+
+  export const SUCCESSFUL_SIGNUP_PHONE_MESSAGE =
+  "An account have been created successfully. Please login with your phone and password on next screen.";

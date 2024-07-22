@@ -26,6 +26,7 @@ export default function Dashboard() {
   const received_sms = useSelector((state) => state.proProfile.received_sms);
 
   // console.log("dashboard",typeof(received_sms));
+  console.log(pro_profile);
   const {
     site_settings,
     page_title,
@@ -65,7 +66,7 @@ export default function Dashboard() {
         {!isLoading && (
           <section className="dashboard">
             <div className="contain">
-              {/* {((pro_profile?.phone_verified == "0" &&
+              {((pro_profile?.phone_verified == "0" &&
                 pro_profile?.phone_verified == 0) || pro_profile?.business_phone == "") && (
                   <div className="alert alert-danger text-center">
                     Your Bussiness Phone is missing or not Verified.
@@ -76,7 +77,7 @@ export default function Dashboard() {
                       <u> Click Here To verify</u>
                     </a>
                   </div>
-                )} */}
+                )}
 
                 {pro_profile?.trial_period == "trial" && !isTrialExpired(pro_profile?.trail_end) ?
                           <div className="alert alert-warning">
@@ -94,7 +95,7 @@ export default function Dashboard() {
               <div className="sec_heading">
                 <h3>
                   Welcome Back
-                  <span className="color">{member?.mem_fname}</span>
+                  <span className="color">{` ${member?.mem_fname}`}</span>
                 </h3>
               </div>
               <div className="dash_tile_main custom_blk">

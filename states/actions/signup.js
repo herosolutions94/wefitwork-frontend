@@ -5,6 +5,7 @@ import Text from "@/components/components/text";
 import {
   SUCCESSFUL_SIGNUP_MESSAGE,
   SUCCESSFUL_EMAIL_VERIFICATION,
+  SUCCESSFUL_SIGNUP_PHONE_MESSAGE,
 } from "@/components/constants/messages";
 
 import {
@@ -28,17 +29,45 @@ export const createAccount = (formData) => (dispatch) => {
     .post("auth/create-account", formData)
     .then(({ data }) => {
       if (data.status) {
-        toast.success(SUCCESSFUL_SIGNUP_MESSAGE, { duration: 6000 });
+        // toast.success(SUCCESSFUL_SIGNUP_MESSAGE, { duration: 6000 });
         dispatch({
           type: CREATE_ACCOUNT_MESSAGE_SUCCESS,
           payload: data,
         });
-        setTimeout(() => {
-          setCookie('mem_type', data.mem_type);
-          setCookie('contact_type', data.contact_type);
-          
-            window.location.replace("/email-verification");
-        }, 2000);
+
+
+        if(data.contact_type == "phone"){
+          toast.success(SUCCESSFUL_SIGNUP_PHONE_MESSAGE, { duration: 6000 });
+          if(data.mem_type == "professional"){
+            setTimeout(() => {
+              setCookie('mem_type', data.mem_type);
+              setCookie('contact_type', data.contact_type);
+              setCookie('authToken', data.authToken);
+
+                                 window.location.replace('/trade-person-signup');
+            }, 2000);
+          }else{
+            setTimeout(() => {
+              setCookie('mem_type', data.mem_type);
+              setCookie('contact_type', data.contact_type);
+              setCookie('authToken', data.authToken);
+              window.location.replace(`/buyer-dashboard`);
+            }, 2000);
+
+          }
+        }else{
+          toast.success(SUCCESSFUL_SIGNUP_MESSAGE, { duration: 6000 });
+          setTimeout(() => {
+            setCookie('mem_type', data.mem_type);
+            setCookie('contact_type', data.contact_type);
+            
+                window.location.replace("/email-verification");
+  
+  
+          }, 2000);
+
+        }
+        
       } else {
         if (data.validationErrors) {
           toast.error(<Text string={data.validationErrors} parse={true} />, {

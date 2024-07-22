@@ -41,10 +41,13 @@ export default function LayoutBuyerDashboard({ children }) {
   }, []);
   // console.log(memberRow)
   useEffect(() => {
-    if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && memberRow?.mem_verified !== "1" && lastSegment !== 'email-verification') {
+    if(memberRow?.mem_contact_type == "email"){
+      if (memberRow?.mem_verified !== undefined && memberRow?.mem_verified !== null && memberRow?.mem_verified !== 1 && memberRow?.mem_verified !== "1" && lastSegment !== 'email-verification') {
         localStorage.setItem('email', memberRow?.mem_email);
         router.push('/email-verification');
     }
+    }
+    
     // console.log('hi');
     
   }, [memberRow]);
