@@ -52,7 +52,7 @@ export default function Checkout({ result }) {
 
   // Access URL parameters
   const { id } = router.query;
-  let { page_title, meta_desc, content, maintenance_cover, included, memData, type_prices, sales_managers } =
+  let { page_title, meta_desc, content, maintenance_cover, included, memData, type_prices, sales_managers, site_settings } =
     result;
   const token = authToken();
   const [step, setStep] = useState(0);
@@ -468,6 +468,41 @@ export default function Checkout({ result }) {
                               </p>
                             </div>
                           </div>
+
+<div className="blk_method">
+                            <div className="lbl_btn">
+                              <input
+                                type="radio"
+                                name="method"
+                                value="bank_pay"
+                                id="bank_pay"
+                                
+                              />
+                              <label htmlFor="bank_pay" onClick={toggleCard}>
+                                <div className="img_icon">
+                                  <img src="/images/bank.png" alt="" />
+                                </div>
+                                <span>Bank Deposit</span>
+                              </label>
+                            </div>
+                            <div
+                              className={
+                                cardMethod
+                                  ? "row form_row show_sec active"
+                                  : "row form_row show_sec"
+                              }
+                            >
+                              <div className="col-xs-12 text-center">
+                               <Text string={site_settings?.site_bank_detail} />
+                              </div>
+                              
+                              <div className="col-xs-6">
+                                <h6>Upload Receipt Copy</h6>
+                                <input type="file" name="" className="input" />
+                              </div>
+                            </div>
+                          </div>
+
 
                         </div>
                       </div>
