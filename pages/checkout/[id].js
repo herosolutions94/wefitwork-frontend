@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import http from "@/components/helpers/http";
 import Text from "@/components/components/text";
@@ -23,6 +23,7 @@ import { saveMaintenanceCoverPayment } from "@/components/states/actions/buyer/m
 import { useDispatch, useSelector } from "react-redux";
 import PopupSmall from "@/components/components/popupSmall";
 import LoginPopup from "@/components/components/authPopup";
+import FileIconsByExtensyionReceipt from "@/components/components/fileIconsByExtReceipt";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query;
@@ -57,9 +58,12 @@ export default function Checkout({ result }) {
   const token = authToken();
   const [step, setStep] = useState(0);
   const [cardMethod, setCardMethod] = useState(false);
-  const toggleCard = () => {
+  const [paymentMethod, setpaymentMethod] = useState('paystack');
+
+  const toggleCard = (payment_method) => {
     setCardMethod(!cardMethod);
     setPaypalMethod(false);
+    setpaymentMethod(payment_method)
   };
   const [paypalMethod, setPaypalMethod] = useState(false);
   const togglePaypal = () => {
@@ -116,11 +120,48 @@ export default function Checkout({ result }) {
 
   const [payInProcess, setPayInProcess] = useState(false);
 
-  const handleSavePayment = (data, saveFormData = false) => {
-    if (saveFormData === true) {
-      data = { ...data, maintenance_cover_id: parseInt(maintenance_cover?.id) }
-      dispatch(saveMaintenanceCoverPayment(data));
+  const [receipt, setReceipt] = useState(null);
+  const [previewReceipt, setPreviewReceipt] = useState(null);
+  const [receiptError, setReceiptError] = useState(false);
+
+  const receiptRef = useRef(null);
+
+  const handleReceiptClick = (e) => {
+    e.preventDefault();
+    receiptRef.current.click();
+  };
+  const handleReceiptSelected = (e) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      setReceipt(e);
+      setPreviewReceipt(URL.createObjectURL(e.target.files[0]));
+      setReceiptError(false)
     }
+  };
+
+  const handleSavePayment = (data, saveFormData = false) => {
+    setReceiptError(false);
+    if(paymentMethod == 'paystack'){
+      if (saveFormData === true) {
+            data = { ...data, maintenance_cover_id: parseInt(maintenance_cover?.id), payment_method : 'paystack' }
+            dispatch(saveMaintenanceCoverPayment(data));
+          }
+    }else if(paymentMethod == 'bank'){
+      if (receipt !== null){
+        data.bank_receipt = receipt.target.files;
+        console.log(data);
+
+      data = { ...data, maintenance_cover_id: parseInt(maintenance_cover?.id), payment_method : 'bank' }
+      dispatch(saveMaintenanceCoverPayment(data));
+
+      }else{
+        setReceiptError('Please upload your bank receipt')
+        toast.error('Please upload your bank receipt');
+      }
+
+     
+    }
+    
   }
 
 
@@ -450,15 +491,20 @@ export default function Checkout({ result }) {
                                 value="paystack"
                                 id="paystack"
                                 checked={true}
+                                onChange={() => setpaymentMethod('paystack')}
                               />
-                              <label htmlFor="paystack">
+                              <label htmlFor="paystack" onClick={() => toggleCard('paystack')}>
                                 <div className="img_icon">
                                   <img src="/images/paystack.png" alt="" />
                                 </div>
                                 <span>Paystack</span>
                               </label>
                             </div>
-                            <div className="show_sec active">
+                            <div className={
+                                paymentMethod == 'paystack'
+                                  ? "row form_row show_sec active"
+                                  : "row form_row show_sec"
+                              }>
                               <div className="image_paypal">
                                 <img src="/images/card-out.svg" alt="" />
                               </div>
@@ -476,9 +522,9 @@ export default function Checkout({ result }) {
                                 name="method"
                                 value="bank_pay"
                                 id="bank_pay"
-                                
+                                onChange={() => setpaymentMethod('bank')}
                               />
-                              <label htmlFor="bank_pay" onClick={toggleCard}>
+                              <label htmlFor="bank_pay" onClick={() => toggleCard('bank')}>
                                 <div className="img_icon">
                                   <img src="/images/bank.png" alt="" />
                                 </div>
@@ -487,7 +533,7 @@ export default function Checkout({ result }) {
                             </div>
                             <div
                               className={
-                                cardMethod
+                                paymentMethod == 'bank'
                                   ? "row form_row show_sec active"
                                   : "row form_row show_sec"
                               }
@@ -498,7 +544,31 @@ export default function Checkout({ result }) {
                               
                               <div className="col-xs-6">
                                 <h6>Upload Receipt Copy</h6>
-                                <input type="file" name="" className="input" />
+                                <div className="dp_flex">
+                                {previewReceipt !== null &&
+                                  <FileIconsByExtensyionReceipt file={previewReceipt} display_name={receipt.target.files[0].name} />
+                                
+                                }
+<br />
+                        </div>
+                                <input type="file" name="receipt" className="input" ref={receiptRef} style={{display: 'none'}} onChange={handleReceiptSelected} />
+                                <div className="btn_blk">
+                          <button
+                            className="site_btn color blank"
+                            type="button"
+                            onClick={handleReceiptClick}
+                          >
+                            Upload Bank Receipt
+                          </button>
+
+                          <div
+                            className="validation-error"
+                            style={{ color: "red" }}
+                          >
+                            {receiptError ? receiptError : ''}
+                          </div>
+                        </div>
+                              
                               </div>
                             </div>
                           </div>
@@ -529,7 +599,9 @@ export default function Checkout({ result }) {
                             Submit
                           </button>
                           :
-                          isFormProcessing ? (
+                          <>
+                          {paymentMethod == 'paystack' && (
+                            isFormProcessing ? (
                             <button type="button" className="site_btn" disabled={isFormProcessing}
                             >
                               Submit{isFormProcessing && (
@@ -550,6 +622,24 @@ export default function Checkout({ result }) {
 
                             />
                           )
+                          )}
+                          {paymentMethod == 'bank' && (
+                            
+                            <button type="submit" className="site_btn" disabled={isFormProcessing}
+                            >
+                              Submit Bank{isFormProcessing && (
+                                <i
+                                  className={
+                                    isFormProcessing ? "spinner" : "spinnerHidden"
+                                  }
+                                ></i>
+                              )}
+                            </button>
+                           
+                          )}
+                          </>
+                          
+                          
 
                         }
 

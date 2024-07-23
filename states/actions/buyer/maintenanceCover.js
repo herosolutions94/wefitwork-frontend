@@ -27,17 +27,31 @@ import useRedirectInvalidToken from "@/components/helpers/useRedirectInvalidToke
 
 export const saveMaintenanceCoverPayment = (formData) => (dispatch) => {
   formData = { ...formData, token: authToken() };
+
+  let bankReceipt = formData.bank_receipt;
+  delete formData.bank_receipt;
+  formData = doObjToFormData(formData);
+  
+  if (typeof bankReceipt != "undefined") formData.append("bank_receipt", bankReceipt[0]);
+  // console.log(formData);
   dispatch({
     type: SAVE_MAINTENANCE_COVER_PAYMENT,
     payload: null,
   });
-  http
-    .post("user/save-maintenance-cover-payment", doObjToFormData(formData))
+  httpBlob
+    .post("user/save-maintenance-cover-payment", formData)
     .then(({ data }) => {
       if (data.status) {
-        toast.success("Repair Cover Purchased Successfully", {
-          duration: 6000,
-        });
+        if(data.payment_method == 'paystack'){
+          toast.success("Maintenance plan purchased successfully", {
+            duration: 6000,
+          });
+        }else if(data.payment_method == 'bank'){
+          toast.success("Maintenance plan purcahsed Successfully. Your bank receipt is under approval. Your plan will be active once your bank payment receipt is approved and verified.", {
+            duration: 6000,
+          });
+        }
+        
         dispatch({
           type: SAVE_MAINTENANCE_COVER_PAYMENT_SUCCESS,
           payload: data,
