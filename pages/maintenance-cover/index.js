@@ -198,7 +198,7 @@ export default function MaintenanceCover({result}) {
             <div className="flex">
               <div className="colL">
                 <div className="image">
-                  <img src="/images/choose.png" alt=""/>
+                  <img src={cmsFileUrl(content?.image5)} alt=""/>
                 </div>
               </div>
               <div className="colR">
