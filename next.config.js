@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'api.shapperly.com',
+        hostname: 'wke.16f.mytemp.website',
         pathname: '/**',
         
       }
